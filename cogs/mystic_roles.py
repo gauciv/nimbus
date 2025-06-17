@@ -249,7 +249,15 @@ class MysticRoles(commands.Cog):
             return
 
         emoji = str(payload.emoji)
-        roles_dict = globals()[f"{category.upper()}_ROLES"]
+        
+        # Map category to the correct role dictionary
+        role_dicts = {
+            "status": STATUS_ROLES,
+            "cohort": COHORT_ROLES,
+            "interests": INTEREST_ROLES  # Note: Dictionary name doesn't have 's'
+        }
+        
+        roles_dict = role_dicts.get(category)
         
         if emoji in roles_dict:
             role_name = roles_dict[emoji]["name"]
@@ -286,9 +294,17 @@ class MysticRoles(commands.Cog):
             return
 
         emoji = str(payload.emoji)
-        roles_dict = globals()[f"{category.upper()}_ROLES"]
         
-        if emoji in roles_dict:
+        # Map category to the correct role dictionary
+        role_dicts = {
+            "status": STATUS_ROLES,
+            "cohort": COHORT_ROLES,
+            "interests": INTEREST_ROLES  # Note: Dictionary name doesn't have 's'
+        }
+        
+        roles_dict = role_dicts.get(category)
+        
+        if roles_dict and emoji in roles_dict:
             role_name = roles_dict[emoji]["name"]
             role = discord.utils.get(guild.roles, name=role_name)
             
