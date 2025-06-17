@@ -8,6 +8,89 @@ from discord.ext import commands
 import logging
 from utils.permissions import is_core_team
 
+# Custom button classes with callbacks
+class RulesButton(discord.ui.Button):
+    def __init__(self, channel_id):
+        super().__init__(
+            label="Ancient Scrolls", 
+            style=discord.ButtonStyle.primary, 
+            emoji="📜",
+            custom_id="rules_button"
+        )
+        self.channel_id = channel_id
+        
+    async def callback(self, interaction: discord.Interaction):
+        # Send ephemeral message with instructions
+        await interaction.response.send_message(
+            "🔮 **The Ancient Scrolls await your study!**\n\n"
+            "In the rules channel, you'll find our community guidelines that help maintain harmony in our digital realm. "
+            "Take a moment to read through them carefully - they contain important wisdom about how we interact and collaborate here.\n\n"
+            "Remember: Understanding the rules is the first step in your journey with us!",
+            ephemeral=True
+        )
+        # Redirect to the channel
+        await interaction.followup.send(f"<#{self.channel_id}>", ephemeral=True)
+
+class GetStartedButton(discord.ui.Button):
+    def __init__(self, channel_id):
+        super().__init__(
+            label="Choose Your Element", 
+            style=discord.ButtonStyle.success, 
+            emoji="✨",
+            custom_id="get_started_button"
+        )
+        self.channel_id = channel_id
+        
+    async def callback(self, interaction: discord.Interaction):
+        # Send ephemeral message with instructions
+        await interaction.response.send_message(
+            "✨ **It's time to choose your elemental affinity!**\n\n"
+            "In the get-started channel, you'll find instructions on how to select roles that represent your interests, "
+            "experience level, and areas of expertise. These roles help others know more about you and connect you with "
+            "like-minded individuals.\n\n"
+            "Choose wisely - your roles shape how others perceive your digital aura!",
+            ephemeral=True
+        )
+        # Redirect to the channel
+        await interaction.followup.send(f"<#{self.channel_id}>", ephemeral=True)
+
+class IntroButton(discord.ui.Button):
+    def __init__(self, channel_id):
+        super().__init__(
+            label="Share Your Legend", 
+            style=discord.ButtonStyle.secondary, 
+            emoji="💬",
+            custom_id="intro_button"
+        )
+        self.channel_id = channel_id
+        
+    async def callback(self, interaction: discord.Interaction):
+        # Send ephemeral message with instructions
+        await interaction.response.send_message(
+            "💬 **The time has come to share your tale!**\n\n"
+            "In the introductions channel, we invite you to tell us about yourself. Consider sharing:\n"
+            "• Your background and experience\n"
+            "• What brought you to our community\n"
+            "• What you hope to learn or contribute\n"
+            "• Any projects you're working on or interested in\n\n"
+            "Your introduction helps us welcome you properly and connect you with others who share your interests!",
+            ephemeral=True
+        )
+        # Redirect to the channel
+        await interaction.followup.send(f"<#{self.channel_id}>", ephemeral=True)
+
+# Custom view for welcome message
+class WelcomeView(discord.ui.View):
+    def __init__(self, rules_id, get_started_id, intro_id):
+        super().__init__(timeout=None)  # Persistent view
+        
+        if rules_id:
+            self.add_item(RulesButton(rules_id))
+        if get_started_id:
+            self.add_item(GetStartedButton(get_started_id))
+        if intro_id:
+            self.add_item(IntroButton(intro_id))
+
 class Welcome(commands.Cog):
     """Commands and listeners for welcoming new members."""
     
@@ -19,6 +102,9 @@ class Welcome(commands.Cog):
             bot: The Discord bot instance
         """
         self.bot = bot
+        
+        # Register the persistent view
+        self.bot.add_view(WelcomeView(None, None, None))
     
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
@@ -60,38 +146,17 @@ class Welcome(commands.Cog):
             # Set a mystical footer
             embed.set_footer(text=f"You are the {len(member.guild.members)}th soul to join our constellation ✨")
             
-            # Create a view with a timeout (required for URL buttons)
-            view = discord.ui.View(timeout=180)  # 3 minute timeout
-            
             # Find the channel IDs
             rules_channel = discord.utils.get(member.guild.channels, name='rules')
             get_started_channel = discord.utils.get(member.guild.channels, name='get-started')
             intro_channel = discord.utils.get(member.guild.channels, name='introductions')
             
-            # Add buttons if channels exist
-            if rules_channel:
-                view.add_item(discord.ui.Button(
-                    label="Ancient Scrolls", 
-                    style=discord.ButtonStyle.primary, 
-                    emoji="📜",
-                    url=f"https://discord.com/channels/{member.guild.id}/{rules_channel.id}"
-                ))
-            
-            if get_started_channel:
-                view.add_item(discord.ui.Button(
-                    label="Choose Your Element", 
-                    style=discord.ButtonStyle.success, 
-                    emoji="✨",
-                    url=f"https://discord.com/channels/{member.guild.id}/{get_started_channel.id}"
-                ))
-            
-            if intro_channel:
-                view.add_item(discord.ui.Button(
-                    label="Share Your Legend", 
-                    style=discord.ButtonStyle.secondary, 
-                    emoji="💬",
-                    url=f"https://discord.com/channels/{member.guild.id}/{intro_channel.id}"
-                ))
+            # Create the custom view with channel IDs
+            view = WelcomeView(
+                rules_channel.id if rules_channel else None,
+                get_started_channel.id if get_started_channel else None,
+                intro_channel.id if intro_channel else None
+            )
             
             # Send the welcome message with buttons
             await arrivals_channel.send(
@@ -164,6 +229,62 @@ class Welcome(commands.Cog):
                 ephemeral=True
             )
     
+    @app_commands.command(name="setup_rules", description="Set up the rules in the rules channel")
+    @is_core_team()
+    async def setup_rules(self, interaction: discord.Interaction):
+        """Set up the mystical rules in the rules channel."""
+        try:
+            # Find the #rules channel
+            rules_channel = discord.utils.get(interaction.guild.channels, name='rules')
+            
+            if not rules_channel:
+                await interaction.response.send_message(
+                    "❌ Could not find #rules channel. Please create it first.",
+                    ephemeral=True
+                )
+                return
+            
+            # Create an embed for the rules
+            embed = discord.Embed(
+                title="📜 The Ancient Scrolls of Nimbus' Cloud Hub",
+                description="*The Oracle has inscribed these sacred laws to maintain harmony in our ethereal realm.*",
+                color=discord.Color.from_rgb(93, 63, 211)  # Mystical purple
+            )
+            
+            embed.add_field(
+                name="✨ The Five Celestial Laws",
+                value="**I. Radiate Kindness**\n"
+                      "Let your aura be free of hate, harassment, and spam. The Oracle sees all.\n\n"
+                      "**II. Maintain Purity**\n"
+                      "Your words and shared visions must be appropriate for all who dwell here.\n\n"
+                      "**III. Honor the Channels**\n"
+                      "Each ethereal space has its purpose. Respect the cosmic order.\n\n"
+                      "**IV. Humble Presence**\n"
+                      "Self-promotion is permitted only in designated realms or with the blessing of the Guardians.\n\n"
+                      "**V. Universal Respect**\n"
+                      "We gather to learn, connect, and ascend together. Honor all fellow travelers.",
+                inline=False
+            )
+            
+            # Add a footer
+            embed.set_footer(text="Those who honor these laws shall find prosperity in our collective.")
+            
+            # Send the rules message
+            await rules_channel.send(embed=embed)
+            
+            # Confirm to the command user
+            await interaction.response.send_message(
+                "✅ The Ancient Scrolls have been inscribed in the #rules channel!",
+                ephemeral=True
+            )
+            
+        except Exception as e:
+            logging.error(f"Error setting up rules: {e}")
+            await interaction.response.send_message(
+                f"❌ An error occurred while setting up the rules: {str(e)}",
+                ephemeral=True
+            )
+    
     @app_commands.command(name="test_welcome", description="Test the welcome message without adding a new member")
     @is_core_team()
     async def test_welcome(self, interaction: discord.Interaction):
@@ -207,38 +328,17 @@ class Welcome(commands.Cog):
             # Set a mystical footer
             embed.set_footer(text=f"You are the {len(interaction.guild.members)}th soul to join our constellation ✨")
             
-            # Create a view with a timeout (required for URL buttons)
-            view = discord.ui.View(timeout=180)  # 3 minute timeout
-            
             # Find the channel IDs
             rules_channel = discord.utils.get(interaction.guild.channels, name='rules')
             get_started_channel = discord.utils.get(interaction.guild.channels, name='get-started')
             intro_channel = discord.utils.get(interaction.guild.channels, name='introductions')
             
-            # Add buttons if channels exist
-            if rules_channel:
-                view.add_item(discord.ui.Button(
-                    label="Ancient Scrolls", 
-                    style=discord.ButtonStyle.primary, 
-                    emoji="📜",
-                    url=f"https://discord.com/channels/{interaction.guild.id}/{rules_channel.id}"
-                ))
-            
-            if get_started_channel:
-                view.add_item(discord.ui.Button(
-                    label="Choose Your Element", 
-                    style=discord.ButtonStyle.success, 
-                    emoji="✨",
-                    url=f"https://discord.com/channels/{interaction.guild.id}/{get_started_channel.id}"
-                ))
-            
-            if intro_channel:
-                view.add_item(discord.ui.Button(
-                    label="Share Your Legend", 
-                    style=discord.ButtonStyle.secondary, 
-                    emoji="💬",
-                    url=f"https://discord.com/channels/{interaction.guild.id}/{intro_channel.id}"
-                ))
+            # Create the custom view with channel IDs
+            view = WelcomeView(
+                rules_channel.id if rules_channel else None,
+                get_started_channel.id if get_started_channel else None,
+                intro_channel.id if intro_channel else None
+            )
             
             # Send the welcome message with buttons
             await arrivals_channel.send(
