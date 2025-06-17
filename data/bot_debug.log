@@ -72,3 +72,76 @@ In components.0.components.1.custom_id: A custom id and url cannot both be speci
 In components.0.components.1.url: A custom id and url cannot both be specified
 In components.0.components.2.custom_id: A custom id and url cannot both be specified
 In components.0.components.2.url: A custom id and url cannot both be specified
+Setting up roles in channel role-assignment
+Successfully set up role message (ID: 1384539399185891369)
+Setting up roles in channel role-assignment
+Successfully set up role message (ID: 1384542685532127292)
+Created role: Student
+Created role: Professional
+Created role: Alumni
+Created role: First Year Novice
+Created role: Second Year Apprentice
+Created role: Third Year Adept
+Created role: Fourth Year Master
+Created role: Web Weaver
+Created role: Data Diviner
+Created role: System Architect
+Created role: Security Sentinel
+Created role: AI Apprentice
+Created role: Ascended
+Created role: Sage
+Error in setup_roles: 400 Bad Request (error code: 10014): Unknown Emoji
+Manifested role: Professional (Sage)
+Manifested role: Alumni (Ascended)
+Manifested role: Web Developer (Web Weaver)
+Manifested role: Data Scientist (Data Sage)
+Manifested role: Cloud Architect (System Crafter)
+Manifested role: Security Engineer (Digital Guardian)
+Manifested role: AI/ML Engineer (Tech Mystic)
+Ignoring exception in on_raw_reaction_add
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 481, in _run_event
+    await coro(*args, **kwargs)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/mystic_roles.py", line 252, in on_raw_reaction_add
+    roles_dict = globals()[f"{category.upper()}_ROLES"]
+                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'INTERESTS_ROLES'
+Ignoring exception in on_raw_reaction_add
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 481, in _run_event
+    await coro(*args, **kwargs)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/mystic_roles.py", line 252, in on_raw_reaction_add
+    roles_dict = globals()[f"{category.upper()}_ROLES"]
+                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'INTERESTS_ROLES'
+Ignoring exception in on_raw_reaction_add
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 481, in _run_event
+    await coro(*args, **kwargs)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/mystic_roles.py", line 252, in on_raw_reaction_add
+    roles_dict = globals()[f"{category.upper()}_ROLES"]
+                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'INTERESTS_ROLES'
+Ignoring exception in on_raw_reaction_add
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 481, in _run_event
+    await coro(*args, **kwargs)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/mystic_roles.py", line 252, in on_raw_reaction_add
+    roles_dict = globals()[f"{category.upper()}_ROLES"]
+                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'INTERESTS_ROLES'
+Ignoring exception in on_raw_reaction_add
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 481, in _run_event
+    await coro(*args, **kwargs)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/mystic_roles.py", line 252, in on_raw_reaction_add
+    roles_dict = globals()[f"{category.upper()}_ROLES"]
+                 ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'INTERESTS_ROLES'
+Channeled role First Year to vinsau_
+Channeled role Second Year to vinsau_
+Channeled role Third Year to vinsau_
+Channeled role Fourth Year to vinsau_
+Channeled role Student to vinsau_
+Channeled role Professional (Sage) to vinsau_
+Channeled role Alumni (Ascended) to vinsau_

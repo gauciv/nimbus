@@ -34,7 +34,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 # List of cogs to load
 COGS = [
-    'cogs.role_management',
+    'cogs.mystic_roles',  # Mystical role management system
     'cogs.welcome',
     'cogs.events',
     'cogs.aws_info',

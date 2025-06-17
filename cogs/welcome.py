@@ -79,6 +79,42 @@ class IntroButton(discord.ui.Button):
         # Redirect to the channel
         await interaction.followup.send(f"<#{self.channel_id}>", ephemeral=True)
 
+# Role selection button class
+class RoleButton(discord.ui.Button):
+    def __init__(self, emoji, role_name):
+        super().__init__(
+            style=discord.ButtonStyle.secondary,
+            emoji=emoji,
+            custom_id=f"role_{role_name.replace(' ', '_').lower()}"
+        )
+        self.role_name = role_name
+        self.emoji = emoji
+        
+    async def callback(self, interaction: discord.Interaction):
+        # Find the role
+        role = discord.utils.get(interaction.guild.roles, name=self.role_name)
+        
+        if not role:
+            await interaction.response.send_message(
+                f"❌ Role '{self.role_name}' not found. Please contact an administrator.",
+                ephemeral=True
+            )
+            return
+            
+        # Toggle the role
+        if role in interaction.user.roles:
+            await interaction.user.remove_roles(role)
+            await interaction.response.send_message(
+                f"✨ You have unequipped the **{self.role_name}** role.",
+                ephemeral=True
+            )
+        else:
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message(
+                f"✨ You have been granted the **{self.role_name}** role!",
+                ephemeral=True
+            )
+
 # Custom view for welcome message
 class WelcomeView(discord.ui.View):
     def __init__(self, rules_id, get_started_id, intro_id):
@@ -90,6 +126,31 @@ class WelcomeView(discord.ui.View):
             self.add_item(GetStartedButton(get_started_id))
         if intro_id:
             self.add_item(IntroButton(intro_id))
+
+# Role selection views
+class StatusRolesView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(RoleButton("🎓", "Student"))
+        self.add_item(RoleButton("💼", "Professional"))
+        self.add_item(RoleButton("🌟", "Alumni"))
+
+class CohortRolesView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(RoleButton("✨", "First Year Novice"))
+        self.add_item(RoleButton("✨✨", "Second Year Apprentice"))
+        self.add_item(RoleButton("✨✨✨", "Third Year Adept"))
+        self.add_item(RoleButton("✨✨✨✨", "Fourth Year Master"))
+
+class InterestRolesView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.add_item(RoleButton("🕸️", "Web Weaver"))
+        self.add_item(RoleButton("🔮", "Data Diviner"))
+        self.add_item(RoleButton("🏗️", "System Architect"))
+        self.add_item(RoleButton("🛡️", "Security Sentinel"))
+        self.add_item(RoleButton("🤖", "AI Apprentice"))
 
 class Welcome(commands.Cog):
     """Commands and listeners for welcoming new members."""
@@ -103,8 +164,11 @@ class Welcome(commands.Cog):
         """
         self.bot = bot
         
-        # Register the persistent view
+        # Register the persistent views
         self.bot.add_view(WelcomeView(None, None, None))
+        self.bot.add_view(StatusRolesView())
+        self.bot.add_view(CohortRolesView())
+        self.bot.add_view(InterestRolesView())
     
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
@@ -180,7 +244,7 @@ class Welcome(commands.Cog):
             
             embed.add_field(
                 name="🌈 Choosing Your Cloud Type",
-                value="#1 Float over to <#role-assignment>\n"
+                value="#1 Float over to <#get-started>\n"
                       "#2 Click on the reactions for the roles that match you\n"
                       "#3 Mix and match to show everyone what kind of cloud you are!",
                 inline=False
@@ -229,62 +293,7 @@ class Welcome(commands.Cog):
                 ephemeral=True
             )
     
-    @app_commands.command(name="setup_rules", description="Set up the rules in the rules channel")
-    @is_core_team()
-    async def setup_rules(self, interaction: discord.Interaction):
-        """Set up the mystical rules in the rules channel."""
-        try:
-            # Find the #rules channel
-            rules_channel = discord.utils.get(interaction.guild.channels, name='rules')
-            
-            if not rules_channel:
-                await interaction.response.send_message(
-                    "❌ Could not find #rules channel. Please create it first.",
-                    ephemeral=True
-                )
-                return
-            
-            # Create an embed for the rules
-            embed = discord.Embed(
-                title="📜 The Ancient Scrolls of Nimbus' Cloud Hub",
-                description="*The Oracle has inscribed these sacred laws to maintain harmony in our ethereal realm.*",
-                color=discord.Color.from_rgb(93, 63, 211)  # Mystical purple
-            )
-            
-            embed.add_field(
-                name="✨ The Five Celestial Laws",
-                value="**I. Radiate Kindness**\n"
-                      "Let your aura be free of hate, harassment, and spam. The Oracle sees all.\n\n"
-                      "**II. Maintain Purity**\n"
-                      "Your words and shared visions must be appropriate for all who dwell here.\n\n"
-                      "**III. Honor the Channels**\n"
-                      "Each ethereal space has its purpose. Respect the cosmic order.\n\n"
-                      "**IV. Humble Presence**\n"
-                      "Self-promotion is permitted only in designated realms or with the blessing of the Guardians.\n\n"
-                      "**V. Universal Respect**\n"
-                      "We gather to learn, connect, and ascend together. Honor all fellow travelers.",
-                inline=False
-            )
-            
-            # Add a footer
-            embed.set_footer(text="Those who honor these laws shall find prosperity in our collective.")
-            
-            # Send the rules message
-            await rules_channel.send(embed=embed)
-            
-            # Confirm to the command user
-            await interaction.response.send_message(
-                "✅ The Ancient Scrolls have been inscribed in the #rules channel!",
-                ephemeral=True
-            )
-            
-        except Exception as e:
-            logging.error(f"Error setting up rules: {e}")
-            await interaction.response.send_message(
-                f"❌ An error occurred while setting up the rules: {str(e)}",
-                ephemeral=True
-            )
-    
+
     @app_commands.command(name="setup_rules", description="Set up the mystical rules in the rules channel")
     @is_core_team()
     async def setup_rules(self, interaction: discord.Interaction):
@@ -399,7 +408,7 @@ class Welcome(commands.Cog):
             
         except Exception as e:
             logging.error(f"Error sending test welcome message: {e}")
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 f"❌ An error occurred while sending the test welcome message: {str(e)}",
                 ephemeral=True
             )
