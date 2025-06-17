@@ -285,6 +285,62 @@ class Welcome(commands.Cog):
                 ephemeral=True
             )
     
+    @app_commands.command(name="setup_rules", description="Set up the mystical rules in the rules channel")
+    @is_core_team()
+    async def setup_rules(self, interaction: discord.Interaction):
+        """Set up the mystical rules in the rules channel."""
+        try:
+            # Find the #rules channel
+            rules_channel = discord.utils.get(interaction.guild.channels, name='rules')
+            
+            if not rules_channel:
+                await interaction.response.send_message(
+                    "❌ Could not find #rules channel. Please create it first.",
+                    ephemeral=True
+                )
+                return
+            
+            # Create an embed for the rules
+            embed = discord.Embed(
+                title="📜 The Ancient Scrolls of Nimbus' Cloud Hub",
+                description="*The Oracle has inscribed these sacred laws to maintain harmony in our ethereal realm.*",
+                color=discord.Color.from_rgb(93, 63, 211)  # Mystical purple
+            )
+            
+            embed.add_field(
+                name="✨ The Five Celestial Laws",
+                value="**I. Radiate Kindness**\n"
+                      "Let your aura be free of hate, harassment, and spam. The Oracle sees all.\n\n"
+                      "**II. Maintain Purity**\n"
+                      "Your words and shared visions must be appropriate for all who dwell here.\n\n"
+                      "**III. Honor the Channels**\n"
+                      "Each ethereal space has its purpose. Respect the cosmic order.\n\n"
+                      "**IV. Humble Presence**\n"
+                      "Self-promotion is permitted only in designated realms or with the blessing of the Guardians.\n\n"
+                      "**V. Universal Respect**\n"
+                      "We gather to learn, connect, and ascend together. Honor all fellow travelers.",
+                inline=False
+            )
+            
+            # Add a footer
+            embed.set_footer(text="Those who honor these laws shall find prosperity in our collective.")
+            
+            # Send the rules message
+            await rules_channel.send(embed=embed)
+            
+            # Confirm to the command user
+            await interaction.response.send_message(
+                "✅ The Ancient Scrolls have been inscribed in the #rules channel!",
+                ephemeral=True
+            )
+            
+        except Exception as e:
+            logging.error(f"Error setting up rules: {e}")
+            await interaction.response.send_message(
+                f"❌ An error occurred while setting up the rules: {str(e)}",
+                ephemeral=True
+            )
+    
     @app_commands.command(name="test_welcome", description="Test the welcome message without adding a new member")
     @is_core_team()
     async def test_welcome(self, interaction: discord.Interaction):
