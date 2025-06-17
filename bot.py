@@ -2373,6 +2373,76 @@ def run_bot_with_error_handling():
         sys.exit(1)
 
 # Run the bot with enhanced error handling
+def run_bot_with_error_handling():
+    try:
+        # Verify token exists and is valid
+        if 'token' not in config:
+            raise KeyError("Token not found in config.json!")
+        if not isinstance(config['token'], str) or not config['token'].strip():
+            raise ValueError("Token is empty or invalid!")
+
+        # Set logging to DEBUG for more detailed information
+        logging.getLogger('discord').setLevel(logging.DEBUG)
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter(
+            '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+        logging.getLogger('discord').addHandler(handler)
+
+        # Attempt to run the bot
+        print("\n=== Starting Bot ===")
+        print("Discord.py version:", discord.__version__)
+        print("Python version:", sys.version)
+        print("Operating system:", sys.platform)
+        print("Debug logging enabled")
+        print("Attempting to connect to Discord...\n")
+        
+        bot.run(config['token'])
+
+    except KeyError as e:
+        print("\n=== Configuration Error ===")
+        print(f"Error: {str(e)}")
+        traceback.print_exc()
+        sys.exit(1)
+
+    except discord.LoginFailure as e:
+        print("\n=== Login Error ===")
+        print("Failed to log in to Discord. Please check if your token is correct!")
+        print(f"Error details: {str(e)}")
+        traceback.print_exc()
+        sys.exit(1)
+
+    except discord.PrivilegedIntentsRequired as e:
+        print("\n=== Intents Error ===")
+        print("Bot requires privileged intents that are not enabled!")
+        print("Please enable the following intents in the Discord Developer Portal:")
+        print("- Server Members Intent")
+        print("- Message Content Intent")
+        print(f"Error details: {str(e)}")
+        traceback.print_exc()
+        sys.exit(1)
+
+    except Exception as e:
+        print("\n=== Fatal Error ===")
+        print("An unexpected error occurred while starting the bot:")
+        print(f"Error Type: {type(e).__name__}")
+        print(f"Error Message: {str(e)}")
+        print("\nFull traceback:")
+        traceback.print_exc()
+        
+        # Additional debug information
+        print("\nDebug Information:")
+        print(f"Python version: {sys.version}")
+        print(f"Discord.py version: {discord.__version__}")
+        print(f"Operating system: {sys.platform}")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Files in directory: {os.listdir('.')}")
+        
+        if hasattr(e, '__context__') and e.__context__:
+            print("\nCaused by:")
+            traceback.print_exception(type(e.__context__), e.__context__, e.__context__.__traceback__)
+        sys.exit(1)
+
+# Run the bot with enhanced error handling
 if __name__ == "__main__":
     print("Starting bot with enhanced error handling...")
     run_bot_with_error_handling()
