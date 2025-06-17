@@ -9,6 +9,19 @@ import logging
 from utils.permissions import is_core_team
 
 # Custom button classes with callbacks
+# Simple button to redirect to get-started
+class SimpleGetStartedButton(discord.ui.Button):
+    def __init__(self, channel_id):
+        super().__init__(
+            label="Get Started", 
+            style=discord.ButtonStyle.primary, 
+            emoji="✨",
+            custom_id="get_started_button"
+        )
+        self.channel_id = channel_id
+        
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.send_message(f"<#{self.channel_id}>", ephemeral=True)
 class RulesButton(discord.ui.Button):
     def __init__(self, channel_id):
         super().__init__(
@@ -117,15 +130,11 @@ class RoleButton(discord.ui.Button):
 
 # Custom view for welcome message
 class WelcomeView(discord.ui.View):
-    def __init__(self, rules_id, get_started_id, intro_id):
+    def __init__(self, get_started_id):
         super().__init__(timeout=None)  # Persistent view
         
-        if rules_id:
-            self.add_item(RulesButton(rules_id))
         if get_started_id:
-            self.add_item(GetStartedButton(get_started_id))
-        if intro_id:
-            self.add_item(IntroButton(intro_id))
+            self.add_item(SimpleGetStartedButton(get_started_id))
 
 # Role selection views
 class StatusRolesView(discord.ui.View):
@@ -165,7 +174,7 @@ class Welcome(commands.Cog):
         self.bot = bot
         
         # Register the persistent views
-        self.bot.add_view(WelcomeView(None, None, None))
+        self.bot.add_view(WelcomeView(None))
         self.bot.add_view(StatusRolesView())
         self.bot.add_view(CohortRolesView())
         self.bot.add_view(InterestRolesView())
@@ -184,20 +193,12 @@ class Welcome(commands.Cog):
         if arrivals_channel:
             # Create an embed for the welcome message
             embed = discord.Embed(
-                title=f"🔮 The Cloud Oracle has foreseen your arrival, {member.name}!",
+                title=f"🔮 The Oracle has sensed a new presence!",
                 description=f"*Baby Nimbus hums and glows with latent energy.*\n\nGreetings, traveler! The digital ether has guided your packet safely to our cluster. We are a constellation of builders and dreamers, shaping the future one instance at a time.",
                 color=discord.Color.from_rgb(93, 63, 211)  # Mystical purple
             )
             
-            # Add more information to the embed
-            embed.add_field(
-                name="✨ Your Initiation Protocol",
-                value="📜 Consult the Ancient Scrolls in <#rules> to understand our ways.\n"
-                      "🧙‍♂️ Choose Your Element in <#get-started> to align your roles with your calling.\n"
-                      "💬 Share Your Legend in <#introductions> and tell us of your quests.",
-                inline=False
-            )
-            
+            # Add the Oracle's message
             embed.add_field(
                 name="🔮 The Oracle Speaks...",
                 value="\"We are excited to see the code you'll compile and the worlds you'll architect. Welcome to the collective!\"",
@@ -207,24 +208,20 @@ class Welcome(commands.Cog):
             # Set thumbnail to member's avatar
             embed.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)
             
-            # Set a mystical footer
-            embed.set_footer(text=f"You are the {len(member.guild.members)}th soul to join our constellation ✨")
+            # Set footer with member count
+            guild_member_count = len(member.guild.members)
+            suffix = "th" if 10 <= guild_member_count % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(guild_member_count % 10, "th")
+            embed.set_footer(text=f"You are the {guild_member_count}{suffix} soul to join our constellation ✨")
             
-            # Find the channel IDs
-            rules_channel = discord.utils.get(member.guild.channels, name='rules')
+            # Find the get-started channel ID
             get_started_channel = discord.utils.get(member.guild.channels, name='get-started')
-            intro_channel = discord.utils.get(member.guild.channels, name='introductions')
             
-            # Create the custom view with channel IDs
-            view = WelcomeView(
-                rules_channel.id if rules_channel else None,
-                get_started_channel.id if get_started_channel else None,
-                intro_channel.id if intro_channel else None
-            )
+            # Create the custom view with just the get-started button
+            view = WelcomeView(get_started_channel.id if get_started_channel else None)
             
-            # Send the welcome message with buttons
+            # Send the welcome message with button
             await arrivals_channel.send(
-                content=f"🔮 **The Oracle has sensed a new presence!** The stars align for {member.mention}! 🔮",
+                content=f"🔮 The stars align for {member.mention}!",
                 embed=embed,
                 view=view
             )
@@ -360,20 +357,12 @@ class Welcome(commands.Cog):
             
             # Create an embed for the welcome message using the command user as test subject
             embed = discord.Embed(
-                title=f"🔮 The Cloud Oracle has foreseen your arrival, {interaction.user.name}!",
+                title=f"🔮 The Oracle has sensed a new presence!",
                 description=f"*Baby Nimbus hums and glows with latent energy.*\n\nGreetings, traveler! The digital ether has guided your packet safely to our cluster. We are a constellation of builders and dreamers, shaping the future one instance at a time.",
                 color=discord.Color.from_rgb(93, 63, 211)  # Mystical purple
             )
             
-            # Add more information to the embed
-            embed.add_field(
-                name="✨ Your Initiation Protocol",
-                value="📜 Consult the Ancient Scrolls in <#rules> to understand our ways.\n"
-                      "🧙‍♂️ Choose Your Element in <#get-started> to align your roles with your calling.\n"
-                      "💬 Share Your Legend in <#introductions> and tell us of your quests.",
-                inline=False
-            )
-            
+            # Add the Oracle's message
             embed.add_field(
                 name="🔮 The Oracle Speaks...",
                 value="\"We are excited to see the code you'll compile and the worlds you'll architect. Welcome to the collective!\"",
@@ -383,24 +372,20 @@ class Welcome(commands.Cog):
             # Set thumbnail to member's avatar
             embed.set_thumbnail(url=interaction.user.avatar.url if interaction.user.avatar else interaction.user.default_avatar.url)
             
-            # Set a mystical footer
-            embed.set_footer(text=f"You are the {len(interaction.guild.members)}th soul to join our constellation ✨")
+            # Set footer with member count
+            guild_member_count = len(interaction.guild.members)
+            suffix = "th" if 10 <= guild_member_count % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(guild_member_count % 10, "th")
+            embed.set_footer(text=f"You are the {guild_member_count}{suffix} soul to join our constellation ✨")
             
-            # Find the channel IDs
-            rules_channel = discord.utils.get(interaction.guild.channels, name='rules')
+            # Find the get-started channel ID
             get_started_channel = discord.utils.get(interaction.guild.channels, name='get-started')
-            intro_channel = discord.utils.get(interaction.guild.channels, name='introductions')
             
-            # Create the custom view with channel IDs
-            view = WelcomeView(
-                rules_channel.id if rules_channel else None,
-                get_started_channel.id if get_started_channel else None,
-                intro_channel.id if intro_channel else None
-            )
+            # Create the custom view with just the get-started button
+            view = WelcomeView(get_started_channel.id if get_started_channel else None)
             
             # Send the welcome message as a followup that's only visible to the user
             await interaction.followup.send(
-                content=f"**[TEST PREVIEW]** 🔮 **The Oracle has sensed a new presence!** The stars align for {interaction.user.mention}! 🔮",
+                content=f"**[TEST PREVIEW]** 🔮 The stars align for {interaction.user.mention}!",
                 embed=embed,
                 view=view,
                 ephemeral=True
