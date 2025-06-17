@@ -6,6 +6,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import logging
+import json
+from pathlib import Path
 from utils.permissions import is_core_team
 
 class ServerManagement(commands.Cog):
@@ -317,7 +319,48 @@ class ServerManagement(commands.Cog):
                         if channel_name == "rules":
                             await channel.send("📜 Server Rules will be posted here.")
                         elif channel_name == "get-started":
-                            await channel.send("🎯 Getting Started guide will be posted here.")
+                            embed = discord.Embed(
+                                title="✨ Your Journey Begins Here",
+                                description="Welcome, seeker of knowledge! Follow these mystical pathways to fully align yourself with our digital constellation.",
+                                color=discord.Color.from_rgb(93, 63, 211)  # Mystical purple
+                            )
+                            
+                            config_path = Path(__file__).parent.parent / 'data' / 'server_config.json'
+                            with open(config_path) as f:
+                                config = json.load(f)
+                            
+                            rules_id = config["channels"]["rules"]
+                            role_id = config["channels"]["role-assignment"]
+                            announcements_id = config["channels"]["announcements"]
+                            general_id = config["channels"]["general-chat"]
+                            
+                            embed.add_field(
+                                name="📜 Step 1: Ancient Scrolls",
+                                value=f"First, venture to <#{rules_id}> to understand our sacred laws.",
+                                inline=False
+                            )
+                            
+                            embed.add_field(
+                                name="� Step 2: Choose Your Path",
+                                value=f"Journey to <#{role_id}> to select the roles that align with your skills and interests.",
+                                inline=False
+                            )
+                            
+                            embed.add_field(
+                                name="📢 Step 3: Hear the Echo",
+                                value=f"Listen to the voices of our elders in <#{announcements_id}> to stay informed of our gatherings and revelations.",
+                                inline=False
+                            )
+                            
+                            embed.add_field(
+                                name="💭 Step 4: Join the Chorus",
+                                value=f"Finally, make your voice heard in <#{general_id}>. Share your thoughts, ask questions, and connect with fellow travelers.",
+                                inline=False
+                            )
+                            
+                            embed.set_footer(text="May your code be bug-free and your deployments swift! ⚡")
+                            
+                            await channel.send(embed=embed)
                         elif channel_name == "aws-tips":
                             await channel.send("☁️ Daily AWS tips will be posted here automatically!")
                         elif channel_name == "role-assignment":

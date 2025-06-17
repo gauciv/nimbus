@@ -214,6 +214,133 @@ class Welcome(commands.Cog):
                 ephemeral=True
             )
 
+    @app_commands.command(name="setup_get_started", description="Set up the getting started guide")
+    @is_core_team()
+    async def setup_get_started(self, interaction: discord.Interaction):
+        """Set up the getting started guide in the get-started channel."""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            
+            # Load channel IDs from config
+            config = load_config()
+            channels = config.get("channels", {})
+            
+            # Dictionary to store channels and their names
+            required_channels = {
+                "get-started": None,
+                "rules": None,
+                "role-assignment": None,
+                "announcements": None,
+                "general-chat": None
+            }
+            
+            # Try to get all required channels
+            missing_channels = []
+            for channel_name in required_channels:
+                channel_id = channels.get(channel_name)
+                if not channel_id:
+                    missing_channels.append(channel_name)
+                    continue
+                    
+                try:
+                    channel = interaction.guild.get_channel(int(channel_id))
+                    if channel is None:
+                        missing_channels.append(channel_name)
+                        continue
+                    required_channels[channel_name] = channel
+                except ValueError:
+                    missing_channels.append(channel_name)
+                    logging.error(f"Invalid channel ID for {channel_name}: {channel_id}")
+            
+            if missing_channels:
+                await interaction.followup.send(
+                    f"❌ The following channels are not properly configured in server_config.json:\n"
+                    f"• " + "\n• ".join(missing_channels),
+                    ephemeral=True
+                )
+                return
+            
+            try:
+                # Create an embed for the getting started guide
+                embed = discord.Embed(
+                    title="✨ Your Journey Begins Here",
+                    description="*The Oracle's energy flows through these sacred halls, guiding new travelers on their path.*\n\n"
+                              "Follow these steps to begin your journey in our digital realm:",
+                    color=discord.Color.from_rgb(93, 63, 211)  # Mystical purple
+                )
+                
+                embed.add_field(
+                    name="📜 1. The Ancient Scrolls",
+                    value=f"First, venture to {required_channels['rules'].mention} to understand our ways and customs.",
+                    inline=False
+                )
+                
+                embed.add_field(
+                    name="✨ 2. Choose Your Path",
+                    value=f"Next, visit {required_channels['role-assignment'].mention} to select roles that align with your interests and expertise.",
+                    inline=False
+                )
+                
+                embed.add_field(
+                    name="📢 3. Stay Informed",
+                    value=f"Keep watch in {required_channels['announcements'].mention} for important news and upcoming events.",
+                    inline=False
+                )
+                
+                embed.add_field(
+                    name="💬 4. Join the Conversation",
+                    value=f"Finally, introduce yourself in {required_channels['general-chat'].mention} and connect with fellow travelers.",
+                    inline=False
+                )
+                
+                embed.add_field(
+                    name="🌟 Additional Notes",
+                    value="• Feel free to explore other channels as you settle in\n"
+                          "• Don't hesitate to ask questions if you need guidance\n"
+                          "• Engage with the community and share your knowledge",
+                    inline=False
+                )
+                
+                # Set footer
+                embed.set_footer(text="Your presence strengthens our constellation ✨")
+                
+                # Clear the channel
+                await required_channels['get-started'].purge()
+                
+                # Send the guide
+                await required_channels['get-started'].send(embed=embed)
+                
+                # Confirm to the command user
+                await interaction.followup.send(
+                    "✅ The getting started guide has been set up!",
+                    ephemeral=True
+                )
+                
+            except discord.Forbidden:
+                await interaction.followup.send(
+                    "❌ I don't have permission to manage messages in the get-started channel.",
+                    ephemeral=True
+                )
+            except Exception as e:
+                logging.error(f"Error creating/sending get-started guide: {e}")
+                await interaction.followup.send(
+                    "❌ An error occurred while creating or sending the guide.",
+                    ephemeral=True
+                )
+                
+        except Exception as e:
+            logging.error(f"Error in setup_get_started: {e}")
+            if not interaction.response.is_done():
+                await interaction.response.send_message(
+                    "❌ An unexpected error occurred. Please check the bot logs.",
+                    ephemeral=True
+                )
+            else:
+                await interaction.followup.send(
+                    "❌ An unexpected error occurred. Please check the bot logs.",
+                    ephemeral=True
+                )
+
 async def setup(bot: commands.Bot):
     """
     Add the Welcome cog to the bot.
