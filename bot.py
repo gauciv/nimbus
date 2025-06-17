@@ -7,6 +7,8 @@ import logging
 import json
 import os
 from typing import List, Dict
+import random
+from discord.ext import tasks
 
 # Set up logging with more detail
 logging.basicConfig(
@@ -822,8 +824,7 @@ async def links(interaction: discord.Interaction):
                 "• [Meeting Calendar](https://calendar.google.com/calendar/aws-cloud-club)\n"
                 "• [Workshop Materials](https://drive.google.com/drive/folders/aws-club-workshops)\n"
                 "• [Past Presentations](https://slides.aws-cloud-club.org)"
-            ),
-            inline=False
+            ), inline=False
         )
 
         # Contact Information
@@ -1549,15 +1550,829 @@ async def docs(interaction: discord.Interaction, service_name: str):
             ephemeral=True
         )
 
-# Run the bot
-try:
-    bot.run(config['token'])
-except KeyError:
-    logging.error("Token not found in config.json!")
-    exit(1)
-except discord.LoginFailure:
-    logging.error("Failed to login. Please check if your token is correct!")
-    exit(1)
-except Exception as e:
-    logging.error(f"Error running bot: {e}")
-    exit(1)
+# AWS Tips organized by categories
+AWS_TIPS = {
+    "Cost Optimization": [
+        {
+            "title": "Use EC2 Reserved Instances",
+            "description": "Save up to 75% on EC2 costs by purchasing Reserved Instances for predictable workloads.",
+            "learn_more": "https://aws.amazon.com/ec2/pricing/reserved-instances/"
+        },
+        {
+            "title": "S3 Storage Classes",
+            "description": "Use S3 Intelligent-Tiering to automatically move objects between storage classes based on access patterns.",
+            "learn_more": "https://aws.amazon.com/s3/storage-classes/"
+        },
+        {
+            "title": "EC2 Spot Instances",
+            "description": "Use Spot Instances for non-critical, flexible workloads to save up to 90% compared to On-Demand prices.",
+            "learn_more": "https://aws.amazon.com/ec2/spot/"
+        }
+    ],
+    "Security": [
+        {
+            "title": "Enable MFA",
+            "description": "Always enable Multi-Factor Authentication (MFA) for your AWS root account and IAM users.",
+            "learn_more": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa.html"
+        },
+        {
+            "title": "Use IAM Roles",
+            "description": "Instead of storing AWS credentials in your applications, use IAM roles for EC2 instances and Lambda functions.",
+            "learn_more": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html"
+        },
+        {
+            "title": "Regular Security Assessments",
+            "description": "Use AWS Inspector to run automated security assessments on your EC2 instances.",
+            "learn_more": "https://aws.amazon.com/inspector/"
+        }
+    ],
+    "Performance": [
+        {
+            "title": "Use CloudFront",
+            "description": "Improve your application's performance by using CloudFront CDN to cache content closer to users.",
+            "learn_more": "https://aws.amazon.com/cloudfront/"
+        },
+        {
+            "title": "RDS Read Replicas",
+            "description": "Scale your database read performance by creating RDS read replicas across multiple regions.",
+            "learn_more": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html"
+        },
+        {
+            "title": "ElastiCache",
+            "description": "Improve application performance by caching frequently accessed data in Amazon ElastiCache.",
+            "learn_more": "https://aws.amazon.com/elasticache/"
+        }
+    ],
+    "Development": [
+        {
+            "title": "Use AWS SDK",
+            "description": "Always use the official AWS SDK for your programming language instead of making direct API calls.",
+            "learn_more": "https://aws.amazon.com/tools/"
+        },
+        {
+            "title": "Local Development",
+            "description": "Use AWS SAM CLI for local development and testing of serverless applications.",
+            "learn_more": "https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html"
+        },
+        {
+            "title": "Infrastructure as Code",
+            "description": "Use AWS CloudFormation or CDK to manage your infrastructure as code for consistency and version control.",
+            "learn_more": "https://aws.amazon.com/cdk/"
+        }
+    ],
+    "Architecture": [
+        {
+            "title": "Microservices",
+            "description": "Consider using AWS ECS or EKS for containerized microservices architecture.",
+            "learn_more": "https://aws.amazon.com/microservices/"
+        },
+        {
+            "title": "Serverless First",
+            "description": "Consider serverless options like Lambda and DynamoDB before setting up traditional servers.",
+            "learn_more": "https://aws.amazon.com/serverless/"
+        },
+        {
+            "title": "Multi-AZ Deployments",
+            "description": "Deploy across multiple Availability Zones for high availability and fault tolerance.",
+            "learn_more": "https://aws.amazon.com/about-aws/global-infrastructure/regions_az/"
+        }
+    ],
+    "Monitoring": [
+        {
+            "title": "Set Up CloudWatch Alarms",
+            "description": "Create CloudWatch alarms for key metrics to get notified about potential issues before they impact users.",
+            "learn_more": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html"
+        },
+        {
+            "title": "Use X-Ray",
+            "description": "Implement AWS X-Ray to trace and analyze user requests as they travel through your application.",
+            "learn_more": "https://aws.amazon.com/xray/"
+        },
+        {
+            "title": "Log Aggregation",
+            "description": "Use CloudWatch Logs Insights to analyze your application logs and find patterns or issues.",
+            "learn_more": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html"
+        }
+    ]
+}
+
+class AWSCloudTips:
+    def __init__(self, bot):
+        self.bot = bot
+        self.tips_channel_name = "aws-tips"
+        self.last_category = None  # Track last category to avoid repetition
+        self.daily_tip.start()
+
+    def cog_unload(self):
+        self.daily_tip.cancel()
+
+    def get_random_tip(self):
+        """Get a random tip, avoiding the same category twice in a row."""
+        # Get a random category, different from the last one
+        available_categories = [cat for cat in AWS_TIPS.keys() if cat != self.last_category]
+        if not available_categories:
+            available_categories = list(AWS_TIPS.keys())
+        
+        category = random.choice(available_categories)
+        self.last_category = category
+        
+        # Get a random tip from the category
+        tip = random.choice(AWS_TIPS[category])
+        return category, tip
+
+    @tasks.loop(hours=24)
+    async def daily_tip(self):
+        """Send a daily AWS tip to the designated channel."""
+        try:
+            # Find the tips channel in all guilds
+            for guild in self.bot.guilds:
+                channel = discord.utils.get(guild.channels, name=self.tips_channel_name)
+                
+                if channel:
+                    # Get a random tip
+                    category, tip = self.get_random_tip()
+                    
+                            # Create the tip embed
+                    embed = discord.Embed(
+                        title=f"☁️ AWS Cloud Tip of the Day: {tip['title']}",
+                        description=tip['description'],
+                        color=discord.Color.from_rgb(255, 153, 0)  # AWS Orange
+                    )
+                    
+                    # Add category and learn more link
+                    embed.add_field(
+                        name="Category",
+                        value=f"📚 {category}",
+                        inline=True
+                    )
+                    
+                    embed.add_field(
+                        name="Learn More",
+                        value=f"[Click here for documentation]({tip['learn_more']})",
+                        inline=True
+                    )
+                    
+                    # Set thumbnail
+                    embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
+                    
+                    # Add footer with tip count
+                    total_tips = sum(len(tips) for tips in AWS_TIPS.values())
+                    embed.set_footer(text=f"Tip {random.randint(1, total_tips)} of {total_tips} • New tip every 24 hours!")
+                    
+                    await channel.send(embed=embed)
+                    logging.info(f"Sent daily AWS tip to {guild.name}")
+
+        except Exception as e:
+            logging.error(f"Error sending daily tip: {e}")
+
+    @daily_tip.before_loop
+    async def before_daily_tip(self):
+        """Wait until the bot is ready before starting the loop."""
+        await self.bot.wait_until_ready()
+        
+        # Calculate time until next run (9:00 AM UTC)
+        now = datetime.utcnow()
+        next_run = now.replace(hour=9, minute=0, second=0, microsecond=0)
+        if now >= next_run:
+            next_run = next_run.replace(day=now.day + 1)
+        
+        await discord.utils.sleep_until(next_run)
+
+# Initialize the tips feature when the bot starts
+@bot.event
+async def on_ready():
+    """Event triggered when the bot is ready and connected to Discord."""
+    logging.info(f'Bot is online! Logged in as {bot.user.name} (ID: {bot.user.id})')
+    
+    # Initialize the tips feature
+    global tips_feature
+    tips_feature = AWSCloudTips(bot)
+    
+    # Clean up past events on startup
+    event_manager.cleanup_past_events()
+    
+    # Sync slash commands
+    try:
+        synced = await bot.tree.sync()
+        logging.info(f"Synced {len(synced)} command(s)")
+    except Exception as e:
+        logging.error(f"Failed to sync commands: {e}")
+    
+    logging.info('------')
+
+@bot.tree.command(name="check_channels", description="Check and list required channel setup for the bot")
+@app_commands.checks.has_permissions(administrator=True)
+async def check_channels(interaction: discord.Interaction):
+    """Check if all required channels exist and list their purposes."""
+    required_channels = {
+        "announcements": {
+            "description": "For event announcements posted via /event command",
+            "permissions": ["Send Messages", "Embed Links", "Mention Everyone"]
+        },
+        "arrivals": {
+            "description": "For welcoming new members with information about the server",
+            "permissions": ["Send Messages", "Embed Links"]
+        },
+        "aws-tips": {
+            "description": "Receives daily AWS Cloud Tips automatically",
+            "permissions": ["Send Messages", "Embed Links"]
+        },
+        "rules": {
+            "description": "Server rules referenced in welcome messages",
+            "permissions": ["Send Messages", "Embed Links"]
+        },
+        "get-started": {
+            "description": "Getting started guide referenced in welcome messages",
+            "permissions": ["Send Messages", "Embed Links"]
+        }
+    }
+
+    embed = discord.Embed(
+        title="🔍 Channel Setup Check",
+        description="Here's the status of all required channels for the bot:",
+        color=discord.Color.blue()
+    )
+
+    for channel_name, info in required_channels.items():
+        channel = discord.utils.get(interaction.guild.channels, name=channel_name)
+        status = "✅ Exists" if channel else "❌ Missing"
+        
+        embed.add_field(
+            name=f"#{channel_name}",
+            value=(
+                f"**Status:** {status}\n"
+                f"**Purpose:** {info['description']}\n"
+                f"**Required Permissions:** {', '.join(info['permissions'])}"
+            ),
+            inline=False
+        )
+
+    missing_channels = [
+        name for name in required_channels.keys()
+        if not discord.utils.get(interaction.guild.channels, name=name)
+    ]
+
+    if missing_channels:
+        embed.add_field(
+            name="📋 Setup Required",
+            value=(
+                "The following channels need to be created:\n" +
+                "\n".join(f"• #{channel}" for channel in missing_channels) +
+                "\n\nMake sure to set appropriate permissions for each channel."
+            ),
+            inline=False
+        )
+    else:
+        embed.add_field(
+            name="✅ All Set!",
+            value="All required channels are set up correctly.",
+            inline=False
+        )
+
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+@bot.tree.command(name="setup_channels", description="Create and configure all required channels")
+@app_commands.checks.has_permissions(administrator=True)
+async def setup_channels(interaction: discord.Interaction):
+    """Create and configure all required channels."""
+    try:
+        required_channels = {
+            "announcements": {
+                "description": "For event announcements posted via /event command",
+                "permissions": ["send_messages", "embed_links", "mention_everyone"],
+                "category": "TEXT CHANNELS"
+            },
+            "arrivals": {
+                "description": "For welcoming new members with information about the server",
+                "permissions": ["send_messages", "embed_links"],
+                "category": "TEXT CHANNELS"
+            },
+            "aws-tips": {
+                "description": "Receives daily AWS Cloud Tips automatically",
+                "permissions": ["send_messages", "embed_links"],
+                "category": "TEXT CHANNELS"
+            },
+            "rules": {
+                "description": "Server rules referenced in welcome messages",
+                "permissions": ["send_messages", "embed_links"],
+                "category": "INFORMATION"
+            },
+            "get-started": {
+                "description": "Getting started guide referenced in welcome messages",
+                "permissions": ["send_messages", "embed_links"],
+                "category": "INFORMATION"
+            },
+            "role-assignment": {
+                "description": "For managing role selections",
+                "permissions": ["send_messages", "embed_links", "add_reactions"],
+                "category": "INFORMATION"
+            },
+            "introductions": {
+                "description": "For new members to introduce themselves",
+                "permissions": ["send_messages", "embed_links"],
+                "category": "COMMUNITY"
+            },
+            "help": {
+                "description": "For assistance and support",
+                "permissions": ["send_messages", "embed_links"],
+                "category": "SUPPORT"
+            }
+        }
+
+        # Send initial response
+        await interaction.response.send_message("🔨 Setting up channels...", ephemeral=True)
+
+        # Track progress
+        created_channels = []
+        existing_channels = []
+        failed_channels = []
+
+        for channel_name, info in required_channels.items():
+            try:
+                # Check if channel exists
+                existing_channel = discord.utils.get(interaction.guild.channels, name=channel_name)
+                
+                if not existing_channel:
+                    # Get or create category
+                    category = discord.utils.get(interaction.guild.categories, name=info["category"])
+                    if not category:
+                        category = await interaction.guild.create_category(info["category"])
+
+                    # Set up permissions for Core Team
+                    overwrites = {
+                        interaction.guild.default_role: discord.PermissionOverwrite(
+                            read_messages=True,
+                            send_messages=False
+                        ),
+                        interaction.guild.me: discord.PermissionOverwrite(**{
+                            perm: True for perm in info["permissions"]
+                        })
+                    }
+                    # Add Core Team role permissions if it exists
+                    team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
+                    if team_role:
+                        overwrites[team_role] = discord.PermissionOverwrite(
+                            read_messages=True,
+                            send_messages=True,
+                            manage_messages=True
+                        )
+
+                    channel = await interaction.guild.create_text_channel(
+                        name=channel_name,
+                        category=category,
+                        topic=info["description"],
+                        overwrites=overwrites
+                    )
+                    
+                    created_channels.append(channel_name)
+                    
+                    # Send initial message based on channel type
+                    if channel_name == "rules":
+                        await channel.send("📜 Server Rules will be posted here.")
+                    elif channel_name == "get-started":
+                        await channel.send("🎯 Getting Started guide will be posted here.")
+                    elif channel_name == "aws-tips":
+                        await channel.send("☁️ Daily AWS tips will be posted here automatically!")
+                    elif channel_name == "role-assignment":
+                        await channel.send("🎭 Role assignment will be set up here. Use `/setup_roles` to configure.")
+                else:
+                    existing_channels.append(channel_name)
+            
+            except Exception as e:
+                logging.error(f"Error creating channel {channel_name}: {e}")
+                failed_channels.append(channel_name)
+
+        # Create status embed
+        embed = discord.Embed(
+            title="📋 Channel Setup Results",
+            color=discord.Color.blue()
+        )
+
+        if created_channels:
+            embed.add_field(
+                name="✅ Created Channels",
+                value="\n".join(f"• #{channel}" for channel in created_channels),
+                inline=False
+            )
+
+        if existing_channels:
+            embed.add_field(
+                name="ℹ️ Already Existing",
+                value="\n".join(f"• #{channel}" for channel in existing_channels),
+                inline=False
+            )
+
+        if failed_channels:
+            embed.add_field(
+                name="❌ Failed to Create",
+                value="\n".join(f"• #{channel}" for channel in failed_channels),
+                inline=False
+            )
+
+        embed.set_footer(text="Use /check_channels to verify the setup")
+
+        # Update the response
+        await interaction.edit_original_response(content=None, embed=embed)
+
+    except Exception as e:
+        logging.error(f"Error in setup_channels: {e}")
+        await interaction.edit_original_response(
+            content="❌ An error occurred while setting up channels. Check the bot's permissions."
+        )
+
+@bot.tree.command(name="topic", description="Start a discussion topic in the main chat")
+@app_commands.describe(
+    question="The discussion topic or question to post"
+)
+@is_core_team()
+async def topic(interaction: discord.Interaction, question: str):
+    """Post a discussion topic in the main chat channel."""
+    try:
+        # Defer the response since we'll be doing multiple operations
+        await interaction.response.defer(ephemeral=True)
+        
+        # Create an embed for the discussion topic
+        embed = discord.Embed(
+            title="💭 Let's Discuss!",
+            description=question,
+            color=discord.Color.blue(),
+            timestamp=datetime.now()
+        )
+        
+        # Add who started the topic
+        embed.add_field(
+            name="Started by",
+            value=interaction.user.mention,
+            inline=False
+        )
+        
+        # Add footer with tip
+        embed.set_footer(text="Share your thoughts and experiences!")
+        
+        # Send the topic
+        try:
+            await interaction.channel.send(
+                content="@here A new discussion topic has been posted! 🗣️",
+                embed=embed
+            )
+            
+            # Confirm to the command user
+            await interaction.followup.send(
+                "✅ Discussion topic posted successfully!",
+                ephemeral=True
+            )
+        except discord.Forbidden:
+            await interaction.followup.send(
+                "❌ I don't have permission to send messages in this channel.",
+                ephemeral=True
+            )
+        except Exception as e:
+            await interaction.followup.send(
+                "❌ Failed to send the topic message. Check my permissions.",
+                ephemeral=True
+            )
+            raise e
+            
+    except Exception as e:
+        logging.error(f"Error posting discussion topic: {e}")
+        try:
+            await interaction.followup.send(
+                "❌ An error occurred while posting the discussion topic.",
+                ephemeral=True
+            )
+        except:
+            # If we can't send a followup, the interaction might have already been responded to
+            if not interaction.response.is_done():
+                await interaction.response.send_message(
+                    "❌ An error occurred while posting the discussion topic.",
+                    ephemeral=True
+                )
+
+@bot.tree.command(name="setup_core_team", description="Create the Core Team role and assign it to a member")
+@app_commands.describe(
+    member="The member to add to Core Team"
+)
+@app_commands.checks.has_permissions(administrator=True)
+async def setup_core_team(interaction: discord.Interaction, member: discord.Member = None):
+    """Create the Core Team role with special permissions."""
+    try:
+        # Check if Core Team role already exists
+        core_team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
+        
+        if not core_team_role:
+            # Create the Core Team role with special permissions
+            core_team_role = await interaction.guild.create_role(
+                name="Core Team",
+                color=discord.Color.gold(),
+                hoist=True,  # Display role members separately in the member list
+                mentionable=True,
+                permissions=discord.Permissions(
+                    manage_messages=True,
+                    mention_everyone=True,
+                    manage_channels=True,
+                    manage_roles=True
+                ),
+                reason="Core Team role creation"
+            )
+            await interaction.response.send_message(
+                "✅ Created Core Team role with administrative permissions!",
+                ephemeral=True
+            )
+        else:
+            await interaction.response.send_message(
+                "ℹ️ Core Team role already exists!",
+                ephemeral=True
+            )
+        
+        # If a member was specified, add them to Core Team
+        if member:
+            if core_team_role in member.roles:
+                await interaction.followup.send(
+                    f"{member.mention} is already a Core Team member!",
+                    ephemeral=True
+                )
+            else:
+                await member.add_roles(core_team_role)
+                await interaction.followup.send(
+                    f"✅ Added {member.mention} to Core Team!",
+                    ephemeral=True
+                )
+                
+    except discord.Forbidden:
+        await interaction.response.send_message(
+            "❌ I don't have permission to manage roles!",
+            ephemeral=True
+        )
+    except Exception as e:
+        logging.error(f"Error setting up Core Team: {e}")
+        await interaction.response.send_message(
+            "❌ An error occurred while setting up the Core Team role.",
+            ephemeral=True
+        )
+
+@bot.tree.command(name="manage_core_team", description="Add or remove a member from Core Team")
+@app_commands.describe(
+    action="Whether to add or remove the member",
+    member="The member to add/remove from Core Team"
+)
+@app_commands.choices(action=[
+    app_commands.Choice(name="Add to Core Team", value="add"),
+    app_commands.Choice(name="Remove from Core Team", value="remove")
+])
+@app_commands.checks.has_permissions(administrator=True)
+async def manage_core_team(
+    interaction: discord.Interaction,
+    action: str,
+    member: discord.Member
+):
+    """Add or remove a member from the Core Team."""
+    try:
+        # Get the Core Team role
+        core_team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
+        
+        if not core_team_role:
+            await interaction.response.send_message(
+                "❌ Core Team role doesn't exist! Use `/setup_core_team` first.",
+                ephemeral=True
+            )
+            return
+        
+        if action == "add":
+            if core_team_role in member.roles:
+                await interaction.response.send_message(
+                    f"{member.mention} is already a Core Team member!",
+                    ephemeral=True
+                )
+            else:
+                await member.add_roles(core_team_role)
+                await interaction.response.send_message(
+                    f"✅ Added {member.mention} to Core Team!",
+                    ephemeral=True
+                )
+        else:  # action == "remove"
+            if core_team_role not in member.roles:
+                await interaction.response.send_message(
+                    f"{member.mention} is not a Core Team member!",
+                    ephemeral=True
+                )
+            else:
+                await member.remove_roles(core_team_role)
+                await interaction.response.send_message(
+                    f"✅ Removed {member.mention} from Core Team!",
+                    ephemeral=True
+                )
+                
+    except discord.Forbidden:
+        await interaction.response.send_message(
+            "❌ I don't have permission to manage roles!",
+            ephemeral=True
+        )
+    except Exception as e:
+        logging.error(f"Error managing Core Team: {e}")
+        await interaction.response.send_message(
+            "❌ An error occurred while managing Core Team membership.",
+            ephemeral=True
+        )
+
+@bot.tree.command(name="setup", description="Set up the server (channels and roles)")
+@app_commands.checks.has_permissions(administrator=True)
+async def setup(interaction: discord.Interaction):
+    """Set up all necessary components for the server."""
+    try:
+        await interaction.response.defer(ephemeral=True)
+        
+        # First, create Core Team role
+        core_team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
+        if not core_team_role:
+            try:
+                core_team_role = await interaction.guild.create_role(
+                    name="Core Team",
+                    color=discord.Color.gold(),
+                    hoist=True,
+                    mentionable=True,
+                    permissions=discord.Permissions(
+                        manage_messages=True,
+                        mention_everyone=True,
+                        manage_channels=True,
+                        manage_roles=True
+                    ),
+                    reason="Core Team role creation"
+                )
+                await interaction.user.add_roles(core_team_role)
+                await interaction.followup.send("✅ Created Core Team role and added you to it!", ephemeral=True)
+            except discord.Forbidden:
+                await interaction.followup.send("❌ I don't have permission to create roles!", ephemeral=True)
+                return
+            except Exception as e:
+                logging.error(f"Error creating Core Team role: {e}")
+                await interaction.followup.send("❌ Failed to create Core Team role!", ephemeral=True)
+                return
+
+        # Set up channels
+        channels_to_create = {
+            "announcements": {"category": "TEXT CHANNELS"},
+            "arrivals": {"category": "TEXT CHANNELS"},
+            "aws-tips": {"category": "TEXT CHANNELS"},
+            "rules": {"category": "INFORMATION"},
+            "get-started": {"category": "INFORMATION"},
+            "role-assignment": {"category": "INFORMATION"},
+            "introductions": {"category": "COMMUNITY"},
+            "help": {"category": "SUPPORT"}
+        }
+
+        created = []
+        existing = []
+        failed = []
+
+        for channel_name, info in channels_to_create.items():
+            try:
+                if not discord.utils.get(interaction.guild.channels, name=channel_name):
+                    # Get or create category
+                    category = discord.utils.get(interaction.guild.categories, name=info["category"])
+                    if not category:
+                        category = await interaction.guild.create_category(info["category"])
+
+                    # Create channel
+                    overwrites = {
+                        interaction.guild.default_role: discord.PermissionOverwrite(
+                            read_messages=True,
+                            send_messages=False
+                        ),
+                        interaction.guild.me: discord.PermissionOverwrite(
+                            read_messages=True,
+                            send_messages=True,
+                            manage_messages=True
+                        )
+                    }
+                    # Add Core Team role permissions if it exists
+                    team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
+                    if team_role:
+                        overwrites[team_role] = discord.PermissionOverwrite(
+                            read_messages=True,
+                            send_messages=True,
+                            manage_messages=True
+                        )
+
+                    await interaction.guild.create_text_channel(
+                        name=channel_name,
+                        category=category,
+                        overwrites=overwrites
+                    )
+                    created.append(channel_name)
+                else:
+                    existing.append(channel_name)
+            except Exception as e:
+                logging.error(f"Error creating channel {channel_name}: {e}")
+                failed.append(channel_name)
+
+        # Send setup report
+        embed = discord.Embed(
+            title="Server Setup Results",
+            color=discord.Color.blue()
+        )
+
+        if created:
+            embed.add_field(
+                name="✅ Created Channels",
+                value="\n".join(f"• #{name}" for name in created),
+                inline=False
+            )
+        if existing:
+            embed.add_field(
+                name="ℹ️ Existing Channels",
+                value="\n".join(f"• #{name}" for name in existing),
+                inline=False
+            )
+        if failed:
+            embed.add_field(
+                name="❌ Failed to Create",
+                value="\n".join(f"• #{name}" for name in failed),
+                inline=False
+            )
+
+        await interaction.followup.send(embed=embed, ephemeral=True)
+
+    except Exception as e:
+        logging.error(f"Error in setup: {e}")
+        await interaction.followup.send(
+            "❌ An error occurred during setup. Check the bot's permissions.",
+            ephemeral=True
+        )
+
+# Enhanced error handling for bot startup
+import sys
+import traceback
+
+def run_bot_with_error_handling():
+    try:
+        # Verify token exists and is valid
+        if 'token' not in config:
+            raise KeyError("Token not found in config.json!")
+        if not isinstance(config['token'], str) or not config['token'].strip():
+            raise ValueError("Token is empty or invalid!")
+
+        # Set logging to DEBUG for more detailed information
+        logging.getLogger('discord').setLevel(logging.DEBUG)
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter(
+            '%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+        logging.getLogger('discord').addHandler(handler)
+
+        # Attempt to run the bot
+        print("\n=== Starting Bot ===")
+        print("Discord.py version:", discord.__version__)
+        print("Python version:", sys.version)
+        print("Operating system:", sys.platform)
+        print("Debug logging enabled")
+        print("Attempting to connect to Discord...\n")
+        
+        bot.run(config['token'])
+
+    except KeyError as e:
+        print("\n=== Configuration Error ===")
+        print(f"Error: {str(e)}")
+        traceback.print_exc()
+        sys.exit(1)
+
+    except discord.LoginFailure as e:
+        print("\n=== Login Error ===")
+        print("Failed to log in to Discord. Please check if your token is correct!")
+        print(f"Error details: {str(e)}")
+        traceback.print_exc()
+        sys.exit(1)
+
+    except discord.PrivilegedIntentsRequired as e:
+        print("\n=== Intents Error ===")
+        print("Bot requires privileged intents that are not enabled!")
+        print("Please enable the following intents in the Discord Developer Portal:")
+        print("- Server Members Intent")
+        print("- Message Content Intent")
+        print(f"Error details: {str(e)}")
+        traceback.print_exc()
+        sys.exit(1)
+
+    except Exception as e:
+        print("\n=== Fatal Error ===")
+        print("An unexpected error occurred while starting the bot:")
+        print(f"Error Type: {type(e).__name__}")
+        print(f"Error Message: {str(e)}")
+        print("\nFull traceback:")
+        traceback.print_exc()
+        
+        # Additional debug information
+        print("\nDebug Information:")
+        print(f"Python version: {sys.version}")
+        print(f"Discord.py version: {discord.__version__}")
+        print(f"Operating system: {sys.platform}")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Files in directory: {os.listdir('.')}")
+        
+        if hasattr(e, '__context__') and e.__context__:
+            print("\nCaused by:")
+            traceback.print_exception(type(e.__context__), e.__context__, e.__context__.__traceback__)
+        sys.exit(1)
+
+# Run the bot with enhanced error handling
+if __name__ == "__main__":
+    print("Starting bot with enhanced error handling...")
+    run_bot_with_error_handling()
