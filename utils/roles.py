@@ -1,13 +1,19 @@
 """
 Role management utilities for the Nimbus Discord bot.
+
+This module provides utilities for role management, including:
+- Role definitions
+- Role message tracking
+- Role embed creation
+- Role existence checking
 """
 import discord
 import logging
-from typing import Dict, Set
+from typing import Dict, Set, Mapping
 from utils.config import load_json_data, save_json_data
 
 # Role configuration
-YEAR_ROLES = {
+YEAR_ROLES: Dict[str, str] = {
     "1️⃣": "First Year",
     "2️⃣": "Second Year",
     "3️⃣": "Third Year",
@@ -15,7 +21,7 @@ YEAR_ROLES = {
     "🎓": "Graduate"
 }
 
-INTEREST_ROLES = {
+INTEREST_ROLES: Dict[str, str] = {
     "🌐": "Web Dev",
     "📊": "Data Science",
     "🤖": "AI/ML",
@@ -82,7 +88,7 @@ async def ensure_roles_exist(guild: discord.Guild) -> bool:
     """
     try:
         # Combine all role names
-        all_roles = {**YEAR_ROLES, **INTEREST_ROLES}
+        all_roles: Mapping[str, str] = {**YEAR_ROLES, **INTEREST_ROLES}
         existing_roles = {role.name for role in guild.roles}
         
         # Create missing roles

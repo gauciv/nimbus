@@ -29,22 +29,34 @@ A comprehensive Discord bot designed for AWS Cloud Club communities, providing t
   - Discussion topics
   - Resource sharing
 
-## Setup
+## Installation
 
 1. Clone this repository
-2. Install dependencies:
+   ```bash
+   git clone https://github.com/yourusername/nimbus-v2.git
+   cd nimbus-v2
    ```
+
+2. Install dependencies
+   ```bash
    pip install -r requirements.txt
    ```
-3. Create a `config.json` file with your bot token:
+
+3. Create a configuration file
+   ```bash
+   cp config.example.json config.json
+   ```
+
+4. Edit the configuration file with your Discord bot token
    ```json
    {
      "token": "YOUR_BOT_TOKEN_HERE",
      "guild_id": "YOUR_GUILD_ID_HERE"
    }
    ```
-4. Run the bot:
-   ```
+
+5. Run the bot
+   ```bash
    python run_bot.py
    ```
 
@@ -55,8 +67,10 @@ nimbus-v2/
 ├── bot.py                 # Main bot file
 ├── run_bot.py             # Debug wrapper for bot startup
 ├── requirements.txt       # Dependencies
-├── config.json            # Bot configuration
+├── config.json            # Bot configuration (create from example)
+├── config.example.json    # Example configuration
 ├── cogs/                  # Command modules
+│   ├── __init__.py        # Package definition
 │   ├── aws_info.py        # AWS information commands
 │   ├── events.py          # Event management commands
 │   ├── info.py            # Club information commands
@@ -64,6 +78,7 @@ nimbus-v2/
 │   ├── server_management.py # Server setup commands
 │   └── welcome.py         # Welcome and onboarding commands
 ├── utils/                 # Utility modules
+│   ├── __init__.py        # Package definition
 │   ├── config.py          # Configuration utilities
 │   ├── events.py          # Event management utilities
 │   ├── permissions.py     # Permission checking utilities
@@ -103,6 +118,30 @@ nimbus-v2/
 - `/topic` - Start a discussion topic in the main chat
 - `/about` - Learn about the AWS Cloud Club and its officers
 - `/links` - Get important AWS Cloud Club links and resources
+
+## Development
+
+### Adding New Commands
+
+To add new commands, create a new cog or extend an existing one:
+
+```python
+from discord.ext import commands
+from discord import app_commands
+
+class MyCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        
+    @app_commands.command(name="mycommand", description="My new command")
+    async def my_command(self, interaction):
+        await interaction.response.send_message("Hello!")
+
+async def setup(bot):
+    await bot.add_cog(MyCog(bot))
+```
+
+Then add your cog to the `COGS` list in `bot.py`.
 
 ## License
 

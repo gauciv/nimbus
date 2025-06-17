@@ -1,16 +1,29 @@
 """
 Permission utilities for the Nimbus Discord bot.
-Handles permission checks and role-based access control.
+
+This module provides utilities for permission checking and role-based access control,
+including decorators for command permission checks.
 """
 import discord
 from discord import app_commands
+from typing import Callable, Awaitable
 
-def is_core_team():
+def is_core_team() -> Callable[[discord.Interaction], Awaitable[bool]]:
     """
     Check if the user has the Core Team role.
     
+    This decorator can be applied to slash commands to restrict them
+    to users with the Core Team role.
+    
     Returns:
         app_commands.check: A check that verifies the user has the Core Team role
+        
+    Example:
+        @app_commands.command(name="admin_command")
+        @is_core_team()
+        async def admin_command(interaction: discord.Interaction):
+            # This will only run if the user has the Core Team role
+            await interaction.response.send_message("Admin command executed")
     """
     async def predicate(interaction: discord.Interaction) -> bool:
         core_team_role = discord.utils.get(interaction.guild.roles, name="Core Team")

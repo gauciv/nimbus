@@ -1,10 +1,13 @@
 """
 Configuration utilities for the Nimbus Discord bot.
+
+This module handles loading and validating configuration from config.json,
+as well as providing utilities for loading and saving JSON data.
 """
 import json
 import os
 import sys
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 # Constants
 CONFIG_FILE = 'config.json'
@@ -46,7 +49,7 @@ def load_config() -> Dict[str, Any]:
         print(f"❌ Unexpected error loading config: {str(e)}")
         sys.exit(1)
 
-def load_json_data(filename: str, default=None):
+def load_json_data(filename: str, default: Any = None) -> Any:
     """
     Load data from a JSON file.
     
@@ -65,7 +68,7 @@ def load_json_data(filename: str, default=None):
     except Exception:
         return default
 
-def save_json_data(filename: str, data):
+def save_json_data(filename: str, data: Any) -> bool:
     """
     Save data to a JSON file.
     
@@ -78,7 +81,9 @@ def save_json_data(filename: str, data):
     """
     try:
         # Ensure directory exists
-        os.makedirs(os.path.dirname(filename) or '.', exist_ok=True)
+        directory = os.path.dirname(filename)
+        if directory:
+            os.makedirs(directory, exist_ok=True)
         
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)

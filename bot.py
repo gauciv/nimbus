@@ -1,5 +1,14 @@
 """
 Nimbus Discord Bot - A comprehensive Discord bot for AWS Cloud Club communities.
+
+This bot provides features for:
+- Server management and setup
+- Role assignment and management
+- Event scheduling and announcements
+- AWS service information and documentation
+- Welcome messages and onboarding
+- Community engagement tools
+
 Version: 2.0
 """
 import discord
@@ -18,9 +27,9 @@ config = load_config()
 
 # Create bot instance with required intents
 intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
-intents.reactions = True
+intents.message_content = True  # Required for reading message content
+intents.members = True          # Required for member events like joins
+intents.reactions = True        # Required for reaction roles
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # List of cogs to load
@@ -49,7 +58,12 @@ async def on_ready():
     print("Bot is ready to use!")
 
 async def load_extensions():
-    """Load all cogs/extensions."""
+    """
+    Load all cogs/extensions.
+    
+    Returns:
+        tuple: (success_count, failed_cogs)
+    """
     success_count = 0
     failed_cogs = []
     
@@ -66,6 +80,8 @@ async def load_extensions():
         print("Failed to load:")
         for cog in failed_cogs:
             print(f"  - {cog}")
+            
+    return success_count, failed_cogs
 
 def main():
     """Main function to start the bot."""

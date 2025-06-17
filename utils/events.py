@@ -1,9 +1,14 @@
 """
 Event management utilities for the Nimbus Discord bot.
+
+This module provides utilities for event management, including:
+- Event class for representing scheduled events
+- EventManager class for managing events
+- Functions for loading, saving, and retrieving events
 """
 import logging
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from utils.config import load_json_data, save_json_data
 
 # File to store events
@@ -70,6 +75,9 @@ class Event:
         
         Returns:
             datetime: Parsed datetime object
+            
+        Raises:
+            ValueError: If the date/time format is invalid
         """
         date_str = f"{self.date} {self.time}"
         try:
@@ -133,7 +141,12 @@ class EventManager:
         return sorted(upcoming, key=lambda e: e.get_datetime())
     
     def cleanup_past_events(self) -> None:
-        """Remove events that have already occurred."""
+        """
+        Remove events that have already occurred.
+        
+        This method removes events with dates in the past and saves
+        the updated event list if any events were removed.
+        """
         now = datetime.now()
         original_count = len(self.events)
         self.events = [event for event in self.events if event.get_datetime() > now]

@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
 """
 Debug wrapper for the Nimbus Discord Bot.
+
+This script provides a wrapper around the main bot code with enhanced
+error handling and cleaner output formatting.
 """
 import sys
 import traceback
@@ -25,7 +29,12 @@ logging.getLogger('discord.http').setLevel(logging.WARNING)
 logging.getLogger('discord.gateway').setLevel(logging.ERROR)
 
 def run_bot():
-    """Run the bot with clean error handling."""
+    """
+    Run the bot with clean error handling.
+    
+    This function imports and runs the main bot code, providing
+    user-friendly error messages for common failure scenarios.
+    """
     try:
         print("\n=== Nimbus Discord Bot v2 ===")
         
