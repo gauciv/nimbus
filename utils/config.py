@@ -1,12 +1,9 @@
 """
 Configuration utilities for the Nimbus Discord bot.
-Handles loading and validating configuration from config.json.
 """
 import json
-import logging
 import os
 import sys
-import traceback
 from typing import Dict, Any
 
 # Constants
@@ -25,27 +22,28 @@ def load_config() -> Dict[str, Any]:
     try:
         with open(CONFIG_FILE) as f:
             config = json.load(f)
-            logging.info("Successfully loaded config.json")
             
             # Validate required fields
             if 'token' not in config:
-                raise KeyError("Bot token not found in config.json")
+                print("❌ Bot token not found in config.json")
+                sys.exit(1)
             if not isinstance(config['token'], str) or not config['token'].strip():
-                raise ValueError("Bot token is empty or invalid")
+                print("❌ Bot token is empty or invalid")
+                sys.exit(1)
+                
+            # Mask token in logs for security
+            masked_token = f"{config['token'][:8]}...{config['token'][-5:]}"
+            print(f"✓ Configuration loaded (Token: {masked_token})")
                 
             return config
     except FileNotFoundError:
-        logging.critical(f"{CONFIG_FILE} not found! Please create a config.json file with your bot token.")
+        print(f"❌ {CONFIG_FILE} not found! Please create a config.json file with your bot token.")
         sys.exit(1)
     except json.JSONDecodeError:
-        logging.critical(f"{CONFIG_FILE} is not a valid JSON file!")
-        sys.exit(1)
-    except (KeyError, ValueError) as e:
-        logging.critical(f"Configuration error: {str(e)}")
+        print(f"❌ {CONFIG_FILE} is not a valid JSON file!")
         sys.exit(1)
     except Exception as e:
-        logging.critical(f"Unexpected error loading config: {str(e)}")
-        traceback.print_exc()
+        print(f"❌ Unexpected error loading config: {str(e)}")
         sys.exit(1)
 
 def load_json_data(filename: str, default=None):
@@ -64,8 +62,7 @@ def load_json_data(filename: str, default=None):
             with open(filename, 'r') as f:
                 return json.load(f)
         return default
-    except Exception as e:
-        logging.error(f"Error loading {filename}: {e}")
+    except Exception:
         return default
 
 def save_json_data(filename: str, data):
@@ -80,9 +77,11 @@ def save_json_data(filename: str, data):
         bool: True if successful, False otherwise
     """
     try:
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(filename) or '.', exist_ok=True)
+        
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
         return True
-    except Exception as e:
-        logging.error(f"Error saving {filename}: {e}")
+    except Exception:
         return False

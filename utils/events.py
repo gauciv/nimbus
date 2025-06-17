@@ -1,6 +1,5 @@
 """
 Event management utilities for the Nimbus Discord bot.
-Handles event creation, storage, and retrieval.
 """
 import logging
 from datetime import datetime
@@ -94,7 +93,8 @@ class EventManager:
         try:
             data = load_json_data(EVENTS_FILE, [])
             self.events = [Event.from_dict(event_data) for event_data in data]
-            logging.info(f"Loaded {len(self.events)} events from storage")
+            if self.events:
+                print(f"✓ Loaded {len(self.events)} events from storage")
         except Exception as e:
             logging.error(f"Error loading events: {e}")
             self.events = []

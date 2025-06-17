@@ -1,15 +1,5 @@
 """
 Nimbus Discord Bot - A comprehensive Discord bot for AWS Cloud Club communities.
-
-This bot provides features for:
-- Server management and setup
-- Role assignment and management
-- Event scheduling and announcements
-- AWS service information and documentation
-- Welcome messages and onboarding
-- Community engagement tools
-
-Author: AWS Cloud Club
 Version: 2.0
 """
 import discord
@@ -17,39 +7,14 @@ from discord.ext import commands
 import logging
 import os
 import sys
-import traceback
 import asyncio
 from utils.config import load_config
 
-# Set up logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s:%(levelname)s:%(name)s: %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('data/bot_debug.log')
-    ]
-)
-
-logger = logging.getLogger('discord')
-logger.setLevel(logging.DEBUG)
-
-# Catch and log any uncaught exceptions
-def handle_exception(exc_type, exc_value, exc_traceback):
-    """Global exception handler to log uncaught exceptions."""
-    if issubclass(exc_type, KeyboardInterrupt):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-        return
-    
-    logger.critical("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-
-sys.excepthook = handle_exception
+# Create data directory if it doesn't exist
+os.makedirs('data', exist_ok=True)
 
 # Load configuration
 config = load_config()
-
-# Create data directory if it doesn't exist
-os.makedirs('data', exist_ok=True)
 
 # Create bot instance with required intents
 intents = discord.Intents.default()
@@ -71,44 +36,61 @@ COGS = [
 @bot.event
 async def on_ready():
     """Event triggered when the bot is ready and connected to Discord."""
-    logging.info(f'Bot is online! Logged in as {bot.user.name} (ID: {bot.user.id})')
+    print(f"\n✅ Bot is online! Logged in as {bot.user.name}")
+    print(f"Connected to {len(bot.guilds)} server(s)")
     
     # Sync slash commands
     try:
         synced = await bot.tree.sync()
-        logging.info(f"Synced {len(synced)} command(s)")
+        print(f"✓ Synced {len(synced)} command(s)")
     except Exception as e:
-        logging.error(f"Failed to sync commands: {e}")
+        print(f"✗ Failed to sync commands: {str(e)}")
     
-    logging.info('------')
+    print("Bot is ready to use!")
 
 async def load_extensions():
     """Load all cogs/extensions."""
+    success_count = 0
+    failed_cogs = []
+    
     for cog in COGS:
         try:
             await bot.load_extension(cog)
-            logging.info(f"Loaded extension: {cog}")
+            success_count += 1
         except Exception as e:
-            logging.error(f"Failed to load extension {cog}: {e}")
-            traceback.print_exc()
+            failed_cogs.append(f"{cog} ({str(e)})")
+    
+    print(f"✓ Loaded {success_count}/{len(COGS)} extensions")
+    
+    if failed_cogs:
+        print("Failed to load:")
+        for cog in failed_cogs:
+            print(f"  - {cog}")
 
-async def main():
+def main():
     """Main function to start the bot."""
     try:
-        # Load all extensions
-        await load_extensions()
+        print("Starting Nimbus Discord Bot...")
         
-        # Start the bot
-        await bot.start(config['token'])
+        # Run the bot
+        asyncio.run(start_bot())
     except KeyboardInterrupt:
-        # Handle graceful shutdown on Ctrl+C
-        logging.info("Received keyboard interrupt. Shutting down...")
-        await bot.close()
+        print("\nShutting down gracefully...")
     except Exception as e:
-        logging.critical(f"Fatal error: {e}")
-        traceback.print_exc()
+        print(f"\n❌ Fatal error: {str(e)}")
         sys.exit(1)
+
+async def start_bot():
+    """Start the bot with proper async handling."""
+    try:
+        await load_extensions()
+        await bot.start(config['token'])
+    except Exception as e:
+        print(f"Error starting bot: {e}")
+    finally:
+        if not bot.is_closed():
+            await bot.close()
 
 # Run the bot
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

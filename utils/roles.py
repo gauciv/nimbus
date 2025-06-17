@@ -1,6 +1,5 @@
 """
 Role management utilities for the Nimbus Discord bot.
-Handles role definitions, creation, and assignment.
 """
 import discord
 import logging
