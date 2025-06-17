@@ -4,3 +4,16 @@
 2025-06-17 15:40:20,396:DEBUG:discord.client: on_raw_reaction_add has successfully been registered as an event
 2025-06-17 15:40:20,396:DEBUG:discord.client: on_raw_reaction_remove has successfully been registered as an event
 2025-06-17 15:40:20,398:DEBUG:discord.client: on_ready has successfully been registered as an event
+2025-06-17 15:50:55,008:INFO:root: Successfully loaded config.json
+2025-06-17 15:50:55,010:DEBUG:discord.client: on_ready has successfully been registered as an event
+2025-06-17 15:50:55,010:DEBUG:discord.client: on_member_join has successfully been registered as an event
+2025-06-17 15:50:55,010:DEBUG:discord.client: on_raw_reaction_add has successfully been registered as an event
+2025-06-17 15:50:55,011:DEBUG:discord.client: on_raw_reaction_remove has successfully been registered as an event
+2025-06-17 15:50:55,012:DEBUG:discord.client: on_ready has successfully been registered as an event
+2025-06-17 15:50:55,013:DEBUG:asyncio: Using selector: EpollSelector
+2025-06-17 15:50:55,014:INFO:discord.client: logging in using static token
+2025-06-17 15:50:56,880:INFO:discord.gateway: Shard ID None has connected to Gateway (Session ID: eab8b1403de092a5dc7a02cca0ff071f).
+2025-06-17 15:50:58,884:INFO:root: Bot is online! Logged in as nimbus.dev (ID: 1384049590461792386)
+2025-06-17 15:50:59,442:INFO:root: Synced 14 command(s)
+2025-06-17 15:50:59,443:INFO:root: ------
+2025-06-17 15:50:59,561:INFO:root: Sent daily AWS tip to nimbus test server

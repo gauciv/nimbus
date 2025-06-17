@@ -2082,6 +2082,59 @@ async def topic(interaction: discord.Interaction, question: str):
                     ephemeral=True
                 )
 
+@bot.tree.command(name="test_welcome", description="Test the welcome message without adding a new member")
+@is_core_team()
+async def test_welcome(interaction: discord.Interaction):
+    """Test the welcome message that would be sent when a new member joins."""
+    try:
+        # Find the #arrivals channel
+        arrivals_channel = discord.utils.get(interaction.guild.channels, name='arrivals')
+        
+        if not arrivals_channel:
+            await interaction.response.send_message(
+                "❌ Could not find #arrivals channel. Please create it first.",
+                ephemeral=True
+            )
+            return
+            
+        # Create an embed for the welcome message using the command user as test subject
+        embed = discord.Embed(
+            title=f"Welcome to {interaction.guild.name}! 🎉",
+            description=f"Hey {interaction.user.mention}, we're glad to have you here!",
+            color=discord.Color.green()
+        )
+        
+        # Add more information to the embed
+        embed.add_field(
+            name="Getting Started",
+            value="Please make sure to check out the following channels:\n"
+                  "📜 <#rules> - Server rules and guidelines\n"
+                  "🎯 <#get-started> - How to get started in our community",
+            inline=False
+        )
+        
+        embed.set_thumbnail(url=interaction.user.avatar.url if interaction.user.avatar else interaction.user.default_avatar.url)
+        embed.set_footer(text=f"Member #{len(interaction.guild.members)}")
+        
+        # Send the welcome message
+        await arrivals_channel.send(
+            content="**[TEST MESSAGE]** This is how a welcome message would appear:",
+            embed=embed
+        )
+        
+        # Confirm to the command user
+        await interaction.response.send_message(
+            "✅ Test welcome message sent to #arrivals channel!",
+            ephemeral=True
+        )
+        
+    except Exception as e:
+        logging.error(f"Error sending test welcome message: {e}")
+        await interaction.response.send_message(
+            "❌ An error occurred while sending the test welcome message.",
+            ephemeral=True
+        )
+
 @bot.tree.command(name="setup_core_team", description="Create the Core Team role and assign it to a member")
 @app_commands.describe(
     member="The member to add to Core Team"
