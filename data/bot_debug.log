@@ -64,3 +64,11 @@
 2025-06-17 16:27:15,101:DEBUG:discord.client: Dispatching event app_command_completion
 Sent daily AWS tip to nimbus test server
 Sent daily AWS tip to nimbus test server
+Sent daily AWS tip to nimbus test server
+Error sending test welcome message: 400 Bad Request (error code: 50035): Invalid Form Body
+In components.0.components.0.custom_id: A custom id and url cannot both be specified
+In components.0.components.0.url: A custom id and url cannot both be specified
+In components.0.components.1.custom_id: A custom id and url cannot both be specified
+In components.0.components.1.url: A custom id and url cannot both be specified
+In components.0.components.2.custom_id: A custom id and url cannot both be specified
+In components.0.components.2.url: A custom id and url cannot both be specified
