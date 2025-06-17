@@ -341,21 +341,14 @@ class Welcome(commands.Cog):
                 ephemeral=True
             )
     
-    @app_commands.command(name="test_welcome", description="Test the welcome message without adding a new member")
+    @app_commands.command(name="test_welcome", description="Test the welcome message (only visible to you)")
     @is_core_team()
     async def test_welcome(self, interaction: discord.Interaction):
         """Test the welcome message that would be sent when a new member joins."""
         try:
-            # Find the #arrivals channel
-            arrivals_channel = discord.utils.get(interaction.guild.channels, name='arrivals')
+            # Defer the response as ephemeral
+            await interaction.response.defer(ephemeral=True)
             
-            if not arrivals_channel:
-                await interaction.response.send_message(
-                    "❌ Could not find #arrivals channel. Please create it first.",
-                    ephemeral=True
-                )
-                return
-                
             # Create an embed for the welcome message using the command user as test subject
             embed = discord.Embed(
                 title=f"🔮 The Cloud Oracle has foreseen your arrival, {interaction.user.name}!",
@@ -396,16 +389,11 @@ class Welcome(commands.Cog):
                 intro_channel.id if intro_channel else None
             )
             
-            # Send the welcome message with buttons
-            await arrivals_channel.send(
-                content=f"**[TEST MESSAGE]** 🔮 **The Oracle has sensed a new presence!** The stars align for {interaction.user.mention}! 🔮",
+            # Send the welcome message as a followup that's only visible to the user
+            await interaction.followup.send(
+                content=f"**[TEST PREVIEW]** 🔮 **The Oracle has sensed a new presence!** The stars align for {interaction.user.mention}! 🔮",
                 embed=embed,
-                view=view
-            )
-            
-            # Confirm to the command user
-            await interaction.response.send_message(
-                "✅ Test welcome message sent to #arrivals channel!",
+                view=view,
                 ephemeral=True
             )
             
