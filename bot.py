@@ -9,13 +9,47 @@ import os
 from typing import List, Dict
 import random
 from discord.ext import tasks
+import sys
+import traceback
 
 # Set up logging with more detail
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s %(levelname)s %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    level=logging.DEBUG,  # Change to DEBUG level for more detailed output
+    format='%(asctime)s:%(levelname)s:%(name)s: %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('bot_debug.log')  # Also log to a file
+    ]
 )
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+
+# Catch and log any uncaught exceptions
+def handle_exception(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    
+    logger.critical("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+sys.excepthook = handle_exception
+
+try:
+    # Load configuration
+    with open('config.json') as f:
+        config = json.load(f)
+        logging.info("Successfully loaded config.json")
+except FileNotFoundError:
+    logging.critical("config.json not found! Please create a config.json file with your bot token.")
+    sys.exit(1)
+except json.JSONDecodeError:
+    logging.critical("config.json is not a valid JSON file!")
+    sys.exit(1)
+except Exception as e:
+    logging.critical(f"Unexpected error loading config: {str(e)}")
+    traceback.print_exc()
+    sys.exit(1)
 
 # Role configuration
 YEAR_ROLES = {
@@ -1780,7 +1814,7 @@ async def check_channels(interaction: discord.Interaction):
         "rules": {
             "description": "Server rules referenced in welcome messages",
             "permissions": ["Send Messages", "Embed Links"]
-        },
+               },
         "get-started": {
             "description": "Getting started guide referenced in welcome messages",
             "permissions": ["Send Messages", "Embed Links"]
@@ -2299,6 +2333,62 @@ async def setup(interaction: discord.Interaction):
             ephemeral=True
         )
 
+@bot.tree.command(name="announce", description="Post an announcement in the announcements channel (Core Team only)")
+@app_commands.describe(
+    message="The announcement message to post"
+)
+@is_core_team()
+async def announce(interaction: discord.Interaction, message: str):
+    """Post an announcement in the #announcements channel."""
+    try:
+        # Find the announcements channel
+        announcements_channel = discord.utils.get(interaction.guild.channels, name='announcements')
+        if not announcements_channel:
+            await interaction.response.send_message(
+                "❌ Could not find the #announcements channel.",
+                ephemeral=True
+            )
+            return
+
+        # Create an embed for the announcement
+        embed = discord.Embed(
+            title="📢 Announcement",
+            description=message,
+            color=discord.Color.blue(),
+            timestamp=datetime.now()
+        )
+
+        # Add who made the announcement
+        embed.add_field(
+            name="Posted by",
+            value=interaction.user.mention,
+            inline=False
+        )
+
+        # Send the announcement
+        try:
+            await announcements_channel.send(
+                content="@everyone New announcement!",
+                embed=embed
+            )
+            
+            # Confirm to the command user
+            await interaction.response.send_message(
+                "✅ Announcement posted successfully!",
+                ephemeral=True
+            )
+        except discord.Forbidden:
+            await interaction.response.send_message(
+                "❌ I don't have permission to send messages in the announcements channel.",
+                ephemeral=True
+            )
+            
+    except Exception as e:
+        logging.error(f"Error posting announcement: {e}")
+        await interaction.response.send_message(
+            "❌ An error occurred while posting the announcement.",
+            ephemeral=True
+        )
 # Enhanced error handling for bot startup
 import sys
 import traceback
