@@ -120,6 +120,69 @@ class Welcome(commands.Cog):
         # Register the persistent view
         self.bot.add_view(WelcomeView())
 
+    async def send_welcome_dm(self, member: discord.Member):
+        """Send a personalized welcome DM to a new member."""
+        try:
+            # Create an embed for the welcome DM
+            embed = discord.Embed(
+                title="✨ Welcome to the AWS Cloud Club!",
+                description=(
+                    f"Greetings {member.name}, and welcome to our mystical realm!\n\n"
+                    "*The Oracle senses great potential within you...*"
+                ),
+                color=discord.Color.from_rgb(93, 63, 211)  # Mystical purple
+            )
+            
+            # Add getting started section
+            embed.add_field(
+                name="🌟 Your First Steps",
+                value=(
+                    "Here's how to begin your journey:\n"
+                    "**1.** Check the rules to understand our ways\n"
+                    "**2.** Choose your roles to unlock relevant channels\n"
+                    "**3.** Introduce yourself in the arrivals channel\n"
+                    "**4.** Join the conversations in general chat"
+                ),
+                inline=False
+            )
+            
+            # Add useful commands section
+            embed.add_field(
+                name="🔮 Mystical Commands",
+                value=(
+                    "*Use these enchantments to navigate our realm:*\n"
+                    "`/about` - Learn about our fellowship\n"
+                    "`/join` - View detailed membership information\n"
+                    "`/aws <service>` - Learn about AWS services\n"
+                    "`/docs <service>` - Access AWS documentation"
+                ),
+                inline=False
+            )
+            
+            # Add help section
+            embed.add_field(
+                name="📚 Need Guidance?",
+                value=(
+                    "• Ask questions in any channel\n"
+                    "• Core team members have special roles\n"
+                    "• Check pinned messages for resources\n"
+                    "• The Oracle (bot) is here to help!"
+                ),
+                inline=False
+            )
+            
+            # Set footer
+            embed.set_footer(text="Your presence strengthens our constellation ✨")
+            
+            # Send the welcome DM
+            await member.send(embed=embed)
+            logging.info(f"Welcome DM sent to {member.name}#{member.discriminator}")
+            
+        except discord.Forbidden:
+            logging.warning(f"Could not send welcome DM to {member.name}#{member.discriminator} (DMs closed)")
+        except Exception as e:
+            logging.error(f"Error sending welcome DM: {e}")
+
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
         """
@@ -128,6 +191,9 @@ class Welcome(commands.Cog):
         Args:
             member: The member who joined
         """
+        # Send welcome DM
+        await self.send_welcome_dm(member)
+        
         # Find the #arrivals channel
         arrivals_channel = discord.utils.get(member.guild.channels, name='arrivals')
         
@@ -206,6 +272,22 @@ class Welcome(commands.Cog):
             logging.error(f"Error sending test welcome message: {e}")
             await interaction.followup.send(
                 f"❌ An error occurred while sending the test welcome message: {str(e)}",
+                ephemeral=True
+            )
+
+    @app_commands.command(name="test_welcome_dm", description="Test the welcome DM (sends you a test DM)")
+    @is_core_team()
+    async def test_welcome_dm(self, interaction: discord.Interaction):
+        """Test the welcome DM that would be sent when a new member joins."""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            await self.send_welcome_dm(interaction.user)
+            await interaction.followup.send("✅ Test welcome DM sent!", ephemeral=True)
+            
+        except Exception as e:
+            logging.error(f"Error sending test welcome DM: {e}")
+            await interaction.followup.send(
+                "❌ Failed to send test welcome DM. Make sure your DMs are open.",
                 ephemeral=True
             )
 
