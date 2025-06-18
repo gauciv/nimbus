@@ -7,11 +7,13 @@ from discord import app_commands
 from discord.ext import commands
 import logging
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import os
+import shutil
 from discord.ext import tasks
 from typing import Dict, Any, List, Tuple
+import utils.permissions
 from utils.config import load_json_data, save_json_data
 from utils.oracle import log_vision, OracleVision, get_error_message
 
@@ -125,9 +127,22 @@ class AWSInfo(commands.Cog):
             List of (category, tip) tuples
         """
         all_tips = []
-        for category, tips in self.aws_tips.items():
-            for tip in tips:
-                all_tips.append((category, tip))
+        try:
+            for category, tips in self.aws_tips.items():
+                if isinstance(tips, list):
+                    for tip in tips:
+                        if isinstance(tip, dict) and 'title' in tip and 'description' in tip and 'learn_more' in tip:
+                            all_tips.append((category, tip))
+                        else:
+                            log_vision(OracleVision.PORTENT, f"Skipping invalid tip in category {category}: {tip}")
+                else:
+                    log_vision(OracleVision.PORTENT, f"Invalid tips format for category {category}")
+            
+            if not all_tips:
+                log_vision(OracleVision.OMEN, "No valid tips found in aws_tips.json")
+        except Exception as e:
+            log_vision(OracleVision.OMEN, "Error flattening tips", e)
+            
         return all_tips
     
     def cog_unload(self):
@@ -142,91 +157,132 @@ class AWSInfo(commands.Cog):
         Returns:
             tuple: (category, tip)
         """
+        # Ensure we have the latest tips
+        if not self.all_tips:
+            self.aws_tips = self._load_aws_tips()
+            self.all_tips = self._flatten_tips()
+            
         total_tips = len(self.all_tips)
         if total_tips == 0:
+            log_vision(OracleVision.PORTENT, "No tips available in the system")
             return "General", {"title": "No tips available", "description": "The Oracle's wisdom is currently veiled.", "learn_more": "https://aws.amazon.com"}
         
-        # Get the current index and last updated date from the state
-        current_index = self.tip_state.get("current_index", 0)
-        last_updated = self.tip_state.get("last_updated", "")
-        today = datetime.utcnow().strftime("%Y-%m-%d")
-        
-        # Only advance the index if it's a new day
-        if today != last_updated:
-            # Get the tip at the current index
-            tip_tuple = self.all_tips[current_index]
+        try:
+            # Get the current index and last updated date from the state
+            current_index = self.tip_state.get("current_index", 0)
             
-            # Increment the index for next time, wrapping around if we reach the end
-            next_index = (current_index + 1) % total_tips
+            # Ensure current_index is valid
+            if current_index >= total_tips:
+                current_index = 0
+                self.tip_state["current_index"] = 0
+                log_vision(OracleVision.PORTENT, f"Reset current_index from {current_index} to 0 (total tips: {total_tips})")
+                
+            last_updated = self.tip_state.get("last_updated", "")
+            today = datetime.utcnow().strftime("%Y-%m-%d")
             
-            # Update the state
-            self.tip_state["current_index"] = next_index
-            self.tip_state["last_updated"] = today
-            self._save_tip_state()
-            
-            return tip_tuple
-        else:
-            # If it's the same day, return the current tip without advancing
-            # We need to use the previous index since current_index has already been incremented
-            prev_index = (current_index - 1) if current_index > 0 else (total_tips - 1)
-            return self.all_tips[prev_index]
+            # Only advance the index if it's a new day
+            if today != last_updated:
+                # Get the tip at the current index
+                tip_tuple = self.all_tips[current_index]
+                
+                # Increment the index for next time, wrapping around if we reach the end
+                next_index = (current_index + 1) % total_tips
+                
+                # Update the state
+                self.tip_state["current_index"] = next_index
+                self.tip_state["last_updated"] = today
+                self._save_tip_state()
+                
+                log_vision(OracleVision.MURMUR, f"Advanced tip to index {current_index}, next will be {next_index}")
+                return tip_tuple
+            else:
+                # If it's the same day, return the current tip without advancing
+                # We need to use the previous index since current_index has already been incremented
+                prev_index = (current_index - 1) if current_index > 0 else (total_tips - 1)
+                
+                # Ensure prev_index is valid
+                if prev_index >= total_tips:
+                    prev_index = 0
+                    
+                log_vision(OracleVision.MURMUR, f"Same day, using previous tip at index {prev_index}")
+                return self.all_tips[prev_index]
+                
+        except Exception as e:
+            log_vision(OracleVision.OMEN, "Error getting next tip", e)
+            return "General", {"title": "Oracle Error", "description": "The Oracle's vision is clouded. Please seek assistance.", "learn_more": "https://aws.amazon.com"}
     
     @tasks.loop(hours=24)
     async def daily_tip(self):
         """Channel the Oracle's daily wisdom to the designated ethereal plane."""
         try:
+            # Reload tips to ensure we have the latest
+            self.aws_tips = self._load_aws_tips()
+            self.all_tips = self._flatten_tips()
+            
+            # Check if we have any tips
+            if not self.all_tips:
+                log_vision(OracleVision.OMEN, "No tips available for daily tip task")
+                return
+                
             # Find the tips channel in all guilds
             for guild in self.bot.guilds:
-                channel = discord.utils.get(guild.channels, name=self.tips_channel_name)
-                
-                if channel:
-                    # Consult the Oracle for the next wisdom in the cycle
-                    category, tip = self.get_next_tip()
+                try:
+                    channel = discord.utils.get(guild.channels, name=self.tips_channel_name)
                     
-                    # Create the mystical tip embed
-                    embed = discord.Embed(
-                        title=f"✨ Oracle's Cloud Wisdom: {tip['title']}",
-                        description=tip['description'],
-                        color=discord.Color.purple()  # Mystical purple
-                    )
-                    
-                    # Add category and learn more link
-                    embed.add_field(
-                        name="🌌 Arcane Domain",
-                        value=f"{category}",
-                        inline=True
-                    )
-                    
-                    embed.add_field(
-                        name="📜 Ancient Scrolls",
-                        value=f"[Consult the sacred texts]({tip['learn_more']})",
-                        inline=True
-                    )
-                    
-                    # Set thumbnail - mystical crystal ball
-                    embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
-                    
-                    # Add mystical footer with tip number
-                    total_tips = len(self.all_tips)
-                    current_index = self.tip_state.get("current_index", 0)
-                    # Calculate the displayed tip index based on whether we advanced today
-                    today = datetime.utcnow().strftime("%Y-%m-%d")
-                    last_updated = self.tip_state.get("last_updated", "")
-                    
-                    if today == last_updated:
-                        # If we updated today, the displayed tip is the previous index
-                        displayed_tip = (current_index - 1) if current_index > 0 else (total_tips - 1)
-                    else:
-                        # If we haven't updated yet today, the displayed tip is the current index
-                        displayed_tip = current_index
+                    if channel:
+                        # Consult the Oracle for the next wisdom in the cycle
+                        category, tip = self.get_next_tip()
                         
-                    embed.set_footer(text=f"✨ Wisdom {displayed_tip + 1} of {total_tips} • The Oracle reveals new wisdom with each celestial cycle ✨")
-                    
-                    await channel.send(embed=embed)
-                    log_vision(OracleVision.MURMUR, f"The Oracle has shared wisdom #{displayed_tip + 1} of {total_tips} with {guild.name} on {today}")
+                        # Create the mystical tip embed
+                        embed = discord.Embed(
+                            title=f"✨ Oracle's Cloud Wisdom: {tip['title']}",
+                            description=tip['description'],
+                            color=discord.Color.purple()  # Mystical purple
+                        )
+                        
+                        # Add category and learn more link
+                        embed.add_field(
+                            name="🌌 Arcane Domain",
+                            value=f"{category}",
+                            inline=True
+                        )
+                        
+                        embed.add_field(
+                            name="📜 Ancient Scrolls",
+                            value=f"[Consult the sacred texts]({tip['learn_more']})",
+                            inline=True
+                        )
+                        
+                        # Set thumbnail - mystical crystal ball
+                        embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
+                        
+                        # Add mystical footer with tip number
+                        total_tips = len(self.all_tips)
+                        current_index = self.tip_state.get("current_index", 0)
+                        # Calculate the displayed tip index based on whether we advanced today
+                        today = datetime.utcnow().strftime("%Y-%m-%d")
+                        last_updated = self.tip_state.get("last_updated", "")
+                        
+                        if today == last_updated:
+                            # If we updated today, the displayed tip is the previous index
+                            displayed_tip = (current_index - 1) if current_index > 0 else (total_tips - 1)
+                        else:
+                            # If we haven't updated yet today, the displayed tip is the current index
+                            displayed_tip = current_index
+                            
+                        # Ensure displayed_tip is valid
+                        if displayed_tip >= total_tips:
+                            displayed_tip = 0
+                            
+                        embed.set_footer(text=f"✨ Wisdom {displayed_tip + 1} of {total_tips} • The Oracle reveals new wisdom with each celestial cycle ✨")
+                        
+                        await channel.send(embed=embed)
+                        log_vision(OracleVision.MURMUR, f"The Oracle has shared wisdom #{displayed_tip + 1} of {total_tips} with {guild.name} on {today}")
+                except Exception as e:
+                    log_vision(OracleVision.OMEN, f"Error sending daily tip to guild {guild.name}", e)
         
         except Exception as e:
-            logging.error(f"The Oracle's vision was clouded: {e}")
+            log_vision(OracleVision.OMEN, "The Oracle's vision was clouded during daily tip task", e)
     
     @daily_tip.before_loop
     async def before_daily_tip(self):
@@ -415,18 +471,10 @@ class AWSInfo(commands.Cog):
             )
 
     @app_commands.command(name="setup_services", description="🌌 Create a dedicated channel for AWS services catalog")
-    @app_commands.default_permissions(administrator=True)
+    @utils.permissions.is_admin()
     async def setup_services(self, interaction: discord.Interaction):
         """Create a dedicated channel for AWS services and populate it with service information."""
         try:
-            # Check if user has admin permissions
-            if not interaction.user.guild_permissions.administrator:
-                await interaction.response.send_message(
-                    "🌑 Only those with administrative powers may invoke this ritual.",
-                    ephemeral=True
-                )
-                return
-                
             await interaction.response.defer(ephemeral=True)
             
             # Create the channel if it doesn't exist
@@ -521,18 +569,10 @@ class AWSInfo(commands.Cog):
             )
     
     @app_commands.command(name="refresh_services", description="🌌 Refresh the AWS services catalog")
-    @app_commands.default_permissions(administrator=True)
+    @utils.permissions.is_admin()
     async def refresh_services(self, interaction: discord.Interaction):
         """Refresh the AWS services channel with updated information."""
         try:
-            # Check if user has admin permissions
-            if not interaction.user.guild_permissions.administrator:
-                await interaction.response.send_message(
-                    "🌑 Only those with administrative powers may invoke this ritual.",
-                    ephemeral=True
-                )
-                return
-                
             # Redirect to setup_services which will handle the refresh
             await self.setup_services(interaction)
                 
@@ -566,6 +606,425 @@ class AWSInfo(commands.Cog):
             log_vision(OracleVision.OMEN, f"Failed to direct user to services channel", e)
             await interaction.response.send_message(
                 get_error_message("general"),
+                ephemeral=True
+            )
+
+    @app_commands.command(name="debug_tips", description="🔍 Debug the AWS tips system (admin only)")
+    @utils.permissions.is_admin()
+    async def debug_tips(self, interaction: discord.Interaction):
+        """Debug the AWS tips system and display current status."""
+        try:
+            # Get the current tips status
+            tips_status = {
+                "tips_file_exists": os.path.exists(self.tips_file),
+                "total_tips": len(self.aws_tips) if hasattr(self, 'aws_tips') else 0,
+                "last_tip_time": self.last_tip_time if hasattr(self, 'last_tip_time') else None,
+                "next_tip_scheduled": self.next_tip_time if hasattr(self, 'next_tip_time') else None
+            }
+            
+            # Create debug embed
+            embed = discord.Embed(
+                title="🔍 AWS Tips System Debug",
+                description="Current system status and diagnostics",
+                color=discord.Color.blue()
+            )
+            
+            for key, value in tips_status.items():
+                embed.add_field(
+                    name=key.replace('_', ' ').title(),
+                    value=str(value),
+                    inline=False
+                )
+            
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logging.error(f"Error in debug_tips: {e}")
+            await interaction.response.send_message(
+                "⚠️ An error occurred while debugging the tips system.",
+                ephemeral=True
+            )
+
+    @app_commands.command(name="reset_tips", description="🔄 Reset the AWS tips system (admin only)")
+    @utils.permissions.is_admin()
+    async def reset_tips(self, interaction: discord.Interaction):
+        """Reset the AWS tips system to its initial state."""
+        try:
+            # Reset the tips system
+            self.aws_tips = []
+            self.last_tip_time = None
+            self.next_tip_time = None
+            
+            # Clear the tips file
+            if os.path.exists(self.tips_file):
+                os.remove(self.tips_file)
+            
+            # Reinitialize the tips system
+            await self.load_aws_tips()
+            
+            await interaction.response.send_message(
+                "✨ AWS Tips system has been reset successfully!",
+                ephemeral=True
+            )
+            
+        except Exception as e:
+            logging.error(f"Error in reset_tips: {e}")
+            await interaction.response.send_message(
+                "⚠️ An error occurred while resetting the tips system.",
+                ephemeral=True
+            )
+
+    @app_commands.command(name="fix_tips_file", description="🔧 Fix the AWS tips file if corrupted (admin only)")
+    @utils.permissions.is_admin()
+    async def fix_tips_file(self, interaction: discord.Interaction):
+        """Attempt to fix a corrupted AWS tips file."""
+        try:
+            # First, create a backup of the current file if it exists
+            if os.path.exists(self.tips_file):
+                backup_file = f"{self.tips_file}.backup"
+                shutil.copy2(self.tips_file, backup_file)
+                
+                # Try to load and validate the tips
+                try:
+                    with open(self.tips_file, 'r') as f:
+                        tips_data = json.load(f)
+                    
+                    # Validate and clean the tips data
+                    valid_tips = []
+                    for tip in tips_data:
+                        if isinstance(tip, dict) and 'content' in tip:
+                            valid_tips.append(tip)
+                    
+                    # Save the cleaned data
+                    with open(self.tips_file, 'w') as f:
+                        json.dump(valid_tips, f, indent=2)
+                    
+                    # Reload the tips system
+                    await self.load_aws_tips()
+                    
+                    await interaction.response.send_message(
+                        f"✅ Tips file has been fixed! Found {len(valid_tips)} valid tips.",
+                        ephemeral=True
+                    )
+                    
+                except Exception as e:
+                    # If fixing failed, restore the backup
+                    if os.path.exists(backup_file):
+                        shutil.copy2(backup_file, self.tips_file)
+                    raise e
+                
+            else:
+                await interaction.response.send_message(
+                    "⚠️ No tips file found to fix.",
+                    ephemeral=True
+                )
+                
+        except Exception as e:
+            logging.error(f"Error in fix_tips_file: {e}")
+            await interaction.response.send_message(
+                "⚠️ An error occurred while fixing the tips file.",
+                ephemeral=True
+            )
+        
+    @app_commands.command(name="reload_tips", description="🔄 Reload AWS tips without resetting state (admin only)")
+    @utils.permissions.is_admin()
+    async def reload_tips(self, interaction: discord.Interaction):
+        """Reload AWS tips without resetting the state."""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            
+            # Save the current state
+            current_state = self.tip_state.copy()
+            
+            # Reload tips
+            self.aws_tips = self._load_aws_tips()
+            self.all_tips = self._flatten_tips()
+            
+            # Restore the state
+            self.tip_state = current_state
+            
+            # Validate the current index
+            total_tips = len(self.all_tips)
+            if total_tips > 0 and self.tip_state.get("current_index", 0) >= total_tips:
+                self.tip_state["current_index"] = 0
+                self._save_tip_state()
+                
+            await interaction.followup.send(
+                f"✅ AWS tips have been reloaded. Found {total_tips} tips across {len(self.aws_tips)} categories.",
+                ephemeral=True
+            )
+            
+        except Exception as e:
+            log_vision(OracleVision.OMEN, f"Failed to reload tips", e)
+            await interaction.followup.send(
+                f"❌ Error reloading tips: {str(e)}",
+                ephemeral=True
+            )
+        """Fix the AWS tips file if it gets corrupted."""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            
+            # Check if the file exists
+            if not os.path.exists(AWS_TIPS_FILE):
+                await interaction.followup.send(
+                    "❌ AWS tips file does not exist.",
+                    ephemeral=True
+                )
+                return
+                
+            # Try to load the file
+            try:
+                with open(AWS_TIPS_FILE, 'r') as f:
+                    content = f.read()
+                    
+                # Try to parse the JSON
+                try:
+                    json.loads(content)
+                    await interaction.followup.send(
+                        "✅ AWS tips file is valid JSON. No fix needed.",
+                        ephemeral=True
+                    )
+                    return
+                except json.JSONDecodeError:
+                    # File is corrupted, let's fix it
+                    pass
+                    
+                # Look for duplicate content or other common issues
+                if "aged-services/" in content:
+                    # Fix the duplicate content issue
+                    content = content.replace("aged-services/\"\n    },\n    {\n      \"title\"", "aged-services/\"\n    },\n    {\n      \"title\"", 1)
+                    
+                # Try to parse again
+                try:
+                    json.loads(content)
+                    # If we get here, the fix worked
+                    with open(AWS_TIPS_FILE, 'w') as f:
+                        f.write(content)
+                    
+                    # Reload the tips
+                    self.aws_tips = self._load_aws_tips()
+                    self.all_tips = self._flatten_tips()
+                    
+                    await interaction.followup.send(
+                        "✅ AWS tips file has been fixed and reloaded.",
+                        ephemeral=True
+                    )
+                except json.JSONDecodeError:
+                    # Still corrupted, need to restore from backup
+                    await interaction.followup.send(
+                        "❌ AWS tips file is still corrupted after attempted fix. Please restore from a backup.",
+                        ephemeral=True
+                    )
+                    
+            except Exception as e:
+                await interaction.followup.send(
+                    f"❌ Error reading AWS tips file: {str(e)}",
+                    ephemeral=True
+                )
+                
+        except Exception as e:
+            log_vision(OracleVision.OMEN, f"Failed to fix tips file", e)
+            await interaction.followup.send(
+                f"❌ Error fixing tips file: {str(e)}",
+                ephemeral=True
+            )
+        """Reset the AWS tips system to start from the beginning."""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            
+            # Reset the tip state
+            today = datetime.utcnow().strftime("%Y-%m-%d")
+            self.tip_state = {"current_index": 0, "last_updated": today}
+            success = self._save_tip_state()
+            
+            # Reload tips data
+            self.aws_tips = self._load_aws_tips()
+            self.all_tips = self._flatten_tips()
+            
+            if success:
+                await interaction.followup.send(
+                    "✅ AWS tips system has been reset. The next tip will be the first one.",
+                    ephemeral=True
+                )
+            else:
+                await interaction.followup.send(
+                    "❌ Failed to save the reset tip state.",
+                    ephemeral=True
+                )
+                
+        except Exception as e:
+            log_vision(OracleVision.OMEN, f"Failed to reset tips system", e)
+            await interaction.followup.send(
+                f"❌ Error resetting tips system: {str(e)}",
+                ephemeral=True
+            )
+        
+    @app_commands.command(name="trigger_tip", description="🔮 Manually trigger the daily AWS tip (admin only)")
+    @utils.permissions.is_admin()
+    async def trigger_tip(self, interaction: discord.Interaction):
+        """Manually trigger the daily AWS tip."""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            
+            # Reload tips data to ensure we have the latest
+            self.aws_tips = self._load_aws_tips()
+            self.all_tips = self._flatten_tips()
+            
+            # Check if we have any tips
+            if not self.all_tips:
+                await interaction.followup.send(
+                    "❌ No tips available. Please check the aws_tips.json file.",
+                    ephemeral=True
+                )
+                return
+                
+            # Force the tip to advance by setting last_updated to yesterday
+            yesterday = (datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) - 
+                        timedelta(days=1)).strftime("%Y-%m-%d")
+            self.tip_state["last_updated"] = yesterday
+            self._save_tip_state()
+            
+            # Get the tips channel
+            channel = discord.utils.get(interaction.guild.channels, name=self.tips_channel_name)
+            if not channel:
+                await interaction.followup.send(
+                    f"❌ Tips channel '{self.tips_channel_name}' not found.",
+                    ephemeral=True
+                )
+                return
+                
+            # Get the next tip
+            category, tip = self.get_next_tip()
+            
+            # Create the mystical tip embed
+            embed = discord.Embed(
+                title=f"✨ Oracle's Cloud Wisdom: {tip['title']}",
+                description=tip['description'],
+                color=discord.Color.purple()  # Mystical purple
+            )
+            
+            # Add category and learn more link
+            embed.add_field(
+                name="🌌 Arcane Domain",
+                value=f"{category}",
+                inline=True
+            )
+            
+            embed.add_field(
+                name="📜 Ancient Scrolls",
+                value=f"[Consult the sacred texts]({tip['learn_more']})",
+                inline=True
+            )
+            
+            # Set thumbnail - mystical crystal ball
+            embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
+            
+            # Add mystical footer with tip number
+            total_tips = len(self.all_tips)
+            current_index = self.tip_state.get("current_index", 0)
+            displayed_tip = (current_index - 1) if current_index > 0 else (total_tips - 1)
+            
+            embed.set_footer(text=f"✨ Wisdom {displayed_tip + 1} of {total_tips} • The Oracle reveals new wisdom with each celestial cycle ✨")
+            
+            # Send the tip
+            await channel.send(embed=embed)
+            
+            # Confirm to admin
+            await interaction.followup.send(
+                f"✅ Tip '{tip['title']}' has been sent to #{self.tips_channel_name}.",
+                ephemeral=True
+            )
+            
+        except Exception as e:
+            log_vision(OracleVision.OMEN, f"Failed to trigger tip", e)
+            await interaction.followup.send(
+                f"❌ Error triggering tip: {str(e)}",
+                ephemeral=True
+            )
+        """Debug the AWS tips system and provide diagnostic information."""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            
+            # Check if tips file exists and is valid JSON
+            tips_exists = os.path.exists(AWS_TIPS_FILE)
+            tips_valid = False
+            tips_count = 0
+            flattened_tips_count = 0
+            
+            if tips_exists:
+                try:
+                    with open(AWS_TIPS_FILE, 'r') as f:
+                        tips_data = json.load(f)
+                        tips_valid = True
+                        tips_count = sum(len(tips) for tips in tips_data.values())
+                except json.JSONDecodeError:
+                    tips_valid = False
+            
+            # Check if tip state file exists and is valid JSON
+            state_exists = os.path.exists(AWS_TIP_STATE_FILE)
+            state_valid = False
+            current_index = None
+            last_updated = None
+            
+            if state_exists:
+                try:
+                    with open(AWS_TIP_STATE_FILE, 'r') as f:
+                        state_data = json.load(f)
+                        state_valid = True
+                        current_index = state_data.get("current_index")
+                        last_updated = state_data.get("last_updated")
+                except json.JSONDecodeError:
+                    state_valid = False
+            
+            # Check the flattened tips list
+            flattened_tips_count = len(self.all_tips)
+            
+            # Create diagnostic embed
+            embed = discord.Embed(
+                title="🔍 AWS Tips System Diagnostic",
+                description="Diagnostic information about the AWS tips system",
+                color=discord.Color.blue()
+            )
+            
+            embed.add_field(
+                name="Tips File",
+                value=f"Exists: {tips_exists}\nValid JSON: {tips_valid}\nTip Count: {tips_count}",
+                inline=False
+            )
+            
+            embed.add_field(
+                name="Tip State",
+                value=f"Exists: {state_exists}\nValid JSON: {state_valid}\nCurrent Index: {current_index}\nLast Updated: {last_updated}",
+                inline=False
+            )
+            
+            embed.add_field(
+                name="Flattened Tips",
+                value=f"Count: {flattened_tips_count}",
+                inline=False
+            )
+            
+            embed.add_field(
+                name="Today's Date",
+                value=f"{datetime.utcnow().strftime('%Y-%m-%d')}",
+                inline=False
+            )
+            
+            # Add a sample tip if available
+            if flattened_tips_count > 0 and current_index is not None and current_index < flattened_tips_count:
+                category, tip = self.all_tips[current_index]
+                embed.add_field(
+                    name="Current Tip",
+                    value=f"Category: {category}\nTitle: {tip['title']}\nIndex: {current_index}",
+                    inline=False
+                )
+            
+            await interaction.followup.send(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            log_vision(OracleVision.OMEN, f"Failed to debug tips system", e)
+            await interaction.followup.send(
+                f"❌ Error debugging tips system: {str(e)}",
                 ephemeral=True
             )
 

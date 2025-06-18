@@ -6,17 +6,12 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import logging
-import json
-from pathlib import Path
 from utils.permissions import is_core_team
+from utils.config import load_json_data
 
 def load_config():
-    config_path = Path(__file__).parent.parent / 'data' / 'server_config.json'
-    try:
-        with open(config_path) as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {"channels": {}}
+    """Load server configuration using the centralized config utility."""
+    return load_json_data('data/server_config.json', {"channels": {}})
 
 # Custom button classes with callbacks
 # Simple button to redirect to get-started
@@ -90,25 +85,25 @@ class StatusRolesView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
         self.add_item(RoleButton("🎓", "Student"))
-        self.add_item(RoleButton("💼", "Professional"))
-        self.add_item(RoleButton("🌟", "Alumni"))
+        self.add_item(RoleButton("💼", "Professional (Sage)"))
+        self.add_item(RoleButton("👨‍🎓", "Alumni (Ascended)"))
 
 class CohortRolesView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(RoleButton("✨", "First Year Novice"))
-        self.add_item(RoleButton("✨✨", "Second Year Apprentice"))
-        self.add_item(RoleButton("✨✨✨", "Third Year Adept"))
-        self.add_item(RoleButton("✨✨✨✨", "Fourth Year Master"))
+        self.add_item(RoleButton("1️⃣", "First Year"))
+        self.add_item(RoleButton("2️⃣", "Second Year"))
+        self.add_item(RoleButton("3️⃣", "Third Year"))
+        self.add_item(RoleButton("4️⃣", "Fourth Year"))
 
 class InterestRolesView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
-        self.add_item(RoleButton("🕸️", "Web Weaver"))
-        self.add_item(RoleButton("🔮", "Data Diviner"))
-        self.add_item(RoleButton("🏗️", "System Architect"))
-        self.add_item(RoleButton("🛡️", "Security Sentinel"))
-        self.add_item(RoleButton("🤖", "AI Apprentice"))
+        self.add_item(RoleButton("🕸️", "Web Developer (Web Weaver)"))
+        self.add_item(RoleButton("🔮", "Data Scientist (Data Sage)"))
+        self.add_item(RoleButton("🏗️", "Cloud Architect (System Crafter)"))
+        self.add_item(RoleButton("🛡️", "Security Engineer (Digital Guardian)"))
+        self.add_item(RoleButton("🤖", "AI/ML Engineer (Tech Mystic)"))
 
 class Welcome(commands.Cog):
     """Commands and listeners for welcoming new members."""

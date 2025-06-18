@@ -5,9 +5,8 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import logging
-import json
-import os
 from typing import Dict, Set
+from utils.oracle import log_vision, OracleVision
 
 # Role Categories and Configurations
 STATUS_ROLES = {
@@ -78,24 +77,14 @@ class MysticRoles(commands.Cog):
         self.role_messages = self.load_role_config()
 
     def load_role_config(self) -> Dict[str, int]:
-        """Load role message configuration from file."""
-        try:
-            if os.path.exists(ROLE_CONFIG_FILE):
-                with open(ROLE_CONFIG_FILE, 'r') as f:
-                    return json.load(f)
-            return {"status": 0, "cohort": 0, "interests": 0}
-        except Exception as e:
-            logging.error(f"Error loading role config: {e}")
-            return {"status": 0, "cohort": 0, "interests": 0}
+        """Load role message configuration from file using centralized config utility."""
+        from utils.config import load_json_data
+        return load_json_data(ROLE_CONFIG_FILE, {"status": 0, "cohort": 0, "interests": 0})
 
     def save_role_config(self):
-        """Save role message configuration to file."""
-        try:
-            os.makedirs(os.path.dirname(ROLE_CONFIG_FILE), exist_ok=True)
-            with open(ROLE_CONFIG_FILE, 'w') as f:
-                json.dump(self.role_messages, f)
-        except Exception as e:
-            logging.error(f"Error saving role config: {e}")
+        """Save role message configuration to file using centralized config utility."""
+        from utils.config import save_json_data
+        save_json_data(ROLE_CONFIG_FILE, self.role_messages)
 
     async def create_mystical_embed(self, category: str, roles: dict) -> discord.Embed:
         """Create a formatted embed for role selection."""
@@ -219,6 +208,7 @@ class MysticRoles(commands.Cog):
 
         except Exception as e:
             logging.error(f"Error in setup_roles: {e}")
+            log_vision(OracleVision.OMEN, "Failed to setup mystical role system", e)
             await interaction.followup.send(
                 "❌ A disturbance in the ethereal plane prevents the setup.",
                 ephemeral=True
@@ -268,7 +258,7 @@ class MysticRoles(commands.Cog):
                     await member.add_roles(role)
                     logging.info(f"Channeled role {role_name} to {member}")
                 except Exception as e:
-                    logging.error(f"Error channeling role energy: {e}")
+                    log_vision(OracleVision.OMEN, f"Error channeling role energy for {member}", e)
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
@@ -313,7 +303,7 @@ class MysticRoles(commands.Cog):
                     await member.remove_roles(role)
                     logging.info(f"Released role {role_name} from {member}")
                 except Exception as e:
-                    logging.error(f"Error releasing role energy: {e}")
+                    log_vision(OracleVision.OMEN, f"Error releasing role energy for {member}", e)
 
 async def setup(bot: commands.Bot):
     """Manifest the MysticRoles cog in the ethereal plane."""

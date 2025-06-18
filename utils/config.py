@@ -34,9 +34,8 @@ def load_config() -> Dict[str, Any]:
                 print("❌ Bot token is empty or invalid")
                 sys.exit(1)
                 
-            # Mask token in logs for security
-            masked_token = f"{config['token'][:8]}...{config['token'][-5:]}"
-            print(f"✓ Configuration loaded (Token: {masked_token})")
+            # Mask token in logs for security - only show that it was loaded
+            print(f"✓ Configuration loaded (Token: ***masked***)")
                 
             return config
     except FileNotFoundError:
