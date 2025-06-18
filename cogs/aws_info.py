@@ -9,14 +9,16 @@ import logging
 import random
 from datetime import datetime
 import json
+import os
 from discord.ext import tasks
 from typing import Dict, Any, List, Tuple
-from utils.config import load_json_data
+from utils.config import load_json_data, save_json_data
 
 # File paths for AWS data
 AWS_SERVICES_FILE = 'data/aws_services.json'
 AWS_TIPS_FILE = 'data/aws_tips.json'
 AWS_DOCS_FILE = 'data/aws_docs.json'
+AWS_TIP_STATE_FILE = 'data/aws_tip_state.json'
 
 class AWSInfo(commands.Cog):
     """Mystical commands for AWS service information and documentation."""
@@ -30,10 +32,11 @@ class AWSInfo(commands.Cog):
         """
         self.bot = bot
         self.tips_channel_name = "aws-tips"
-        self.last_tip_index = -1  # Track last tip to avoid repetition
         self.aws_services = self._load_aws_services()
         self.aws_tips = self._load_aws_tips()
         self.aws_docs = self._load_aws_docs()
+        self.tip_state = self._load_tip_state()
+        self.all_tips = self._flatten_tips()
         self.daily_tip.start()
     
     def _load_aws_services(self) -> Dict[str, Any]:
@@ -74,41 +77,76 @@ class AWSInfo(commands.Cog):
         except Exception as e:
             logging.error(f"Error loading AWS documentation links: {e}")
             return {}
+            
+    def _load_tip_state(self) -> Dict[str, Any]:
+        """
+        Load the current tip state from the mystical archives.
+        
+        Returns:
+            Dict containing tip state information
+        """
+        try:
+            return load_json_data(AWS_TIP_STATE_FILE, {"current_index": 0, "last_updated": datetime.utcnow().strftime("%Y-%m-%d")})
+        except Exception as e:
+            logging.error(f"Error loading tip state: {e}")
+            return {"current_index": 0, "last_updated": datetime.utcnow().strftime("%Y-%m-%d")}
+            
+    def _save_tip_state(self) -> bool:
+        """
+        Save the current tip state to the mystical archives.
+        
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            return save_json_data(AWS_TIP_STATE_FILE, self.tip_state)
+        except Exception as e:
+            logging.error(f"Error saving tip state: {e}")
+            return False
+            
+    def _flatten_tips(self) -> List[Tuple[str, Dict[str, str]]]:
+        """
+        Flatten all tips into a single list with their categories.
+        
+        Returns:
+            List of (category, tip) tuples
+        """
+        all_tips = []
+        for category, tips in self.aws_tips.items():
+            for tip in tips:
+                all_tips.append((category, tip))
+        return all_tips
     
     def cog_unload(self):
         """Release the magical energies when the cog is unloaded."""
         self.daily_tip.cancel()
     
-    def get_random_tip(self) -> Tuple[str, Dict[str, str]]:
+    def get_next_tip(self) -> Tuple[str, Dict[str, str]]:
         """
-        Consult the Oracle for a random tip, ensuring no repetition.
+        Consult the Oracle for the next tip in the monthly cycle.
         
         Returns:
             tuple: (category, tip)
         """
-        # Flatten all tips into a single list with their categories
-        all_tips = []
-        for category, tips in self.aws_tips.items():
-            for tip in tips:
-                all_tips.append((category, tip))
-        
-        # Get a random tip, different from the last one
-        total_tips = len(all_tips)
+        total_tips = len(self.all_tips)
         if total_tips == 0:
             return "General", {"title": "No tips available", "description": "The Oracle's wisdom is currently veiled.", "learn_more": "https://aws.amazon.com"}
         
-        # Choose a new random index different from the last one
-        available_indices = list(range(total_tips))
-        if self.last_tip_index in available_indices:
-            available_indices.remove(self.last_tip_index)
+        # Get the current index from the state
+        current_index = self.tip_state.get("current_index", 0)
         
-        if not available_indices:  # If we've somehow exhausted all tips
-            available_indices = list(range(total_tips))
+        # Get the tip at the current index
+        tip_tuple = self.all_tips[current_index]
         
-        tip_index = random.choice(available_indices)
-        self.last_tip_index = tip_index
+        # Increment the index for next time, wrapping around if we reach the end
+        next_index = (current_index + 1) % total_tips
         
-        return all_tips[tip_index]
+        # Update the state
+        self.tip_state["current_index"] = next_index
+        self.tip_state["last_updated"] = datetime.utcnow().strftime("%Y-%m-%d")
+        self._save_tip_state()
+        
+        return tip_tuple
     
     @tasks.loop(hours=24)
     async def daily_tip(self):
@@ -119,8 +157,8 @@ class AWSInfo(commands.Cog):
                 channel = discord.utils.get(guild.channels, name=self.tips_channel_name)
                 
                 if channel:
-                    # Consult the Oracle for wisdom
-                    category, tip = self.get_random_tip()
+                    # Consult the Oracle for the next wisdom in the cycle
+                    category, tip = self.get_next_tip()
                     
                     # Create the mystical tip embed
                     embed = discord.Embed(
@@ -145,9 +183,12 @@ class AWSInfo(commands.Cog):
                     # Set thumbnail - mystical crystal ball
                     embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
                     
-                    # Add mystical footer
-                    total_tips = sum(len(tips) for tips in self.aws_tips.values())
-                    embed.set_footer(text=f"✨ The Oracle reveals new wisdom with each celestial cycle ✨")
+                    # Add mystical footer with tip number
+                    total_tips = len(self.all_tips)
+                    current_tip = self.tip_state.get("current_index", 0)
+                    # We display the tip we just showed, which is the previous index
+                    displayed_tip = current_tip - 1 if current_tip > 0 else total_tips - 1
+                    embed.set_footer(text=f"✨ Wisdom {displayed_tip + 1} of {total_tips} • The Oracle reveals new wisdom with each celestial cycle ✨")
                     
                     await channel.send(embed=embed)
                     logging.info(f"The Oracle has shared wisdom with {guild.name}")

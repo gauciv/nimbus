@@ -19,6 +19,11 @@
       "title": "Scry with Cost Explorer",
       "description": "Gaze into the Cost Explorer crystal to identify patterns in your resource consumption and discover opportunities for optimization.",
       "learn_more": "https://aws.amazon.com/aws-cost-management/aws-cost-explorer/"
+    },
+    {
+      "title": "Rightsize Your Ethereal Constructs",
+      "description": "Summon only the size of EC2 instances that your enchantments truly require. The Oracle's Compute Optimizer can guide your choices.",
+      "learn_more": "https://aws.amazon.com/compute-optimizer/"
     }
   ],
   "Security Enchantments": [
@@ -41,6 +46,11 @@
       "title": "Erect Security Groups Wisely",
       "description": "Configure your ethereal barriers (Security Groups) to permit only necessary pathways into your resources. Deny all by default.",
       "learn_more": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html"
+    },
+    {
+      "title": "Invoke GuardDuty's Vigilance",
+      "description": "Summon the watchful guardian to detect malevolent entities attempting to infiltrate your mystical realm.",
+      "learn_more": "https://aws.amazon.com/guardduty/"
     }
   ],
   "Performance Divination": [
@@ -63,6 +73,11 @@
       "title": "Embrace Caching Crystals",
       "description": "Place ElastiCache between your applications and databases to store frequently accessed wisdom for rapid retrieval.",
       "learn_more": "https://aws.amazon.com/elasticache/"
+    },
+    {
+      "title": "Optimize Image Enchantments",
+      "description": "Compress and transform your mystical images with CloudFront Functions to reduce their ethereal weight and accelerate their manifestation.",
+      "learn_more": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-functions.html"
     }
   ],
   "Reliability Wards": [
@@ -85,6 +100,11 @@
       "title": "Design for Failure",
       "description": "Assume components will eventually fail and design your architecture to continue functioning despite these inevitable disturbances.",
       "learn_more": "https://docs.aws.amazon.com/whitepapers/latest/aws-fault-isolation-boundaries/aws-fault-isolation-boundaries.html"
+    },
+    {
+      "title": "Invoke Route 53 Health Checks",
+      "description": "Command the Mystical Wayfinder to regularly test your enchantments and redirect seekers away from troubled realms.",
+      "learn_more": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/welcome-health-checks.html"
     }
   ],
   "Serverless Sorcery": [
@@ -107,6 +127,11 @@
       "title": "Utilize Managed Services",
       "description": "Delegate routine tasks to AWS's mystical servants, freeing your attention for the unique enchantments that define your realm.",
       "learn_more": "https://aws.amazon.com/managed-services/"
+    },
+    {
+      "title": "Optimize Lambda Memory Allocation",
+      "description": "Attune your Spectral Functions with precisely the right amount of memory to maximize their efficiency and minimize their cost.",
+      "learn_more": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html"
     }
   ],
   "DevOps Alchemy": [
@@ -129,6 +154,11 @@
       "title": "Embrace Immutable Infrastructure",
       "description": "Rather than modifying existing resources, conjure entirely new ones with updated configurations and smoothly transition between them.",
       "learn_more": "https://docs.aws.amazon.com/whitepapers/latest/overview-deployment-options/immutable-infrastructure.html"
+    },
+    {
+      "title": "Invoke AWS Proton",
+      "description": "Standardize your infrastructure templates to ensure consistent deployment of your microservices and serverless applications.",
+      "learn_more": "https://aws.amazon.com/proton/"
     }
   ],
   "Data Divination": [
@@ -151,6 +181,45 @@
       "title": "Transform with Glue",
       "description": "Use AWS Glue to transmute raw data into structured formats suitable for analysis, without maintaining persistent transformation engines.",
       "learn_more": "https://aws.amazon.com/glue/"
+    },
+    {
+      "title": "Analyze with Redshift",
+      "description": "Harness the power of the cosmic warehouse to analyze vast quantities of data with blazing speed and mystical efficiency.",
+      "learn_more": "https://aws.amazon.com/redshift/"
+    }
+  ],
+  "Networking Enchantments": [
+    {
+      "title": "Weave Private Connections with Direct Connect",
+      "description": "Establish dedicated mystical pathways between your on-premises realm and AWS, bypassing the chaotic public internet.",
+      "learn_more": "https://aws.amazon.com/directconnect/"
+    },
+    {
+      "title": "Shield Against the Void with WAF",
+      "description": "Erect a Web Application Firewall to protect your enchantments from malevolent incantations and dark magic.",
+      "learn_more": "https://aws.amazon.com/waf/"
+    },
+    {
+      "title": "Traverse Realms with Transit Gateway",
+      "description": "Create a central hub for connecting VPCs, on-premises networks, and remote branches in a star pattern of mystical connectivity.",
+      "learn_more": "https://aws.amazon.com/transit-gateway/"
+    }
+  ],
+  "Container Conjuring": [
+    {
+      "title": "Orchestrate with EKS",
+      "description": "Command a fleet of containerized enchantments with the power of Kubernetes, managed by the cosmic forces of AWS.",
+      "learn_more": "https://aws.amazon.com/eks/"
+    },
+    {
+      "title": "Simplify with Fargate",
+      "description": "Focus on your container spells without concerning yourself with the underlying ethereal constructs that run them.",
+      "learn_more": "https://aws.amazon.com/fargate/"
+    },
+    {
+      "title": "Store Arcane Images in ECR",
+      "description": "Secure your container images in the Elastic Container Registry, where they can be quickly summoned when needed.",
+      "learn_more": "https://aws.amazon.com/ecr/"
     }
   ]
 }
