@@ -1,0 +1,107 @@
+{
+  "s3": {
+    "name": "Simple Storage Service (S3)",
+    "mystical_name": "Celestial Vault",
+    "description": "A boundless repository where digital artifacts are preserved for eternity. Like an enchanted chest with infinite capacity, it safeguards your mystical scrolls and arcane images.",
+    "use_cases": "• Hosting ethereal web presences\n• Archiving ancient knowledge\n• Creating lakes of wisdom\n• Storing magical artifacts",
+    "icon": "🔮"
+  },
+  "ec2": {
+    "name": "Elastic Compute Cloud (EC2)",
+    "mystical_name": "Ethereal Thought Construct",
+    "description": "Conjure virtual thinking entities that manifest your will in the digital realm. These ethereal constructs can be summoned or banished at your command.",
+    "use_cases": "• Hosting mystical applications\n• Processing arcane calculations\n• Serving as vessels for your digital creations\n• Scaling your magical workloads",
+    "icon": "✨"
+  },
+  "lambda": {
+    "name": "Lambda",
+    "mystical_name": "Spectral Functions",
+    "description": "Invoke ephemeral spells that materialize only when needed, then fade back into the ether. These spectral functions require no persistent vessel to manifest their power.",
+    "use_cases": "• Responding to mystical events\n• Processing arcane data\n• Creating serverless enchantments\n• Automating magical workflows",
+    "icon": "⚡"
+  },
+  "dynamodb": {
+    "name": "DynamoDB",
+    "mystical_name": "Tome of Infinite Records",
+    "description": "A magical tome that expands to accommodate any volume of arcane knowledge. Its pages reorganize themselves instantly to reveal exactly what you seek.",
+    "use_cases": "• Storing enchanted items\n• Cataloging user profiles\n• Recording mystical events\n• Maintaining session states",
+    "icon": "📜"
+  },
+  "rds": {
+    "name": "Relational Database Service (RDS)",
+    "mystical_name": "Arcane Knowledge Repository",
+    "description": "A meticulously organized library where knowledge is stored in interconnected tomes. The magical librarians maintain order and protect against dark forces.",
+    "use_cases": "• Preserving structured knowledge\n• Maintaining relational wisdom\n• Hosting traditional database engines\n• Automating arcane maintenance",
+    "icon": "📚"
+  },
+  "sns": {
+    "name": "Simple Notification Service (SNS)",
+    "mystical_name": "Ethereal Messenger",
+    "description": "A network of spectral messengers that carry your proclamations across the digital realm. They ensure your words reach all intended recipients simultaneously.",
+    "use_cases": "• Broadcasting mystical announcements\n• Triggering cascading enchantments\n• Notifying mortal users\n• Decoupling magical systems",
+    "icon": "📯"
+  },
+  "sqs": {
+    "name": "Simple Queue Service (SQS)",
+    "mystical_name": "Patience Pools",
+    "description": "Mystical pools where tasks await their turn to be fulfilled. These pools ensure no magical work is lost, even when the cosmic forces are turbulent.",
+    "use_cases": "• Decoupling system components\n• Managing task backlogs\n• Ensuring message processing\n• Handling traffic spikes",
+    "icon": "⏳"
+  },
+  "cloudfront": {
+    "name": "CloudFront",
+    "mystical_name": "Astral Network",
+    "description": "A constellation of mystical mirrors that reflect your content across the mortal realm. These mirrors bring your enchantments closer to those who seek them.",
+    "use_cases": "• Accelerating content delivery\n• Protecting against dark forces\n• Reducing origin burden\n• Distributing global content",
+    "icon": "🌠"
+  },
+  "iam": {
+    "name": "Identity and Access Management (IAM)",
+    "mystical_name": "Arcane Gatekeeper",
+    "description": "The vigilant guardian that determines which entities may access your mystical resources. It grants or denies passage based on ancient scrolls of permission.",
+    "use_cases": "• Controlling access to resources\n• Creating magical roles\n• Managing user identities\n• Implementing principle of least privilege",
+    "icon": "🔐"
+  },
+  "cloudwatch": {
+    "name": "CloudWatch",
+    "mystical_name": "All-Seeing Eye",
+    "description": "A mystical orb that observes all activities within your realm. It can alert you when anomalies appear or when thresholds of power are crossed.",
+    "use_cases": "• Monitoring magical resources\n• Observing application health\n• Triggering automated responses\n• Collecting and analyzing metrics",
+    "icon": "👁️"
+  },
+  "route53": {
+    "name": "Route 53",
+    "mystical_name": "Mystical Wayfinder",
+    "description": "An enchanted map that guides seekers to your digital domains. It translates arcane runes (domain names) into the numeric coordinates of your realms.",
+    "use_cases": "• Registering mystical domains\n• Directing traffic to resources\n• Health checking your enchantments\n• Implementing routing policies",
+    "icon": "🧭"
+  },
+  "vpc": {
+    "name": "Virtual Private Cloud (VPC)",
+    "mystical_name": "Ethereal Sanctuary",
+    "description": "A protected pocket dimension where your mystical resources can exist in isolation. Within these boundaries, you control all aspects of connectivity and security.",
+    "use_cases": "• Creating isolated networks\n• Defining security boundaries\n• Controlling ingress and egress\n• Connecting to other realms",
+    "icon": "🌌"
+  },
+  "efs": {
+    "name": "Elastic File System (EFS)",
+    "mystical_name": "Shared Grimoire",
+    "description": "A magical tome that can be read and written by multiple entities simultaneously. It expands as needed to accommodate growing knowledge.",
+    "use_cases": "• Sharing files between constructs\n• Storing application data\n• Supporting content management\n• Enabling collaborative workspaces",
+    "icon": "📖"
+  },
+  "cloudformation": {
+    "name": "CloudFormation",
+    "mystical_name": "Reality Weaver",
+    "description": "Ancient scrolls that, when recited, manifest entire infrastructures from the void. These scrolls ensure your realm is constructed identically each time.",
+    "use_cases": "• Creating infrastructure as code\n• Automating resource provisioning\n• Maintaining consistent environments\n• Managing complex deployments",
+    "icon": "🧙"
+  },
+  "apigateway": {
+    "name": "API Gateway",
+    "mystical_name": "Portal Master",
+    "description": "A mystical doorkeeper that manages the thresholds between realms. It controls who may pass through your portals and how they may interact with what lies beyond.",
+    "use_cases": "• Creating RESTful interfaces\n• Managing API access\n• Transforming and validating requests\n• Connecting to backend services",
+    "icon": "🚪"
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "Arcane Cost Optimization": [
+    {
+      "title": "Harness Reserved Ethereal Constructs",
+      "description": "Channel your resources wisely by binding EC2 Reserved Instances to your predictable workloads, saving up to 75% of your mystical energies.",
+      "learn_more": "https://aws.amazon.com/ec2/pricing/reserved-instances/"
+    },
+    {
+      "title": "Banish Unused Resources",
+      "description": "Regularly dispel idle resources that drain your energies. The Oracle's CloudWatch can reveal these dormant entities so you may release them back to the void.",
+      "learn_more": "https://aws.amazon.com/cloudwatch/"
+    },
+    {
+      "title": "Invoke the Savings Plans Ritual",
+      "description": "Commit to a consistent flow of compute power and receive discounted rates through the ancient pact known as Savings Plans.",
+      "learn_more": "https://aws.amazon.com/savingsplans/"
+    },
+    {
+      "title": "Scry with Cost Explorer",
+      "description": "Gaze into the Cost Explorer crystal to identify patterns in your resource consumption and discover opportunities for optimization.",
+      "learn_more": "https://aws.amazon.com/aws-cost-management/aws-cost-explorer/"
+    }
+  ],
+  "Security Enchantments": [
+    {
+      "title": "Fortify with Multi-Factor Authentication",
+      "description": "Protect your realm by requiring multiple keys to enter. Enable MFA for all entities who access your AWS constellation.",
+      "learn_more": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa.html"
+    },
+    {
+      "title": "Invoke Least Privilege Principles",
+      "description": "Grant only the minimum permissions necessary for each entity to perform its duties. The Arcane Gatekeeper (IAM) allows for precise control.",
+      "learn_more": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege"
+    },
+    {
+      "title": "Shield Your Secrets",
+      "description": "Never inscribe access keys directly into your spells. Use Secrets Manager or Parameter Store to protect your mystical credentials.",
+      "learn_more": "https://aws.amazon.com/secrets-manager/"
+    },
+    {
+      "title": "Erect Security Groups Wisely",
+      "description": "Configure your ethereal barriers (Security Groups) to permit only necessary pathways into your resources. Deny all by default.",
+      "learn_more": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html"
+    }
+  ],
+  "Performance Divination": [
+    {
+      "title": "Summon Auto Scaling Groups",
+      "description": "Allow your fleet of Ethereal Constructs to expand and contract with the tides of demand, ensuring optimal performance during any cosmic event.",
+      "learn_more": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html"
+    },
+    {
+      "title": "Distribute Through the Astral Network",
+      "description": "Deploy your content to the edges of the realm using CloudFront, reducing the distance your enchantments must travel to reach their recipients.",
+      "learn_more": "https://aws.amazon.com/cloudfront/"
+    },
+    {
+      "title": "Implement Read Replicas",
+      "description": "Create magical mirrors of your knowledge repositories to distribute the burden of queries and accelerate responses to seekers.",
+      "learn_more": "https://aws.amazon.com/rds/features/read-replicas/"
+    },
+    {
+      "title": "Embrace Caching Crystals",
+      "description": "Place ElastiCache between your applications and databases to store frequently accessed wisdom for rapid retrieval.",
+      "learn_more": "https://aws.amazon.com/elasticache/"
+    }
+  ],
+  "Reliability Wards": [
+    {
+      "title": "Disperse Across Multiple Realms",
+      "description": "Deploy your enchantments across multiple Availability Zones to protect against localized disturbances in the cosmic fabric.",
+      "learn_more": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html"
+    },
+    {
+      "title": "Implement Circuit Breakers",
+      "description": "Protect your systems from cascading failures by implementing mystical barriers that open when downstream services falter.",
+      "learn_more": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/"
+    },
+    {
+      "title": "Create Disaster Recovery Scrolls",
+      "description": "Prepare ancient scrolls (backup and recovery plans) that can restore your realm should catastrophe strike.",
+      "learn_more": "https://aws.amazon.com/backup/"
+    },
+    {
+      "title": "Design for Failure",
+      "description": "Assume components will eventually fail and design your architecture to continue functioning despite these inevitable disturbances.",
+      "learn_more": "https://docs.aws.amazon.com/whitepapers/latest/aws-fault-isolation-boundaries/aws-fault-isolation-boundaries.html"
+    }
+  ],
+  "Serverless Sorcery": [
+    {
+      "title": "Embrace Spectral Functions",
+      "description": "Convert your monolithic enchantments into collections of Lambda functions that materialize only when invoked, conserving precious resources.",
+      "learn_more": "https://aws.amazon.com/lambda/"
+    },
+    {
+      "title": "Orchestrate with Step Functions",
+      "description": "Coordinate complex workflows by binding multiple Spectral Functions together in a precisely defined sequence of magical operations.",
+      "learn_more": "https://aws.amazon.com/step-functions/"
+    },
+    {
+      "title": "Harness Event-Driven Architecture",
+      "description": "Design your systems to respond to mystical events rather than constantly maintaining vigilance, allowing for more efficient use of resources.",
+      "learn_more": "https://aws.amazon.com/event-driven-architecture/"
+    },
+    {
+      "title": "Utilize Managed Services",
+      "description": "Delegate routine tasks to AWS's mystical servants, freeing your attention for the unique enchantments that define your realm.",
+      "learn_more": "https://aws.amazon.com/managed-services/"
+    }
+  ],
+  "DevOps Alchemy": [
+    {
+      "title": "Automate with CodePipeline",
+      "description": "Create magical conveyor belts that transport your code from development through testing and into production without manual intervention.",
+      "learn_more": "https://aws.amazon.com/codepipeline/"
+    },
+    {
+      "title": "Monitor with the All-Seeing Eye",
+      "description": "Configure CloudWatch to observe your systems and alert you when anomalies appear, before they grow into full-fledged crises.",
+      "learn_more": "https://aws.amazon.com/cloudwatch/"
+    },
+    {
+      "title": "Implement Infrastructure as Code",
+      "description": "Define your entire realm in mystical scrolls (CloudFormation or CDK) that can be version-controlled and automatically deployed.",
+      "learn_more": "https://aws.amazon.com/cdk/"
+    },
+    {
+      "title": "Embrace Immutable Infrastructure",
+      "description": "Rather than modifying existing resources, conjure entirely new ones with updated configurations and smoothly transition between them.",
+      "learn_more": "https://docs.aws.amazon.com/whitepapers/latest/overview-deployment-options/immutable-infrastructure.html"
+    }
+  ],
+  "Data Divination": [
+    {
+      "title": "Create Lakes of Wisdom",
+      "description": "Establish data lakes using S3 and Athena to store vast quantities of raw knowledge that can be queried directly without transformation.",
+      "learn_more": "https://aws.amazon.com/big-data/datalakes-and-analytics/"
+    },
+    {
+      "title": "Process Streams of Events",
+      "description": "Use Kinesis to capture and process continuous flows of data, allowing real-time analysis of the ever-changing cosmic patterns.",
+      "learn_more": "https://aws.amazon.com/kinesis/"
+    },
+    {
+      "title": "Invoke Machine Learning Divination",
+      "description": "Harness SageMaker to train mystical models that can predict future events based on patterns in historical data.",
+      "learn_more": "https://aws.amazon.com/sagemaker/"
+    },
+    {
+      "title": "Transform with Glue",
+      "description": "Use AWS Glue to transmute raw data into structured formats suitable for analysis, without maintaining persistent transformation engines.",
+      "learn_more": "https://aws.amazon.com/glue/"
+    }
+  ]
+}
