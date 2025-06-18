@@ -176,3 +176,18 @@ class EventManager:
         if event in self.events:
             self.events.remove(event)
             self.save_events()
+            
+    def get_event_by_id(self, message_id: int) -> Optional[Event]:
+        """
+        Find an event by its message ID.
+        
+        Args:
+            message_id: The Discord message ID of the event announcement
+            
+        Returns:
+            Event object if found, None otherwise
+        """
+        for event in self.events:
+            if event.message_id == message_id:
+                return event
+        return None

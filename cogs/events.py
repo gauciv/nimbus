@@ -174,6 +174,170 @@ class EventCommands(commands.GroupCog, name="event"):
                 ephemeral=True
             )
 
+    @app_commands.command(name="list", description="✨ Reveal the mystical gatherings for the Council of Elders (list events for Core Team)")
+    @is_core_team()
+    async def list_events(self, interaction: discord.Interaction):
+        """List all events with their numbers for Core Team members."""
+        try:
+            upcoming_events = self.event_manager.get_upcoming_events()
+            
+            if not upcoming_events:
+                await interaction.response.send_message(
+                    "🌌 The cosmic calendar shows no gatherings to manage. (No upcoming events)",
+                    ephemeral=True
+                )
+                return
+                
+            # Create an embed for the event list
+            embed = discord.Embed(
+                title="🔮 Mystical Gatherings Registry (Event Management)",
+                description="The Oracle reveals the gatherings you may manage:",
+                color=discord.Color.purple(),
+                timestamp=datetime.now()
+            )
+            
+            # Add each event to the embed with its number
+            for i, event in enumerate(upcoming_events, 1):
+                event_datetime = event.get_datetime()
+                time_until = event_datetime - datetime.now()
+                
+                embed.add_field(
+                    name=f"Gathering #{i}: {event.title}",
+                    value=(
+                        f"📆 Date: {event.date}\n"
+                        f"⏰ Time: {event.time}\n"
+                        f"🔢 Event Number: {i} (use this to cancel)\n"
+                        f"📜 Description: {event.description or 'None provided'}"
+                    ),
+                    inline=False
+                )
+            
+            embed.set_footer(text="✨ Use /event cancel <event_number> <reason> to unravel a gathering from the cosmic tapestry")
+            
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logging.error(f"Error listing events: {e}")
+            await interaction.response.send_message(
+                "🌑 The cosmic forces prevent the Oracle from revealing the gatherings registry. (Error listing events)",
+                ephemeral=True
+            )
+    
+    @app_commands.command(name="cancel", description="✨ Unravel a mystical gathering from the cosmic tapestry (cancel an event)")
+    @app_commands.describe(
+        event_number="The numerical sigil of the gathering to unravel (event number from /event list)",
+        reason="The arcane explanation for this unraveling (reason for cancellation)"
+    )
+    @is_core_team()
+    async def cancel(
+        self,
+        interaction: discord.Interaction,
+        event_number: int,
+        reason: str
+    ):
+        """Cancel an event with a reason."""
+        try:
+            # Get upcoming events
+            upcoming_events = self.event_manager.get_upcoming_events()
+            
+            if not upcoming_events:
+                await interaction.response.send_message(
+                    "🌌 The cosmic calendar shows no gatherings to unravel. (No events to cancel)",
+                    ephemeral=True
+                )
+                return
+                
+            # Check if event number is valid
+            if event_number < 1 or event_number > len(upcoming_events):
+                await interaction.response.send_message(
+                    f"🌑 The numerical sigil {event_number} does not correspond to any known gathering. (Invalid event number)",
+                    ephemeral=True
+                )
+                return
+                
+            # Get the event to cancel
+            event_to_cancel = upcoming_events[event_number - 1]
+            
+            # Find the announcements channel
+            announcements_channel = discord.utils.get(interaction.guild.channels, name='announcements')
+            if not announcements_channel:
+                await interaction.response.send_message(
+                    "🌑 The sacred chamber of proclamations cannot be found in this realm. (Missing #announcements channel)",
+                    ephemeral=True
+                )
+                return
+                
+            # Create cancellation embed
+            embed = discord.Embed(
+                title=f"🌙 Gathering Unraveled (Event Cancelled): {event_to_cancel.title}",
+                description=f"A mystical gathering has been removed from the cosmic tapestry.",
+                color=discord.Color.red(),
+                timestamp=datetime.now()
+            )
+            
+            embed.add_field(
+                name="📆 Written in the Stars (Date)",
+                value=event_to_cancel.date,
+                inline=True
+            )
+            
+            embed.add_field(
+                name="⏰ When the Hour Would Have Struck (Time)",
+                value=event_to_cancel.time,
+                inline=True
+            )
+            
+            embed.add_field(
+                name="🔮 Arcane Reasoning (Cancellation Reason)",
+                value=reason,
+                inline=False
+            )
+            
+            embed.add_field(
+                name="✨ Decree Issued By (Cancelled By)",
+                value=interaction.user.mention,
+                inline=False
+            )
+            
+            # Send cancellation announcement
+            await announcements_channel.send(
+                content="@everyone A gathering has been unraveled from the cosmic tapestry! (Event cancelled)",
+                embed=embed
+            )
+            
+            # Try to edit or reply to the original event message
+            try:
+                original_message = await announcements_channel.fetch_message(event_to_cancel.message_id)
+                if original_message:
+                    original_embed = original_message.embeds[0]
+                    original_embed.title = f"🌙 CANCELLED: {original_embed.title}"
+                    original_embed.color = discord.Color.red()
+                    original_embed.add_field(
+                        name="🔮 Cancellation Reason",
+                        value=reason,
+                        inline=False
+                    )
+                    await original_message.edit(embed=original_embed)
+            except:
+                # If we can't edit the original message, just continue
+                pass
+                
+            # Remove the event
+            self.event_manager.remove_event(event_to_cancel)
+            
+            # Confirm to the command user
+            await interaction.response.send_message(
+                f"✨ The gathering '{event_to_cancel.title}' has been unraveled from the cosmic tapestry. (Event cancelled successfully)",
+                ephemeral=True
+            )
+            
+        except Exception as e:
+            logging.error(f"Error cancelling event: {e}")
+            await interaction.response.send_message(
+                "🌑 The cosmic forces resist your attempt to unravel this gathering. (Error cancelling event)",
+                ephemeral=True
+            )
+    
     @app_commands.command(name="schedule", description="✨ Consult the cosmic calendar of mystical gatherings (view upcoming events)")
     async def schedule(self, interaction: discord.Interaction):
         """Display all upcoming events with mystical flair."""
@@ -234,7 +398,12 @@ class EventCommands(commands.GroupCog, name="event"):
                     inline=False
                 )
             
-            embed.set_footer(text="✨ Use /event create to inscribe a new gathering in the cosmic calendar (Core Team only)")
+            # Add footer with instructions for Core Team members
+            is_core_team = discord.utils.get(interaction.guild.roles, name="Core Team") in interaction.user.roles
+            if is_core_team:
+                embed.set_footer(text="✨ Use /event create to inscribe a new gathering or /event cancel to unravel an existing one (Core Team only)")
+            else:
+                embed.set_footer(text="✨ Use /event create to inscribe a new gathering in the cosmic calendar (Core Team only)")
             
             await interaction.response.send_message(embed=embed)
             
