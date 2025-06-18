@@ -2,106 +2,190 @@
   "s3": {
     "name": "Simple Storage Service (S3)",
     "mystical_name": "Celestial Vault",
-    "description": "A boundless repository where digital artifacts are preserved for eternity. Like an enchanted chest with infinite capacity, it safeguards your mystical scrolls and arcane images.",
-    "use_cases": "• Hosting ethereal web presences\n• Archiving ancient knowledge\n• Creating lakes of wisdom\n• Storing magical artifacts",
+    "description": "A boundless repository (object storage service) where digital artifacts are preserved for eternity. Like an enchanted chest with infinite capacity, it safeguards your mystical scrolls (documents) and arcane images (media files) with unparalleled durability.",
+    "use_cases": "• Hosting ethereal web presences (static websites)\n• Archiving ancient knowledge (data backup)\n• Creating lakes of wisdom (data lakes)\n• Storing magical artifacts (media files)",
     "icon": "🔮"
   },
   "ec2": {
     "name": "Elastic Compute Cloud (EC2)",
     "mystical_name": "Ethereal Thought Construct",
-    "description": "Conjure virtual thinking entities that manifest your will in the digital realm. These ethereal constructs can be summoned or banished at your command.",
-    "use_cases": "• Hosting mystical applications\n• Processing arcane calculations\n• Serving as vessels for your digital creations\n• Scaling your magical workloads",
+    "description": "Conjure virtual thinking entities (virtual servers) that manifest your will in the digital realm. These ethereal constructs (instances) can be summoned or banished at your command, providing resizable compute capacity in the cloud.",
+    "use_cases": "• Hosting mystical applications (web applications)\n• Processing arcane calculations (batch processing)\n• Serving as vessels for your digital creations (hosting services)\n• Scaling your magical workloads (variable workloads)",
     "icon": "✨"
   },
   "lambda": {
     "name": "Lambda",
     "mystical_name": "Spectral Functions",
-    "description": "Invoke ephemeral spells that materialize only when needed, then fade back into the ether. These spectral functions require no persistent vessel to manifest their power.",
-    "use_cases": "• Responding to mystical events\n• Processing arcane data\n• Creating serverless enchantments\n• Automating magical workflows",
+    "description": "Invoke ephemeral spells (serverless functions) that materialize only when needed, then fade back into the ether. These spectral functions require no persistent vessel (server) to manifest their power, and you pay only for what you use.",
+    "use_cases": "• Responding to mystical events (event-driven processing)\n• Processing arcane data (data transformation)\n• Creating serverless enchantments (microservices)\n• Automating magical workflows (automation tasks)",
     "icon": "⚡"
   },
   "dynamodb": {
     "name": "DynamoDB",
     "mystical_name": "Tome of Infinite Records",
-    "description": "A magical tome that expands to accommodate any volume of arcane knowledge. Its pages reorganize themselves instantly to reveal exactly what you seek.",
-    "use_cases": "• Storing enchanted items\n• Cataloging user profiles\n• Recording mystical events\n• Maintaining session states",
+    "description": "A magical tome (NoSQL database) that expands to accommodate any volume of arcane knowledge. Its pages (tables) reorganize themselves instantly to reveal exactly what you seek, with single-digit millisecond performance at any scale.",
+    "use_cases": "• Storing enchanted items (product catalogs)\n• Cataloging user profiles (user data)\n• Recording mystical events (event logs)\n• Maintaining session states (web sessions)",
     "icon": "📜"
   },
   "rds": {
     "name": "Relational Database Service (RDS)",
     "mystical_name": "Arcane Knowledge Repository",
-    "description": "A meticulously organized library where knowledge is stored in interconnected tomes. The magical librarians maintain order and protect against dark forces.",
-    "use_cases": "• Preserving structured knowledge\n• Maintaining relational wisdom\n• Hosting traditional database engines\n• Automating arcane maintenance",
+    "description": "A meticulously organized library (managed relational database) where knowledge is stored in interconnected tomes (tables). The magical librarians (AWS) maintain order and protect against dark forces, handling routine database tasks automatically.",
+    "use_cases": "• Preserving structured knowledge (relational data)\n• Maintaining relational wisdom (complex queries)\n• Hosting traditional database engines (MySQL, PostgreSQL, etc.)\n• Automating arcane maintenance (backups, patching)",
     "icon": "📚"
   },
   "sns": {
     "name": "Simple Notification Service (SNS)",
     "mystical_name": "Ethereal Messenger",
-    "description": "A network of spectral messengers that carry your proclamations across the digital realm. They ensure your words reach all intended recipients simultaneously.",
-    "use_cases": "• Broadcasting mystical announcements\n• Triggering cascading enchantments\n• Notifying mortal users\n• Decoupling magical systems",
+    "description": "A network of spectral messengers (pub/sub messaging service) that carry your proclamations across the digital realm. They ensure your words (messages) reach all intended recipients (subscribers) simultaneously.",
+    "use_cases": "• Broadcasting mystical announcements (notifications)\n• Triggering cascading enchantments (event chains)\n• Notifying mortal users (user alerts)\n• Decoupling magical systems (microservices)",
     "icon": "📯"
   },
   "sqs": {
     "name": "Simple Queue Service (SQS)",
     "mystical_name": "Patience Pools",
-    "description": "Mystical pools where tasks await their turn to be fulfilled. These pools ensure no magical work is lost, even when the cosmic forces are turbulent.",
-    "use_cases": "• Decoupling system components\n• Managing task backlogs\n• Ensuring message processing\n• Handling traffic spikes",
+    "description": "Mystical pools (message queues) where tasks await their turn to be fulfilled. These pools ensure no magical work is lost, even when the cosmic forces are turbulent, enabling decoupled and scalable systems.",
+    "use_cases": "• Decoupling system components (microservices)\n• Managing task backlogs (work queues)\n• Ensuring message processing (reliable delivery)\n• Handling traffic spikes (load leveling)",
     "icon": "⏳"
   },
   "cloudfront": {
     "name": "CloudFront",
     "mystical_name": "Astral Network",
-    "description": "A constellation of mystical mirrors that reflect your content across the mortal realm. These mirrors bring your enchantments closer to those who seek them.",
-    "use_cases": "• Accelerating content delivery\n• Protecting against dark forces\n• Reducing origin burden\n• Distributing global content",
+    "description": "A constellation of mystical mirrors (CDN) that reflect your content across the mortal realm. These mirrors (edge locations) bring your enchantments (content) closer to those who seek them, reducing latency and improving performance.",
+    "use_cases": "• Accelerating content delivery (faster loading)\n• Protecting against dark forces (security features)\n• Reducing origin burden (offloading traffic)\n• Distributing global content (worldwide delivery)",
     "icon": "🌠"
   },
   "iam": {
     "name": "Identity and Access Management (IAM)",
     "mystical_name": "Arcane Gatekeeper",
-    "description": "The vigilant guardian that determines which entities may access your mystical resources. It grants or denies passage based on ancient scrolls of permission.",
-    "use_cases": "• Controlling access to resources\n• Creating magical roles\n• Managing user identities\n• Implementing principle of least privilege",
+    "description": "The vigilant guardian (security service) that determines which entities may access your mystical resources. It grants or denies passage based on ancient scrolls of permission (policies), ensuring precise control over your AWS realm.",
+    "use_cases": "• Controlling access to resources (permissions)\n• Creating magical roles (IAM roles)\n• Managing user identities (user management)\n• Implementing principle of least privilege (security best practice)",
     "icon": "🔐"
   },
   "cloudwatch": {
     "name": "CloudWatch",
     "mystical_name": "All-Seeing Eye",
-    "description": "A mystical orb that observes all activities within your realm. It can alert you when anomalies appear or when thresholds of power are crossed.",
-    "use_cases": "• Monitoring magical resources\n• Observing application health\n• Triggering automated responses\n• Collecting and analyzing metrics",
+    "description": "A mystical orb (monitoring service) that observes all activities within your realm. It can alert you when anomalies appear or when thresholds of power are crossed, providing visibility into your resources and applications.",
+    "use_cases": "• Monitoring magical resources (resource metrics)\n• Observing application health (health checks)\n• Triggering automated responses (alarms)\n• Collecting and analyzing metrics (performance data)",
     "icon": "👁️"
   },
   "route53": {
     "name": "Route 53",
     "mystical_name": "Mystical Wayfinder",
-    "description": "An enchanted map that guides seekers to your digital domains. It translates arcane runes (domain names) into the numeric coordinates of your realms.",
-    "use_cases": "• Registering mystical domains\n• Directing traffic to resources\n• Health checking your enchantments\n• Implementing routing policies",
+    "description": "An enchanted map (DNS service) that guides seekers to your digital domains. It translates arcane runes (domain names) into the numeric coordinates (IP addresses) of your realms, ensuring reliable routing for your visitors.",
+    "use_cases": "• Registering mystical domains (domain registration)\n• Directing traffic to resources (DNS routing)\n• Health checking your enchantments (health checks)\n• Implementing routing policies (traffic management)",
     "icon": "🧭"
   },
   "vpc": {
     "name": "Virtual Private Cloud (VPC)",
     "mystical_name": "Ethereal Sanctuary",
-    "description": "A protected pocket dimension where your mystical resources can exist in isolation. Within these boundaries, you control all aspects of connectivity and security.",
-    "use_cases": "• Creating isolated networks\n• Defining security boundaries\n• Controlling ingress and egress\n• Connecting to other realms",
+    "description": "A protected pocket dimension (virtual network) where your mystical resources can exist in isolation. Within these boundaries, you control all aspects of connectivity and security, creating a private section of the AWS cloud.",
+    "use_cases": "• Creating isolated networks (network isolation)\n• Defining security boundaries (network security)\n• Controlling ingress and egress (traffic control)\n• Connecting to other realms (hybrid connectivity)",
     "icon": "🌌"
   },
   "efs": {
     "name": "Elastic File System (EFS)",
     "mystical_name": "Shared Grimoire",
-    "description": "A magical tome that can be read and written by multiple entities simultaneously. It expands as needed to accommodate growing knowledge.",
-    "use_cases": "• Sharing files between constructs\n• Storing application data\n• Supporting content management\n• Enabling collaborative workspaces",
+    "description": "A magical tome (managed file system) that can be read and written by multiple entities (EC2 instances) simultaneously. It expands as needed to accommodate growing knowledge, providing scalable file storage for your applications.",
+    "use_cases": "• Sharing files between constructs (shared storage)\n• Storing application data (persistent storage)\n• Supporting content management (CMS storage)\n• Enabling collaborative workspaces (shared workspaces)",
     "icon": "📖"
   },
   "cloudformation": {
     "name": "CloudFormation",
     "mystical_name": "Reality Weaver",
-    "description": "Ancient scrolls that, when recited, manifest entire infrastructures from the void. These scrolls ensure your realm is constructed identically each time.",
-    "use_cases": "• Creating infrastructure as code\n• Automating resource provisioning\n• Maintaining consistent environments\n• Managing complex deployments",
+    "description": "Ancient scrolls (templates) that, when recited, manifest entire infrastructures from the void. These scrolls ensure your realm is constructed identically each time, allowing you to model and provision resources using code.",
+    "use_cases": "• Creating infrastructure as code (IaC)\n• Automating resource provisioning (deployment automation)\n• Maintaining consistent environments (environment consistency)\n• Managing complex deployments (stack management)",
     "icon": "🧙"
   },
   "apigateway": {
     "name": "API Gateway",
     "mystical_name": "Portal Master",
-    "description": "A mystical doorkeeper that manages the thresholds between realms. It controls who may pass through your portals and how they may interact with what lies beyond.",
-    "use_cases": "• Creating RESTful interfaces\n• Managing API access\n• Transforming and validating requests\n• Connecting to backend services",
+    "description": "A mystical doorkeeper (API management service) that manages the thresholds between realms. It controls who may pass through your portals (APIs) and how they may interact with what lies beyond, creating, publishing, and securing APIs at any scale.",
+    "use_cases": "• Creating RESTful interfaces (REST APIs)\n• Managing API access (API keys)\n• Transforming and validating requests (request/response handling)\n• Connecting to backend services (service integration)",
     "icon": "🚪"
+  },
+  "eks": {
+    "name": "Elastic Kubernetes Service (EKS)",
+    "mystical_name": "Container Constellation",
+    "description": "A celestial orchestration system (managed Kubernetes service) that coordinates the dance of countless enchanted vessels (containers). It maintains the harmony of your containerized applications without the burden of managing the control plane.",
+    "use_cases": "• Orchestrating container fleets (container orchestration)\n• Managing distributed applications (microservices)\n• Ensuring consistent deployments (deployment consistency)\n• Scaling container workloads (auto-scaling)",
+    "icon": "🌐"
+  },
+  "fargate": {
+    "name": "Fargate",
+    "mystical_name": "Vessel Conjurer",
+    "description": "A mystical force that summons the perfect vessel (serverless compute engine) for your containerized enchantments (applications). It frees you from the burden of managing the underlying ethereal constructs (servers), focusing solely on your containers.",
+    "use_cases": "• Running containers without servers (serverless containers)\n• Scaling container workloads (auto-scaling)\n• Simplifying infrastructure management (reduced overhead)\n• Paying only for resources used (cost optimization)",
+    "icon": "🚢"
+  },
+  "aurora": {
+    "name": "Aurora",
+    "mystical_name": "Luminous Repository",
+    "description": "A radiant knowledge vault (relational database) that shines with the speed of five traditional repositories while maintaining perfect harmony with ancient tomes (MySQL/PostgreSQL compatibility). It offers superior performance with automatic scaling.",
+    "use_cases": "• Storing critical mystical knowledge (mission-critical data)\n• Handling intense divination requests (high-throughput queries)\n• Ensuring knowledge persistence (high availability)\n• Scaling with growing wisdom (automatic scaling)",
+    "icon": "✨"
+  },
+  "athena": {
+    "name": "Athena",
+    "mystical_name": "Wisdom Seeker",
+    "description": "A mystical sage (interactive query service) that can extract profound insights from vast lakes of knowledge (data lakes) without moving the waters. It allows you to analyze data directly in S3 using standard SQL, with no infrastructure to manage.",
+    "use_cases": "• Querying lakes of wisdom (data lake queries)\n• Analyzing ancient scrolls (log analysis)\n• Extracting business insights (business intelligence)\n• Exploring data without preparation (ad-hoc analysis)",
+    "icon": "🔍"
+  },
+  "glue": {
+    "name": "Glue",
+    "mystical_name": "Essence Transmuter",
+    "description": "A mystical alchemist (ETL service) that transforms raw materials (data) into refined essences suitable for divination. It discovers, prepares, and combines your data for analytics, machine learning, and application development.",
+    "use_cases": "• Transforming raw knowledge (data transformation)\n• Cataloging mystical artifacts (data cataloging)\n• Preparing data for divination (analytics preparation)\n• Connecting disparate data sources (data integration)",
+    "icon": "⚗️"
+  },
+  "sagemaker": {
+    "name": "SageMaker",
+    "mystical_name": "Oracle's Workshop",
+    "description": "A sacred chamber (machine learning platform) where oracles (data scientists) craft divination tools (ML models) to glimpse the future. It provides everything needed to build, train, and deploy machine learning models at scale.",
+    "use_cases": "• Crafting prediction enchantments (ML model building)\n• Training mystical intelligences (model training)\n• Deploying oracular services (model deployment)\n• Automating divination workflows (ML pipelines)",
+    "icon": "🧠"
+  },
+  "cognito": {
+    "name": "Cognito",
+    "mystical_name": "Identity Weaver",
+    "description": "A mystical registry (authentication service) that recognizes and verifies the identity of visitors to your realm. It manages user sign-up, sign-in, and access control, supporting various identity providers and security features.",
+    "use_cases": "• Recognizing realm visitors (user authentication)\n• Managing visitor identities (user management)\n• Controlling access to enchantments (access control)\n• Supporting external identity scrolls (social sign-in)",
+    "icon": "🔑"
+  },
+  "eventbridge": {
+    "name": "EventBridge",
+    "mystical_name": "Cosmic Event Tapestry",
+    "description": "A mystical loom (serverless event bus) that weaves together the threads of events across your realm and beyond. It connects applications using events, making it easier to build scalable event-driven applications.",
+    "use_cases": "• Connecting disparate systems (application integration)\n• Responding to mystical occurrences (event-driven architecture)\n• Automating workflows (workflow automation)\n• Scheduling regular rituals (scheduled tasks)",
+    "icon": "🌉"
+  },
+  "secretsmanager": {
+    "name": "Secrets Manager",
+    "mystical_name": "Vault of Hidden Truths",
+    "description": "A secure chamber (secrets management service) where your most valuable mystical keys and passwords are kept hidden from prying eyes. It helps you protect access to your applications, services, and IT resources without hardcoded credentials.",
+    "use_cases": "• Protecting mystical keys (credential management)\n• Rotating ancient passwords (secret rotation)\n• Securing access to magical repositories (database credentials)\n• Sharing secrets with trusted entities (secure sharing)",
+    "icon": "🗝️"
+  },
+  "cloudtrail": {
+    "name": "CloudTrail",
+    "mystical_name": "Chronicle of Actions",
+    "description": "A meticulous scribe (logging service) that records every action taken within your mystical realm. It provides a history of events for security analysis, resource change tracking, and compliance auditing.",
+    "use_cases": "• Recording mystical activities (activity logging)\n• Investigating security incidents (security analysis)\n• Tracking resource changes (change tracking)\n• Demonstrating compliance (compliance auditing)",
+    "icon": "📜"
+  },
+  "kms": {
+    "name": "Key Management Service (KMS)",
+    "mystical_name": "Keeper of Sacred Keys",
+    "description": "A mystical guardian (encryption service) that creates and controls the enchanted keys used to protect your secrets. It makes it easy for you to create and manage cryptographic keys and control their use across a wide range of AWS services.",
+    "use_cases": "• Creating powerful encryption keys (key generation)\n• Managing access to sacred keys (key management)\n• Protecting sensitive information (data encryption)\n• Securing communications (secure channels)",
+    "icon": "🔒"
+  },
+  "step-functions": {
+    "name": "Step Functions",
+    "mystical_name": "Ritual Choreographer",
+    "description": "A master orchestrator (workflow service) that arranges complex magical sequences (workflows) with precision and reliability. It allows you to coordinate multiple AWS services into serverless workflows so you can build and update apps quickly.",
+    "use_cases": "• Coordinating complex rituals (workflow orchestration)\n• Sequencing magical operations (process automation)\n• Managing state transitions (state management)\n• Visualizing process flows (workflow visualization)",
+    "icon": "🔄"
   }
 }

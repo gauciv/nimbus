@@ -19,6 +19,7 @@
   "elasticbeanstalk": "https://docs.aws.amazon.com/elasticbeanstalk/",
   "kms": "https://docs.aws.amazon.com/kms/",
   "secretsmanager": "https://docs.aws.amazon.com/secretsmanager/",
+  "step-functions": "https://docs.aws.amazon.com/step-functions/",
   "stepfunctions": "https://docs.aws.amazon.com/step-functions/",
   "codepipeline": "https://docs.aws.amazon.com/codepipeline/",
   "codebuild": "https://docs.aws.amazon.com/codebuild/",
@@ -28,5 +29,15 @@
   "glue": "https://docs.aws.amazon.com/glue/",
   "kinesis": "https://docs.aws.amazon.com/kinesis/",
   "sagemaker": "https://docs.aws.amazon.com/sagemaker/",
-  "elasticache": "https://docs.aws.amazon.com/elasticache/"
+  "elasticache": "https://docs.aws.amazon.com/elasticache/",
+  "fargate": "https://docs.aws.amazon.com/fargate/",
+  "aurora": "https://docs.aws.amazon.com/aurora/",
+  "cognito": "https://docs.aws.amazon.com/cognito/",
+  "eventbridge": "https://docs.aws.amazon.com/eventbridge/",
+  "cloudtrail": "https://docs.aws.amazon.com/cloudtrail/",
+  "waf": "https://docs.aws.amazon.com/waf/",
+  "guardduty": "https://docs.aws.amazon.com/guardduty/",
+  "directconnect": "https://docs.aws.amazon.com/directconnect/",
+  "transit-gateway": "https://docs.aws.amazon.com/transit-gateway/",
+  "ecr": "https://docs.aws.amazon.com/ecr/"
 }

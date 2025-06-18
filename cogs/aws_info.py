@@ -288,12 +288,24 @@ class AWSInfo(commands.Cog):
             )
             
             # Add arcane learning resources
+            # Handle special cases for service URLs
+            service_url = service_name
+            if service_name == "step-functions":
+                service_url = "step-functions"
+            elif service_name == "cloudfront":
+                service_url = "cloudfront"
+            elif service_name == "route53":
+                service_url = "route-53"
+            elif service_name == "apigateway":
+                service_url = "api-gateway"
+            
             embed.add_field(
                 name="📚 Ancient Scrolls",
                 value=(
                     f"• [Sacred Documentation](https://docs.aws.amazon.com/{service_name})\n"
-                    f"• [Initiation Rituals](https://aws.amazon.com/{service_name}/getting-started)\n"
-                    f"• [Mystical Questions](https://aws.amazon.com/{service_name}/faqs)"
+                    f"• [Service Overview](https://aws.amazon.com/{service_url}/)\n"
+                    f"• [Initiation Rituals](https://aws.amazon.com/{service_url}/getting-started/)\n"
+                    f"• [Mystical Questions](https://aws.amazon.com/{service_url}/faqs/)"
                 ),
                 inline=False
             )
@@ -401,33 +413,77 @@ class AWSInfo(commands.Cog):
                 ephemeral=True
             )
 
-    @app_commands.command(name="services", description="🌌 Reveal all services in the AWS constellation")
-    async def services(self, interaction: discord.Interaction):
-        """Display all available AWS services with their mystical names."""
+    @app_commands.command(name="setup_services", description="🌌 Create a dedicated channel for AWS services catalog")
+    @app_commands.default_permissions(administrator=True)
+    async def setup_services(self, interaction: discord.Interaction):
+        """Create a dedicated channel for AWS services and populate it with service information."""
         try:
-            if not self.aws_services:
+            # Check if user has admin permissions
+            if not interaction.user.guild_permissions.administrator:
                 await interaction.response.send_message(
-                    "🌑 The cosmic catalog is currently veiled in shadow. Please seek wisdom again later.",
+                    "🌑 Only those with administrative powers may invoke this ritual.",
                     ephemeral=True
                 )
                 return
                 
+            await interaction.response.defer(ephemeral=True)
+            
+            # Create the channel if it doesn't exist
+            guild = interaction.guild
+            existing_channel = discord.utils.get(guild.channels, name="aws-services")
+            
+            if existing_channel:
+                # Clear existing channel
+                await existing_channel.purge(limit=100)
+                channel = existing_channel
+                channel_id = str(existing_channel.id)
+            else:
+                # Create new channel
+                channel = await guild.create_text_channel(
+                    name="aws-services",
+                    topic="Catalog of AWS services with mystical descriptions",
+                    reason="Created by Nimbus bot for AWS services catalog"
+                )
+                channel_id = str(channel.id)
+                
+                # Update server config with the new channel ID
+                config = load_json_data("data/server_config.json", {})
+                if "channels" not in config:
+                    config["channels"] = {}
+                config["channels"]["aws-services"] = channel_id
+                save_json_data("data/server_config.json", config)
+            
             # Create categories for services
             categories = {
-                "Compute": ["ec2", "lambda", "ecs", "eks", "elasticbeanstalk"],
+                "Compute": ["ec2", "lambda", "ecs", "eks", "elasticbeanstalk", "fargate"],
                 "Storage": ["s3", "efs"],
-                "Database": ["rds", "dynamodb"],
-                "Networking": ["vpc", "route53", "cloudfront"],
-                "Security": ["iam", "kms", "secretsmanager"],
+                "Database": ["rds", "dynamodb", "aurora", "elasticache"],
+                "Networking": ["vpc", "route53", "cloudfront", "directconnect", "transit-gateway"],
+                "Security": ["iam", "kms", "secretsmanager", "cognito", "guardduty", "waf", "cloudtrail"],
                 "Monitoring": ["cloudwatch"],
-                "Messaging": ["sns", "sqs"],
+                "Messaging": ["sns", "sqs", "eventbridge"],
                 "Development": ["codepipeline", "codebuild", "codecommit", "codedeploy"],
-                "Analytics": ["athena", "glue", "kinesis", "sagemaker"],
-                "Infrastructure": ["cloudformation"]
+                "Analytics": ["athena", "glue", "kinesis", "sagemaker", "redshift"],
+                "Infrastructure": ["cloudformation"],
+                "Containers": ["eks", "ecs", "fargate", "ecr"],
+                "Serverless": ["lambda", "apigateway", "step-functions", "eventbridge"]
             }
             
+            # Send introduction message
+            intro_embed = discord.Embed(
+                title="✨ AWS Services Catalog",
+                description="Welcome to the mystical catalog of AWS services. Here you will find all the enchanted tools available in the AWS constellation, organized by their arcane domains.",
+                color=discord.Color.purple()
+            )
+            intro_embed.add_field(
+                name="🔮 How to Use",
+                value="Browse the categories below to discover AWS services. Use the `/aws <service>` command to learn more about a specific service.",
+                inline=False
+            )
+            intro_embed.set_footer(text="✨ The Oracle's knowledge is vast and ever-expanding ✨")
+            await channel.send(embed=intro_embed)
+            
             # Create an embed for each category
-            embeds = []
             for category, service_keys in categories.items():
                 # Filter to only include services we have data for
                 available_services = [s for s in service_keys if s in self.aws_services]
@@ -447,28 +503,68 @@ class AWSInfo(commands.Cog):
                         inline=True
                     )
                 
-                embeds.append(embed)
+                embed.set_footer(text=f"✨ Use /aws <service> to learn more about a specific service ✨")
+                await channel.send(embed=embed)
             
-            # Send the first embed and add a note about pagination if needed
-            if embeds:
-                first_embed = embeds[0]
-                first_embed.set_footer(text=f"✨ Page 1/{len(embeds)} • Use /aws <service> to learn more about a specific service ✨")
-                await interaction.response.send_message(embed=first_embed)
+            # Send confirmation to admin
+            await interaction.followup.send(
+                f"✨ The AWS services catalog has been inscribed in <#{channel_id}>. The mystical knowledge is now available to all seekers.",
+                ephemeral=True
+            )
                 
-                # Send additional embeds as follow-ups if there are more
-                for i, embed in enumerate(embeds[1:], 2):
-                    embed.set_footer(text=f"✨ Page {i}/{len(embeds)} • Use /aws <service> to learn more about a specific service ✨")
-                    await interaction.followup.send(embed=embed)
+        except Exception as e:
+            logging.error(f"Error setting up services channel: {e}")
+            await interaction.followup.send(
+                "🌑 The cosmic forces are disturbed. The Oracle could not complete the ritual.",
+                ephemeral=True
+            )
+    
+    @app_commands.command(name="refresh_services", description="🌌 Refresh the AWS services catalog")
+    @app_commands.default_permissions(administrator=True)
+    async def refresh_services(self, interaction: discord.Interaction):
+        """Refresh the AWS services channel with updated information."""
+        try:
+            # Check if user has admin permissions
+            if not interaction.user.guild_permissions.administrator:
+                await interaction.response.send_message(
+                    "🌑 Only those with administrative powers may invoke this ritual.",
+                    ephemeral=True
+                )
+                return
+                
+            # Redirect to setup_services which will handle the refresh
+            await self.setup_services(interaction)
+                
+        except Exception as e:
+            logging.error(f"Error refreshing services channel: {e}")
+            await interaction.response.send_message(
+                "🌑 The cosmic forces are disturbed. The Oracle cannot refresh the catalog at this time.",
+                ephemeral=True
+            )
+    
+    @app_commands.command(name="services", description="🌌 View the AWS services catalog")
+    async def services(self, interaction: discord.Interaction):
+        """Direct users to the AWS services channel."""
+        try:
+            # Get the services channel ID from config
+            config = load_json_data("data/server_config.json", {})
+            channel_id = config.get("channels", {}).get("aws-services", "")
+            
+            if channel_id:
+                await interaction.response.send_message(
+                    f"✨ The catalog of mystical AWS services awaits you in <#{channel_id}>. Journey there to explore the Oracle's knowledge.",
+                    ephemeral=True
+                )
             else:
                 await interaction.response.send_message(
-                    "🌑 The cosmic catalog is currently empty. The Oracle's vision is clouded.",
+                    "🌑 The services catalog has not yet been established. Ask an administrator to invoke the `/setup_services` ritual.",
                     ephemeral=True
                 )
                 
         except Exception as e:
-            logging.error(f"Error revealing service catalog: {e}")
+            logging.error(f"Error directing to services channel: {e}")
             await interaction.response.send_message(
-                "🌑 The cosmic forces are disturbed. The Oracle cannot reveal the service catalog at this time.",
+                "🌑 The cosmic forces are disturbed. The Oracle cannot guide you at this time.",
                 ephemeral=True
             )
 
