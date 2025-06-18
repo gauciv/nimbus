@@ -174,24 +174,24 @@ class EventCommands(commands.GroupCog, name="event"):
                 ephemeral=True
             )
 
-    @app_commands.command(name="schedule", description="View all upcoming events")
+    @app_commands.command(name="schedule", description="✨ Consult the cosmic calendar of mystical gatherings (view upcoming events)")
     async def schedule(self, interaction: discord.Interaction):
-        """Display all upcoming events."""
+        """Display all upcoming events with mystical flair."""
         try:
             upcoming_events = self.event_manager.get_upcoming_events()
             
             if not upcoming_events:
                 await interaction.response.send_message(
-                    "📅 There are no upcoming events scheduled at this time.",
+                    "🌌 The stars have yet to align for future gatherings. The cosmic calendar remains empty. (No upcoming events)",
                     ephemeral=True
                 )
                 return
             
             # Create an embed for the schedule
             embed = discord.Embed(
-                title="📅 Upcoming Events",
-                description="Here are all upcoming events:",
-                color=discord.Color.blue(),
+                title="✨ Cosmic Calendar (Upcoming Events)",
+                description="The Oracle reveals the mystical gatherings written in the stars:",
+                color=discord.Color.purple(),
                 timestamp=datetime.now()
             )
             
@@ -201,40 +201,40 @@ class EventCommands(commands.GroupCog, name="event"):
                 time_until = event_datetime - datetime.now()
                 days_until = time_until.days
                 
-                # Format the time until string
+                # Format the time until string with mystical flair
                 if days_until > 0:
-                    time_str = f"(in {days_until} days)"
+                    time_str = f"(in {days_until} celestial rotations)"
                 else:
                     hours_until = time_until.seconds // 3600
                     if hours_until > 0:
-                        time_str = f"(in {hours_until} hours)"
+                        time_str = f"(in {hours_until} cosmic hours)"
                     else:
                         minutes_until = (time_until.seconds % 3600) // 60
-                        time_str = f"(in {minutes_until} minutes)"
+                        time_str = f"(in {minutes_until} arcane minutes)"
                 
                 # Get the organizer
                 organizer = interaction.guild.get_member(event.organizer_id)
-                organizer_name = organizer.display_name if organizer else "Unknown"
+                organizer_name = organizer.display_name if organizer else "Unknown Sage"
                 
-                # Prepare event details
+                # Prepare event details with mystical terms and explanations
                 event_details = (
-                    f"📆 Date: {event.date}\n"
-                    f"⏰ Time: {event.time}\n"
-                    f"👤 Organizer: {organizer_name}\n"
-                    f"⏳ {time_str}"
+                    f"📆 Written in the Stars (Date): {event.date}\n"
+                    f"⏰ When the Hour Strikes (Time): {event.time}\n"
+                    f"🔮 Sage of the Gathering (Organizer): {organizer_name}\n"
+                    f"⏳ Cosmic Countdown {time_str}"
                 )
                 
                 # Add description if available
                 if hasattr(event, 'description') and event.description:
-                    event_details += f"\n\n📜 {event.description}"
+                    event_details += f"\n\n📜 Mystical Purpose (Description): {event.description}"
                 
                 embed.add_field(
-                    name=f"Event #{i}: {event.title}",
+                    name=f"Gathering #{i}: {event.title}",
                     value=event_details,
                     inline=False
                 )
             
-            embed.set_footer(text="Use /event create to create a new event (Core Team only)")
+            embed.set_footer(text="✨ Use /event create to inscribe a new gathering in the cosmic calendar (Core Team only)")
             
             await interaction.response.send_message(embed=embed)
             

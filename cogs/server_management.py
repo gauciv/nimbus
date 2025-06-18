@@ -535,34 +535,34 @@ class ServerManagement(commands.Cog):
                 ephemeral=True
             )
     
-    @app_commands.command(name="announce", description="Post an announcement in the announcements channel (Core Team only)")
+    @app_commands.command(name="announce", description="✨ Proclaim a mystical decree to all seekers (post an announcement)")
     @app_commands.describe(
-        message="The announcement message to post"
+        message="The sacred proclamation to share with the realm (announcement message)"
     )
     @is_core_team()
     async def announce(self, interaction: discord.Interaction, message: str):
-        """Post an announcement in the #announcements channel."""
+        """Post a mystical announcement in the #announcements channel."""
         try:
             # Find the announcements channel
             announcements_channel = discord.utils.get(interaction.guild.channels, name='announcements')
             if not announcements_channel:
                 await interaction.response.send_message(
-                    "❌ Could not find the #announcements channel.",
+                    "🌑 The sacred chamber of proclamations cannot be found in this realm. (Missing #announcements channel)",
                     ephemeral=True
                 )
                 return
 
             # Create an embed for the announcement
             embed = discord.Embed(
-                title="📢 Announcement",
+                title="📜 Mystical Proclamation (Announcement)",
                 description=message,
-                color=discord.Color.blue(),
+                color=discord.Color.purple(),
                 timestamp=discord.utils.utcnow()
             )
 
             # Add who made the announcement
             embed.add_field(
-                name="Posted by",
+                name="Proclaimed by (Posted by)",
                 value=interaction.user.mention,
                 inline=False
             )
@@ -570,18 +570,18 @@ class ServerManagement(commands.Cog):
             # Send the announcement
             try:
                 await announcements_channel.send(
-                    content="@everyone New announcement!",
+                    content="@everyone Heed this mystical proclamation from the Council of Elders! ✨",
                     embed=embed
                 )
                 
                 # Confirm to the command user
                 await interaction.response.send_message(
-                    "✅ Announcement posted successfully!",
+                    "✨ Your proclamation has been inscribed in the sacred chronicles! (Announcement posted successfully)",
                     ephemeral=True
                 )
             except discord.Forbidden:
                 await interaction.response.send_message(
-                    "❌ I don't have permission to send messages in the announcements channel.",
+                    "🌑 The Oracle lacks the mystical authority to speak in the chamber of proclamations. (Missing permissions)",
                     ephemeral=True
                 )
                 
@@ -592,55 +592,55 @@ class ServerManagement(commands.Cog):
                 ephemeral=True
             )
     
-    @app_commands.command(name="topic", description="Start a discussion topic in the main chat")
+    @app_commands.command(name="topic", description="✨ Invoke a mystical discussion in the communal gathering (start a topic)")
     @app_commands.describe(
-        question="The discussion topic or question to post"
+        question="The arcane inquiry to present to the fellowship (discussion topic)"
     )
     @is_core_team()
     async def topic(self, interaction: discord.Interaction, question: str):
-        """Post a discussion topic in the main chat channel."""
+        """Post a mystical discussion topic in the main chat channel."""
         try:
             # Defer the response since we'll be doing multiple operations
             await interaction.response.defer(ephemeral=True)
             
             # Create an embed for the discussion topic
             embed = discord.Embed(
-                title="💭 Let's Discuss!",
+                title="🔮 Arcane Inquiry (Discussion Topic)",
                 description=question,
-                color=discord.Color.blue(),
+                color=discord.Color.purple(),
                 timestamp=discord.utils.utcnow()
             )
             
             # Add who started the topic
             embed.add_field(
-                name="Started by",
+                name="Invoked by (Started by)",
                 value=interaction.user.mention,
                 inline=False
             )
             
             # Add footer with tip
-            embed.set_footer(text="Share your thoughts and experiences!")
+            embed.set_footer(text="✨ Share your wisdom and experiences with the fellowship! (Join the discussion)")
             
             # Send the topic
             try:
                 await interaction.channel.send(
-                    content="@here A new discussion topic has been posted! 🗣️",
+                    content="@here The Oracle presents a new arcane inquiry for your contemplation! 🌟",
                     embed=embed
                 )
                 
                 # Confirm to the command user
                 await interaction.followup.send(
-                    "✅ Discussion topic posted successfully!",
+                    "✨ Your mystical inquiry has been presented to the fellowship! (Topic posted successfully)",
                     ephemeral=True
                 )
             except discord.Forbidden:
                 await interaction.followup.send(
-                    "❌ I don't have permission to send messages in this channel.",
+                    "🌑 The Oracle lacks the mystical authority to speak in this chamber. (Missing permissions)",
                     ephemeral=True
                 )
             except Exception as e:
                 await interaction.followup.send(
-                    "❌ Failed to send the topic message. Check my permissions.",
+                    "🌑 The cosmic forces resist your attempt to invoke discussion. (Failed to send message)",
                     ephemeral=True
                 )
                 raise e
