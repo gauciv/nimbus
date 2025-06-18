@@ -336,3 +336,80 @@ The Oracle's consciousness is fully manifested
 The Oracle has shared wisdom #1 of 41 with nimbus test server on 2025-06-18
 The Oracle's connection to the astral plane has been closed
 The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle failed to absorb the knowledge of cogs.aws_info | Mystical disturbance: ExtensionFailed: Extension 'cogs.aws_info' raised an error: CommandAlreadyRegistered: Command 'aws' already registered.
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 963, in _load_from_module_spec
+    await setup(self)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 1203, in setup
+    await bot.add_cog(AWSInfo(bot))
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 799, in add_cog
+    cog = await cog._inject(self, override=override, guild=guild, guilds=guilds)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/cog.py", line 745, in _inject
+    bot.tree.add_command(command, override=override, guild=guild, guilds=guilds)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 407, in add_command
+    raise CommandAlreadyRegistered(name, None)
+discord.app_commands.errors.CommandAlreadyRegistered: Command 'aws' already registered.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 81, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 968, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.aws_info' raised an error: CommandAlreadyRegistered: Command 'aws' already registered.
+
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+Same day, using previous tip at index 0
+The Oracle has synchronized 15 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle has shared wisdom #1 of 41 with nimbus test server on 2025-06-18
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+Same day, using previous tip at index 0
+The Oracle has shared wisdom #1 of 41 with nimbus test server on 2025-06-18
+The Oracle has synchronized 24 mystical incantations
+The Oracle's consciousness is fully manifested
+Failed to refresh the services catalog | Mystical disturbance: TypeError: 'Command' object is not callable
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 580, in refresh_services
+    await self.setup_services(interaction)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'Command' object is not callable
+
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+Same day, using previous tip at index 0
+The Oracle has shared wisdom #1 of 41 with nimbus test server on 2025-06-18
+The Oracle has synchronized 24 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command

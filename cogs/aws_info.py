@@ -213,7 +213,7 @@ class AWSInfo(commands.Cog):
     
     @tasks.loop(hours=24)
     async def daily_tip(self):
-        """Channel the Oracle's daily wisdom to the designated ethereal plane."""
+        """Share a random AWS tip daily."""
         try:
             # Reload tips to ensure we have the latest
             self.aws_tips = self._load_aws_tips()
@@ -286,7 +286,7 @@ class AWSInfo(commands.Cog):
     
     @daily_tip.before_loop
     async def before_daily_tip(self):
-        """Align with the cosmic forces before starting the wisdom cycle."""
+        """Wait until a specific time to start the daily tip."""
         await self.bot.wait_until_ready()
         
         # Calculate time until next run (9:00 AM UTC)
@@ -297,12 +297,12 @@ class AWSInfo(commands.Cog):
         
         await discord.utils.sleep_until(next_run)
     
-    @app_commands.command(name="aws", description="✨ Consult the Oracle about AWS mystical services (visible only to you)")
+    @app_commands.command(name="aws", description="✨ Learn about AWS services (visible only to you)")
     @app_commands.describe(
-        service_name="The true name of the AWS service (e.g., s3, ec2, lambda, rds)"
+        service_name="The name of the AWS service (e.g., s3, ec2, lambda, rds)"
     )
-    async def aws(self, interaction: discord.Interaction, service_name: str):
-        """Reveal the mystical nature of an AWS service."""
+    async def aws_service(self, interaction: discord.Interaction, service_name: str):
+        """Get information about an AWS service."""
         try:
             # Convert to lowercase to make the command case-insensitive
             service_name = service_name.lower()
@@ -471,15 +471,18 @@ class AWSInfo(commands.Cog):
             )
 
     @app_commands.command(name="setup_services", description="🌌 Create a dedicated channel for AWS services catalog")
-    @utils.permissions.is_admin()
-    async def setup_services(self, interaction: discord.Interaction):
-        """Create a dedicated channel for AWS services and populate it with service information."""
+    @app_commands.describe(
+        channel_name="The name for the services catalog channel (default: aws-services)"
+    )
+    @commands.has_permissions(manage_channels=True)
+    async def setup_services(self, interaction: discord.Interaction, channel_name: str = "aws-services"):
+        """Create and set up the AWS services catalog channel."""
         try:
             await interaction.response.defer(ephemeral=True)
             
             # Create the channel if it doesn't exist
             guild = interaction.guild
-            existing_channel = discord.utils.get(guild.channels, name="aws-services")
+            existing_channel = discord.utils.get(guild.channels, name=channel_name)
             
             if existing_channel:
                 # Clear existing channel
@@ -489,7 +492,7 @@ class AWSInfo(commands.Cog):
             else:
                 # Create new channel
                 channel = await guild.create_text_channel(
-                    name="aws-services",
+                    name=channel_name,
                     topic="Catalog of AWS services with mystical descriptions",
                     reason="Created by Nimbus bot for AWS services catalog"
                 )
@@ -569,13 +572,66 @@ class AWSInfo(commands.Cog):
             )
     
     @app_commands.command(name="refresh_services", description="🌌 Refresh the AWS services catalog")
-    @utils.permissions.is_admin()
+    @commands.has_permissions(manage_messages=True)
     async def refresh_services(self, interaction: discord.Interaction):
-        """Refresh the AWS services channel with updated information."""
+        """Refresh the AWS services catalog display."""
         try:
-            # Redirect to setup_services which will handle the refresh
-            await self.setup_services(interaction)
+            # Find the services channel
+            services_channel = discord.utils.get(interaction.guild.channels, name="aws-services")
+            if not services_channel:
+                services_channel = discord.utils.get(interaction.guild.channels, name="aws_services")
+            
+            if not services_channel:
+                await interaction.response.send_message(
+                    "🌑 I could not find the services catalog channel. Please use `/setup_services` first.",
+                    ephemeral=True
+                )
+                return
+
+            # Create the catalog embed
+            embed = discord.Embed(
+                title="🌌 AWS Services Catalog",
+                description="Behold the mystical services of the AWS realm:",
+                color=discord.Color.purple()
+            )
+
+            # Group services by type/category
+            categories = {
+                "Storage": ["s3", "efs"],
+                "Compute": ["ec2", "lambda", "fargate"],
+                "Database": ["dynamodb", "rds", "aurora"],
+                "Networking": ["vpc", "cloudfront", "route53"],
+                "Security": ["iam", "kms", "guardduty"],
+                "Monitoring": ["cloudwatch", "cloudtrail"],
+                "Integration": ["sns", "sqs", "eventbridge"],
+                "Containers": ["ecs", "eks"],
+                "Developer Tools": ["codepipeline", "codebuild", "codecommit"]
+            }
+
+            # Add fields for each category
+            for category, services in categories.items():
+                field_value = ""
+                for service_name in services:
+                    if service_name in self.aws_services:
+                        service = self.aws_services[service_name]
+                        field_value += f"{service['icon']} **{service['name']}** - {service['mystical_name']}\n"
                 
+                if field_value:
+                    embed.add_field(
+                        name=f"✨ {category}",
+                        value=field_value,
+                        inline=False
+                    )
+
+            # Clear existing messages and send new catalog
+            await services_channel.purge()
+            await services_channel.send(embed=embed)
+            
+            await interaction.response.send_message(
+                "🌟 The services catalog has been refreshed with new mystical knowledge!",
+                ephemeral=True
+            )
+            
         except Exception as e:
             log_vision(OracleVision.OMEN, f"Failed to refresh the services catalog", e)
             await interaction.response.send_message(
@@ -583,32 +639,6 @@ class AWSInfo(commands.Cog):
                 ephemeral=True
             )
     
-    @app_commands.command(name="services", description="🌌 View the AWS services catalog")
-    async def services(self, interaction: discord.Interaction):
-        """Direct users to the AWS services channel."""
-        try:
-            # Get the services channel ID from config
-            config = load_json_data("data/server_config.json", {})
-            channel_id = config.get("channels", {}).get("aws-services", "")
-            
-            if channel_id:
-                await interaction.response.send_message(
-                    f"✨ The catalog of mystical AWS services awaits you in <#{channel_id}>. Journey there to explore the Oracle's knowledge.",
-                    ephemeral=True
-                )
-            else:
-                await interaction.response.send_message(
-                    "🌑 The services catalog has not yet been established. Ask an administrator to invoke the `/setup_services` ritual.",
-                    ephemeral=True
-                )
-                
-        except Exception as e:
-            log_vision(OracleVision.OMEN, f"Failed to direct user to services channel", e)
-            await interaction.response.send_message(
-                get_error_message("general"),
-                ephemeral=True
-            )
-
     @app_commands.command(name="debug_tips", description="🔍 Debug the AWS tips system (admin only)")
     @utils.permissions.is_admin()
     async def debug_tips(self, interaction: discord.Interaction):
@@ -760,105 +790,7 @@ class AWSInfo(commands.Cog):
                 f"❌ Error reloading tips: {str(e)}",
                 ephemeral=True
             )
-        """Fix the AWS tips file if it gets corrupted."""
-        try:
-            await interaction.response.defer(ephemeral=True)
-            
-            # Check if the file exists
-            if not os.path.exists(AWS_TIPS_FILE):
-                await interaction.followup.send(
-                    "❌ AWS tips file does not exist.",
-                    ephemeral=True
-                )
-                return
-                
-            # Try to load the file
-            try:
-                with open(AWS_TIPS_FILE, 'r') as f:
-                    content = f.read()
-                    
-                # Try to parse the JSON
-                try:
-                    json.loads(content)
-                    await interaction.followup.send(
-                        "✅ AWS tips file is valid JSON. No fix needed.",
-                        ephemeral=True
-                    )
-                    return
-                except json.JSONDecodeError:
-                    # File is corrupted, let's fix it
-                    pass
-                    
-                # Look for duplicate content or other common issues
-                if "aged-services/" in content:
-                    # Fix the duplicate content issue
-                    content = content.replace("aged-services/\"\n    },\n    {\n      \"title\"", "aged-services/\"\n    },\n    {\n      \"title\"", 1)
-                    
-                # Try to parse again
-                try:
-                    json.loads(content)
-                    # If we get here, the fix worked
-                    with open(AWS_TIPS_FILE, 'w') as f:
-                        f.write(content)
-                    
-                    # Reload the tips
-                    self.aws_tips = self._load_aws_tips()
-                    self.all_tips = self._flatten_tips()
-                    
-                    await interaction.followup.send(
-                        "✅ AWS tips file has been fixed and reloaded.",
-                        ephemeral=True
-                    )
-                except json.JSONDecodeError:
-                    # Still corrupted, need to restore from backup
-                    await interaction.followup.send(
-                        "❌ AWS tips file is still corrupted after attempted fix. Please restore from a backup.",
-                        ephemeral=True
-                    )
-                    
-            except Exception as e:
-                await interaction.followup.send(
-                    f"❌ Error reading AWS tips file: {str(e)}",
-                    ephemeral=True
-                )
-                
-        except Exception as e:
-            log_vision(OracleVision.OMEN, f"Failed to fix tips file", e)
-            await interaction.followup.send(
-                f"❌ Error fixing tips file: {str(e)}",
-                ephemeral=True
-            )
-        """Reset the AWS tips system to start from the beginning."""
-        try:
-            await interaction.response.defer(ephemeral=True)
-            
-            # Reset the tip state
-            today = datetime.utcnow().strftime("%Y-%m-%d")
-            self.tip_state = {"current_index": 0, "last_updated": today}
-            success = self._save_tip_state()
-            
-            # Reload tips data
-            self.aws_tips = self._load_aws_tips()
-            self.all_tips = self._flatten_tips()
-            
-            if success:
-                await interaction.followup.send(
-                    "✅ AWS tips system has been reset. The next tip will be the first one.",
-                    ephemeral=True
-                )
-            else:
-                await interaction.followup.send(
-                    "❌ Failed to save the reset tip state.",
-                    ephemeral=True
-                )
-                
-        except Exception as e:
-            log_vision(OracleVision.OMEN, f"Failed to reset tips system", e)
-            await interaction.followup.send(
-                f"❌ Error resetting tips system: {str(e)}",
-                ephemeral=True
-            )
-        
+    
     @app_commands.command(name="trigger_tip", description="🔮 Manually trigger the daily AWS tip (admin only)")
     @utils.permissions.is_admin()
     async def trigger_tip(self, interaction: discord.Interaction):
@@ -941,6 +873,10 @@ class AWSInfo(commands.Cog):
                 f"❌ Error triggering tip: {str(e)}",
                 ephemeral=True
             )
+    
+    @app_commands.command(name="debug_tips", description="🔍 Debug the AWS tips system (admin only)")
+    @utils.permissions.is_admin()
+    async def debug_tips(self, interaction: discord.Interaction):
         """Debug the AWS tips system and provide diagnostic information."""
         try:
             await interaction.response.defer(ephemeral=True)
