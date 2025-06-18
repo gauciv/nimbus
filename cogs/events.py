@@ -7,7 +7,8 @@ from discord import app_commands
 from discord.ext import commands
 import logging
 import re
-from datetime import datetime
+import asyncio
+from datetime import datetime, timedelta
 from utils.events import Event, EventManager
 from utils.permissions import is_core_team
 
@@ -24,12 +25,13 @@ class EventCommands(commands.GroupCog, name="event"):
         super().__init__()
         self.bot = bot
         self.event_manager = EventManager()
+        self._task = None  # Store the background task for cleanup
 
-    @app_commands.command(name="create", description="Create a new event announcement")
+    @app_commands.command(name="create", description="🌟 Inscribe a new gathering in the chronicles of our realm")
     @app_commands.describe(
-        title="The title of the event",
-        date="The date of the event (DD/MM/YYYY)",
-        time="The time of the event (HH:MM AM/PM)"
+        title="The title of your gathering",
+        date="The appointed date (DD/MM/YYYY)",
+        time="The appointed hour (HH:MM AM/PM)"
     )
     @is_core_team()
     async def create(
@@ -39,20 +41,46 @@ class EventCommands(commands.GroupCog, name="event"):
         date: str,
         time: str
     ):
-        """Create a new event announcement."""
+        """Create a new event announcement with mystical flair."""
+        # First, provide helpful examples to the command invoker
+        example_embed = discord.Embed(
+            title="✨ Event Creation Guidelines",
+            description="Here's how to properly format your event details:",
+            color=discord.Color.purple()
+        )
+        example_embed.add_field(
+            name="📖 Example",
+            value=(
+                "**Title:** AWS Lambda Deep Dive Workshop\n"
+                "**Date:** 25/06/2025\n"
+                "**Time:** 2:30 PM"
+            ),
+            inline=False
+        )
+        example_embed.add_field(
+            name="📝 Format Requirements",
+            value=(
+                "• Date must be in DD/MM/YYYY format\n"
+                "• Time must be in HH:MM AM/PM format (12-hour)\n"
+                "• Title should be clear and descriptive"
+            ),
+            inline=False
+        )
+        await interaction.response.send_message(embed=example_embed, ephemeral=True)
+
         try:
             # Validate date format
             if not re.match(r'^\d{2}/\d{2}/\d{4}$', date):
-                await interaction.response.send_message(
-                    "❌ Invalid date format. Please use DD/MM/YYYY (e.g., 25/06/2025)",
+                await interaction.followup.send(
+                    "🌙 The stars whisper that your date format needs adjustment. Please use DD/MM/YYYY (e.g., 25/06/2025)",
                     ephemeral=True
                 )
                 return
 
             # Validate time format
             if not re.match(r'^\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)$', time):
-                await interaction.response.send_message(
-                    "❌ Invalid time format. Please use HH:MM AM/PM (e.g., 2:30 PM)",
+                await interaction.followup.send(
+                    "⏳ The sands of time flow in HH:MM AM/PM format (e.g., 2:30 PM). Please adjust your timing accordingly.",
                     ephemeral=True
                 )
                 return
@@ -61,14 +89,14 @@ class EventCommands(commands.GroupCog, name="event"):
             try:
                 event_datetime = datetime.strptime(f"{date} {time}", "%d/%m/%Y %I:%M %p")
                 if event_datetime < datetime.now():
-                    await interaction.response.send_message(
-                        "❌ Event date cannot be in the past!",
+                    await interaction.followup.send(
+                        "🌟 Even our mystical powers cannot schedule events in the past. Please choose a future date.",
                         ephemeral=True
                     )
                     return
             except ValueError:
-                await interaction.response.send_message(
-                    "❌ Invalid date or time format.",
+                await interaction.followup.send(
+                    "🌌 The cosmic forces cannot interpret your date and time. Please check the format and try again.",
                     ephemeral=True
                 )
                 return
@@ -76,45 +104,42 @@ class EventCommands(commands.GroupCog, name="event"):
             # Find the announcements channel
             announcements_channel = discord.utils.get(interaction.guild.channels, name='announcements')
             if not announcements_channel:
-                await interaction.response.send_message(
-                    "❌ Could not find the #announcements channel.",
+                await interaction.followup.send(
+                    "🌠 The announcements channel seems to be lost in the void. Please ensure it exists.",
                     ephemeral=True
                 )
                 return
 
-            # Create the event embed
+            # Create the event embed with mystical elements
             embed = discord.Embed(
-                title=f"📅 New Event: {title}",
-                description="A new event has been scheduled!",
-                color=discord.Color.blue(),
+                title=f"✨ New Gathering: {title}",
+                description="The stars align for another momentous occasion!",
+                color=discord.Color.purple(),
                 timestamp=datetime.now()
             )
 
-            # Add event details
             embed.add_field(
-                name="📆 Date",
+                name="📆 Written in the Stars",
                 value=date,
                 inline=True
             )
             embed.add_field(
-                name="⏰ Time",
+                name="⏰ When the Hour Strikes",
                 value=time,
                 inline=True
             )
             
-            # Add organizer info
             embed.add_field(
-                name="👤 Organized by",
+                name="🔮 Sage of the Gathering",
                 value=interaction.user.mention,
                 inline=False
             )
 
-            # Add footer with instructions
-            embed.set_footer(text="React with 👍 if you plan to attend!")
+            embed.set_footer(text="✨ Mark your presence with 👍 if you plan to join this gathering!")
 
             # Send the announcement
             event_message = await announcements_channel.send(
-                content="@everyone New event announcement!",
+                content="@everyone A new gathering has been ordained!",
                 embed=embed
             )
             
@@ -126,15 +151,15 @@ class EventCommands(commands.GroupCog, name="event"):
             self.event_manager.add_event(new_event)
 
             # Send confirmation to the command user
-            await interaction.response.send_message(
-                "✅ Event has been announced in #announcements!",
+            await interaction.followup.send(
+                "✨ Your gathering has been inscribed in the chronicles! Check #announcements to see it.",
                 ephemeral=True
             )
 
         except Exception as e:
             logging.error(f"Error creating event: {e}")
-            await interaction.response.send_message(
-                "❌ An error occurred while creating the event.",
+            await interaction.followup.send(
+                "🌑 The cosmic forces are disturbed. Your event could not be created.",
                 ephemeral=True
             )
 
@@ -201,6 +226,66 @@ class EventCommands(commands.GroupCog, name="event"):
                 "❌ An error occurred while fetching the schedule.",
                 ephemeral=True
             )
+
+    async def check_upcoming_events(self):
+        """Background task to check for upcoming events and send reminders."""
+        await self.bot.wait_until_ready()  # Ensure bot is ready before starting
+        while not self.bot.is_closed():
+            try:
+                current_time = datetime.now()
+                events = self.event_manager.get_all_events()
+                
+                for event in events:
+                    event_datetime = datetime.strptime(f"{event.date} {event.time}", "%d/%m/%Y %I:%M %p")
+                    time_until_event = event_datetime - current_time
+                    
+                    # Remind 24 hours before the event
+                    if timedelta(hours=23, minutes=55) <= time_until_event <= timedelta(hours=24, minutes=5):
+                        channel = discord.utils.get(self.bot.get_all_channels(), name='announcements')
+                        if channel:
+                            reminder_embed = discord.Embed(
+                                title="🌟 Event Reminder",
+                                description=f"The stars remind us of tomorrow's gathering!",
+                                color=discord.Color.purple()
+                            )
+                            reminder_embed.add_field(
+                                name="✨ Event",
+                                value=event.title,
+                                inline=False
+                            )
+                            reminder_embed.add_field(
+                                name="📆 When",
+                                value=f"{event.date} at {event.time}",
+                                inline=True
+                            )
+                            
+                            await channel.send(
+                                content="@everyone A mystical gathering approaches!",
+                                embed=reminder_embed
+                            )
+                    
+                    # Remove past events
+                    if current_time > event_datetime:
+                        self.event_manager.remove_event(event)
+                
+            except Exception as e:
+                logging.error(f"Error in event reminder system: {e}")
+            
+            # Check every 15 minutes
+            await asyncio.sleep(900)
+
+    async def cog_load(self) -> None:
+        """Start the event reminder system when the cog loads."""
+        self._task = asyncio.create_task(self.check_upcoming_events())
+
+    async def cog_unload(self) -> None:
+        """Cleanup when the cog is unloaded."""
+        if self._task:
+            self._task.cancel()
+            try:
+                await self._task
+            except asyncio.CancelledError:
+                pass
 
 async def setup(bot: commands.Bot):
     """

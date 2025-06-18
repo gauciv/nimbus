@@ -183,3 +183,7 @@ Traceback (most recent call last):
   File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 876, in _do_call
     raise CommandInvokeError(self, e) from e
 discord.app_commands.errors.CommandInvokeError: Command 'setup_get_started' raised an exception: NotFound: 404 Not Found (error code: 10062): Unknown interaction
+Sent daily AWS tip to nimbus test server
+Sent daily AWS tip to nimbus test server
+Error in event reminder system: 'EventManager' object has no attribute 'get_all_events'
+Sent daily AWS tip to nimbus test server
