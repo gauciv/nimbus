@@ -240,7 +240,7 @@ class AWSInfo(commands.Cog):
         
         await discord.utils.sleep_until(next_run)
     
-    @app_commands.command(name="aws", description="✨ Consult the Oracle about AWS mystical services")
+    @app_commands.command(name="aws", description="✨ Consult the Oracle about AWS mystical services (visible only to you)")
     @app_commands.describe(
         service_name="The true name of the AWS service (e.g., s3, ec2, lambda, rds)"
     )
@@ -275,14 +275,14 @@ class AWSInfo(commands.Cog):
             
             # Create an enchanted embed with the service information
             embed = discord.Embed(
-                title=f"{service['icon']} {service['mystical_name']}",
-                description=f"*{service['name']}*\n\n{service['description']}",
+                title=f"{service['icon']} {service['mystical_name']} ({service['name']})",
+                description=f"{service['description']}",
                 color=discord.Color.purple()  # Mystical purple
             )
             
             # Add mystical use cases
             embed.add_field(
-                name="🔮 Mystical Applications",
+                name="🔮 Mystical Applications (Common Use Cases)",
                 value=service['use_cases'],
                 inline=False
             )
@@ -300,12 +300,12 @@ class AWSInfo(commands.Cog):
                 service_url = "api-gateway"
             
             embed.add_field(
-                name="📚 Ancient Scrolls",
+                name="📚 Ancient Scrolls (Learning Resources)",
                 value=(
-                    f"• [Sacred Documentation](https://docs.aws.amazon.com/{service_name})\n"
-                    f"• [Service Overview](https://aws.amazon.com/{service_url}/)\n"
-                    f"• [Initiation Rituals](https://aws.amazon.com/{service_url}/getting-started/)\n"
-                    f"• [Mystical Questions](https://aws.amazon.com/{service_url}/faqs/)"
+                    f"• [Sacred Documentation (Official Docs)](https://docs.aws.amazon.com/{service_name})\n"
+                    f"• [Service Overview (Main Page)](https://aws.amazon.com/{service_url}/)\n"
+                    f"• [Initiation Rituals (Getting Started)](https://aws.amazon.com/{service_url}/getting-started/)\n"
+                    f"• [Mystical Questions (FAQs)](https://aws.amazon.com/{service_url}/faqs/)"
                 ),
                 inline=False
             )
@@ -316,7 +316,7 @@ class AWSInfo(commands.Cog):
             # Add mystical footer
             embed.set_footer(text="✨ The Oracle awaits your questions about other mystical AWS services ✨")
             
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             
         except Exception as e:
             logging.error(f"The Oracle's vision was clouded: {e}")
@@ -325,7 +325,7 @@ class AWSInfo(commands.Cog):
                 ephemeral=True
             )
     
-    @app_commands.command(name="docs", description="📜 Uncover the sacred AWS documentation scrolls")
+    @app_commands.command(name="docs", description="📜 Uncover the sacred AWS documentation scrolls (visible only to you)")
     @app_commands.describe(
         service_name="The true name of the AWS service (e.g., s3, lambda, ec2)"
     )
@@ -344,37 +344,37 @@ class AWSInfo(commands.Cog):
                 
                 # Create an enchanted embed with the documentation link
                 embed = discord.Embed(
-                    title=f"📜 Sacred Texts of {service_mystical_name}",
-                    description=f"*{service_full_name}*\n\nThe Oracle reveals the path to ancient knowledge:",
+                    title=f"📜 Sacred Texts of {service_mystical_name} (Documentation for {service_name})",
+                    description=f"*{service_full_name}*\n\nThe Oracle reveals the path to ancient knowledge (official AWS documentation):",
                     color=discord.Color.purple()  # Mystical purple
                 )
                 
                 # Add the main documentation link
                 embed.add_field(
-                    name="📖 Primary Scrolls",
-                    value=f"[Journey to the sacred repository]({self.aws_docs[service_name]})",
+                    name="📖 Primary Scrolls (Main Documentation)",
+                    value=f"[Journey to the sacred repository (Open Documentation)]({self.aws_docs[service_name]})",
                     inline=False
                 )
                 
                 # Add mystical quick links
                 embed.add_field(
-                    name="⚡ Pathways of Knowledge",
+                    name="⚡ Pathways of Knowledge (Quick Links)",
                     value=(
-                        f"• [Initiation Rituals]({self.aws_docs[service_name]}latest/dg/getting-started.html)\n"
-                        f"• [Sage's Compendium]({self.aws_docs[service_name]}latest/dg/)\n"
-                        f"• [Invocation Reference]({self.aws_docs[service_name]}latest/api/)\n"
-                        f"• [Command Incantations]({self.aws_docs[service_name]}cli/)"
+                        f"• [Initiation Rituals (Getting Started)]({self.aws_docs[service_name]}latest/dg/getting-started.html)\n"
+                        f"• [Sage's Compendium (Developer Guide)]({self.aws_docs[service_name]}latest/dg/)\n"
+                        f"• [Invocation Reference (API Reference)]({self.aws_docs[service_name]}latest/api/)\n"
+                        f"• [Command Incantations (CLI Reference)]({self.aws_docs[service_name]}cli/)"
                     ),
                     inline=False
                 )
                 
                 # Add mystical resources
                 embed.add_field(
-                    name="🔍 Supplementary Grimoires",
+                    name="🔍 Supplementary Grimoires (Additional Resources)",
                     value=(
-                        f"• [Training of the Adepts](https://aws.amazon.com/training/)\n"
-                        f"• [Practical Enchantments](https://workshops.aws/)\n"
-                        f"• [Arcane Solutions](https://aws.amazon.com/solutions/)"
+                        f"• [Training of the Adepts (AWS Training)]({self.aws_docs[service_name]}latest/dg/getting-started.html)\n"
+                        f"• [Practical Enchantments (AWS Workshops)](https://workshops.aws/)\n"
+                        f"• [Arcane Solutions (AWS Solutions)](https://aws.amazon.com/solutions/)"
                     ),
                     inline=False
                 )
@@ -383,9 +383,9 @@ class AWSInfo(commands.Cog):
                 embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
                 
                 # Add mystical footer
-                embed.set_footer(text="✨ Use /aws to unveil the mystical nature of this service ✨")
+                embed.set_footer(text="✨ Use /aws to learn more about this service's features and use cases ✨")
                 
-                await interaction.response.send_message(embed=embed)
+                await interaction.response.send_message(embed=embed, ephemeral=True)
                 
             else:
                 # Seek similar names in the cosmic patterns

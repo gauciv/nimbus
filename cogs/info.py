@@ -6,6 +6,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import logging
+from utils.config import load_json_data
 
 class Info(commands.Cog):
     """Commands for displaying information and resources."""
@@ -18,177 +19,316 @@ class Info(commands.Cog):
             bot: The Discord bot instance
         """
         self.bot = bot
+        self.club_info = load_json_data('data/club_info.json', {})
     
-    @app_commands.command(name="about", description="Learn about the AWS Cloud Club and its officers")
+    @app_commands.command(name="about", description="✨ Learn about the AWS Cloud Club and its Sages (visible only to you)")
     async def about(self, interaction: discord.Interaction):
-        """Display information about the AWS Cloud Club and its officers."""
+        """Display information about the AWS Cloud Club and its leaders."""
         try:
+            # Reload club info to ensure we have the latest data
+            self.club_info = load_json_data('data/club_info.json', self.club_info)
+            
             embed = discord.Embed(
-                title="🌟 AWS Cloud Club",
+                title=f"✨ {self.club_info.get('name', 'AWS Cloud Club')}",
                 description=(
-                    "Welcome to AWS Cloud Club! We're a community of students passionate "
-                    "about cloud computing and Amazon Web Services technology."
+                    f"Welcome, seeker, to the mystical realm of AWS Cloud Club (AWS Student Community)! "
+                    f"{self.club_info.get('description', '')}\n\n"
+                    f"*This is a student-led community focused on learning and exploring AWS cloud technologies together.*"
                 ),
-                color=discord.Color.from_rgb(255, 153, 0)  # AWS Orange
+                color=discord.Color.purple()  # Mystical purple
             )
 
             # Mission Statement
+            mission_items = self.club_info.get('mission', [])
+            mission_text = "To illuminate the path of cloud wisdom (share AWS knowledge) through:\n"
+            mission_text += "\n".join([f"• {item}" for item in mission_items])
+            
             embed.add_field(
-                name="📜 Our Mission",
-                value=(
-                    "To foster learning and collaboration in cloud computing through:\n"
-                    "• Hands-on AWS projects\n"
-                    "• Technical workshops\n"
-                    "• Industry speaker sessions\n"
-                    "• Certification study groups"
-                ),
+                name="📜 Our Sacred Mission (Club Goals)",
+                value=mission_text,
                 inline=False
             )
 
             # Current Officers
-            embed.add_field(
-                name="👥 Club Officers",
-                value=(
-                    "**President**\n"
-                    "Sarah Chen - *AWS Solutions Architect Associate*\n\n"
-                    "**Vice President**\n"
-                    "Michael Rodriguez - *AWS Cloud Practitioner*\n\n"
-                    "**Technical Lead**\n"
-                    "Alex Kumar - *AWS Developer Associate*\n\n"
-                    "**Events Coordinator**\n"
-                    "Emma Thompson - *AWS Cloud Practitioner*"
-                ),
-                inline=False
-            )
+            leaders = self.club_info.get('leadership', [])
+            if leaders:
+                leaders_text = ""
+                for leader in leaders:
+                    leaders_text += f"**{leader.get('role', '')}**\n"
+                    leaders_text += f"{leader.get('name', '')} - *{leader.get('title', '')}*\n\n"
+                leaders_text += "*The Council of Elders is still forming. Join us to shape the future of our mystical order!*"
+                
+                embed.add_field(
+                    name="🔮 Guild Sages (Club Leadership)",
+                    value=leaders_text,
+                    inline=False
+                )
 
             # Activities and Events
+            activities = self.club_info.get('activities', [])
+            activities_text = "\n".join([f"• {activity}" for activity in activities])
+            
             embed.add_field(
-                name="🎯 What We Do",
-                value=(
-                    "• Weekly technical workshops\n"
-                    "• Monthly cloud projects\n"
-                    "• AWS certification prep\n"
-                    "• Networking events\n"
-                    "• Industry tours"
-                ),
+                name="🌟 Our Mystical Practices (Club Activities)",
+                value=activities_text,
                 inline=False
             )
 
             # Contact Information
+            social_links = self.club_info.get('social_links', {})
+            contact_text = "• Join our Discord sanctuary\n"
+            
+            if social_links.get('instagram'):
+                contact_text += f"• [Instagram Scrying Pool]({social_links['instagram']})\n"
+            
+            if social_links.get('facebook'):
+                contact_text += f"• [Facebook Astral Projection]({social_links['facebook']})\n"
+            
             embed.add_field(
-                name="📫 Get in Touch",
-                value=(
-                    "• Join our Discord community\n"
-                    "• Email: awscloudclub@university.edu\n"
-                    "• Instagram: @awscloudclub"
-                ),
+                name="📫 Commune With Us (Contact Information)",
+                value=contact_text,
                 inline=False
             )
 
             # Set footer with meeting info
-            embed.set_footer(text="Regular meetings every Thursday at 5:00 PM in Tech Center Room 401")
+            meeting = self.club_info.get('meeting_info', {})
+            if meeting.get('day') and meeting.get('time') and meeting.get('location'):
+                footer_text = f"✨ Gatherings: {meeting['day']} at {meeting['time']} in {meeting['location']} ✨"
+            else:
+                footer_text = "✨ The stars will reveal our gathering times soon. Stay vigilant for announcements! ✨"
+                
+            embed.set_footer(text=footer_text)
             
-            # AWS Logo (you can replace this URL with your club's actual logo)
+            # AWS Logo with mystical aura
             embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
             
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             
         except Exception as e:
             logging.error(f"Error in about command: {e}")
             await interaction.response.send_message(
-                "❌ An error occurred while fetching club information.",
+                "🌑 The cosmic forces are disturbed. The Oracle cannot reveal this knowledge at this time.",
                 ephemeral=True
             )
     
-    @app_commands.command(name="links", description="Get important AWS Cloud Club links and resources")
+    @app_commands.command(name="links", description="✨ Discover mystical pathways to AWS Cloud Club resources (visible only to you)")
     async def links(self, interaction: discord.Interaction):
         """Display important links and resources."""
         try:
+            # Reload club info to ensure we have the latest data
+            self.club_info = load_json_data('data/club_info.json', self.club_info)
+            
             embed = discord.Embed(
-                title="🔗 AWS Cloud Club Resources",
-                description="All the important links you need to get started!",
-                color=discord.Color.from_rgb(255, 153, 0)  # AWS Orange
+                title="🔮 Mystical Pathways (Important Links)",
+                description="Sacred links (useful resources) to expand your knowledge of the cloud realms (AWS services)!",
+                color=discord.Color.purple()  # Mystical purple
             )
 
             # Social Media Links
-            embed.add_field(
-                name="📱 Social Media",
-                value=(
-                    "• [LinkedIn Group](https://linkedin.com/groups/aws-cloud-club)\n"
-                    "• [Twitter](https://twitter.com/awscloudclub)\n"
-                    "• [Instagram](https://instagram.com/awscloudclub)\n"
-                    "• [YouTube Channel](https://youtube.com/awscloudclub)"
-                ),
-                inline=False
-            )
-
-            # Code & Project Resources
-            embed.add_field(
-                name="💻 Code & Projects",
-                value=(
-                    "• [GitHub Organization](https://github.com/aws-cloud-club)\n"
-                    "• [Project Showcase](https://aws-cloud-club.github.io/projects)\n"
-                    "• [Club Wiki](https://github.com/aws-cloud-club/wiki)"
-                ),
-                inline=False
-            )
+            social_links = self.club_info.get('social_links', {})
+            social_text = ""
+            
+            if social_links.get('instagram'):
+                social_text += f"• [Instagram Scrying Pool]({social_links['instagram']})\n"
+            
+            if social_links.get('facebook'):
+                social_text += f"• [Facebook Ethereal Plane]({social_links['facebook']})\n"
+                
+            if social_links.get('discord'):
+                social_text += f"• [Discord Sanctuary]({social_links['discord']})\n"
+                
+            if social_text:
+                embed.add_field(
+                    name="📱 Astral Projections (Social Media)",
+                    value=social_text,
+                    inline=False
+                )
 
             # AWS Learning Resources
             embed.add_field(
-                name="📚 AWS Resources",
+                name="📚 Tomes of Knowledge (Learning Resources)",
                 value=(
-                    "• [AWS Skill Builder](https://explore.skillbuilder.aws)\n"
-                    "• [AWS Documentation](https://docs.aws.amazon.com)\n"
-                    "• [AWS Solutions Architecture](https://aws.amazon.com/architecture)\n"
-                    "• [AWS Free Tier](https://aws.amazon.com/free)"
+                    "• [AWS Skill Builder](https://explore.skillbuilder.aws) - *Path of the Adept* (Free training courses)\n"
+                    "• [AWS Documentation](https://docs.aws.amazon.com) - *Sacred Scrolls* (Official documentation)\n"
+                    "• [AWS Architecture Center](https://aws.amazon.com/architecture) - *Blueprint of the Cosmos* (Reference architectures)\n"
+                    "• [AWS Free Tier](https://aws.amazon.com/free) - *Novice's First Enchantments* (Free AWS services)"
                 ),
                 inline=False
             )
 
             # Certification Resources
             embed.add_field(
-                name="📜 AWS Certification",
+                name="📜 Paths to Enlightenment (Certification Resources)",
                 value=(
-                    "• [Certification Portal](https://aws.amazon.com/certification)\n"
-                    "• [Exam Prep](https://aws.amazon.com/certification/certification-prep)\n"
-                    "• [Practice Exams](https://explore.skillbuilder.aws/learn/course/external/view/elearning/9449/aws-certification-official-practice-question-sets-english)"
+                    "• [Certification Portal](https://aws.amazon.com/certification) - *Trials of Mastery* (AWS certification info)\n"
+                    "• [Exam Preparation](https://aws.amazon.com/certification/certification-prep) - *Ritual Preparation* (Study materials)\n"
+                    "• [Practice Challenges](https://explore.skillbuilder.aws/learn/course/external/view/elearning/9449/aws-certification-official-practice-question-sets-english) - *Training Grounds* (Practice exams)"
                 ),
                 inline=False
             )
 
-            # Club Resources
+            # AWS Community Resources
             embed.add_field(
-                name="🎓 Club Resources",
+                name="🌐 Mystical Communities (AWS Community)",
                 value=(
-                    "• [Meeting Calendar](https://calendar.google.com/calendar/aws-cloud-club)\n"
-                    "• [Workshop Materials](https://drive.google.com/drive/folders/aws-club-workshops)\n"
-                    "• [Past Presentations](https://slides.aws-cloud-club.org)"
-                ), inline=False
-            )
-
-            # Contact Information
-            embed.add_field(
-                name="📫 Contact Us",
-                value=(
-                    "• Email: contact@aws-cloud-club.org\n"
-                    "• Discord: discord.gg/aws-cloud-club\n"
-                    "• Office: Tech Center Room 401"
+                    "• [AWS Community](https://aws.amazon.com/developer/community/) - *Council of Elders* (Developer community)\n"
+                    "• [AWS Events](https://aws.amazon.com/events/) - *Grand Gatherings* (Conferences & webinars)\n"
+                    "• [AWS User Groups](https://aws.amazon.com/developer/community/usergroups/) - *Local Covens* (Local meetups)"
                 ),
                 inline=False
             )
 
             # Set a footer with update information
-            embed.set_footer(text="Links last updated: June 2025 | Contact an officer if you find any broken links")
+            embed.set_footer(text="✨ These mystical pathways were last aligned with the cosmos on the present moon ✨")
             
-            # Set the AWS logo as thumbnail
+            # Set the AWS logo as thumbnail with mystical aura
             embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
 
-            await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
         except Exception as e:
             logging.error(f"Error displaying links: {e}")
             await interaction.response.send_message(
-                "❌ An error occurred while fetching the links.",
+                "🌑 The cosmic forces are disturbed. The Oracle cannot reveal these pathways at this time.",
+                ephemeral=True
+            )
+            
+    @app_commands.command(name="update_info", description="✨ Update club information (Admin only)")
+    @app_commands.default_permissions(administrator=True)
+    async def update_info(self, interaction: discord.Interaction, field: str, value: str):
+        """Update club information (Admin only)."""
+        try:
+            # Check if user has admin permissions
+            if not interaction.user.guild_permissions.administrator:
+                await interaction.response.send_message(
+                    "🌑 Only those with administrative powers may alter the cosmic records.",
+                    ephemeral=True
+                )
+                return
+                
+            # Reload club info to ensure we have the latest data
+            self.club_info = load_json_data('data/club_info.json', {})
+            
+            # Handle nested fields with dot notation (e.g., "social_links.instagram")
+            if "." in field:
+                parts = field.split(".")
+                if len(parts) == 2 and parts[0] in self.club_info and isinstance(self.club_info[parts[0]], dict):
+                    self.club_info[parts[0]][parts[1]] = value
+                    from utils.config import save_json_data
+                    save_json_data('data/club_info.json', self.club_info)
+                    await interaction.response.send_message(
+                        f"✨ The cosmic records have been updated. Field `{field}` is now set to `{value}`.",
+                        ephemeral=True
+                    )
+                else:
+                    await interaction.response.send_message(
+                        f"🌑 The field `{field}` does not exist in the cosmic records.",
+                        ephemeral=True
+                    )
+            # Handle top-level fields
+            elif field in self.club_info:
+                # Handle special cases for lists
+                if field in ["mission", "activities", "leadership"] and isinstance(self.club_info[field], list):
+                    await interaction.response.send_message(
+                        f"🌑 The field `{field}` is a list and cannot be updated with this command. Please edit the club_info.json file directly.",
+                        ephemeral=True
+                    )
+                else:
+                    self.club_info[field] = value
+                    from utils.config import save_json_data
+                    save_json_data('data/club_info.json', self.club_info)
+                    await interaction.response.send_message(
+                        f"✨ The cosmic records have been updated. Field `{field}` is now set to `{value}`.",
+                        ephemeral=True
+                    )
+            else:
+                await interaction.response.send_message(
+                    f"🌑 The field `{field}` does not exist in the cosmic records.",
+                    ephemeral=True
+                )
+                
+        except Exception as e:
+            logging.error(f"Error updating club info: {e}")
+            await interaction.response.send_message(
+                "🌑 The cosmic forces are disturbed. The Oracle cannot update the records at this time.",
+                ephemeral=True
+            )
+    
+    @app_commands.command(name="join", description="✨ Learn how to join the AWS Cloud Club (visible only to you)")
+    async def join(self, interaction: discord.Interaction):
+        """Display information about joining the club."""
+        try:
+            embed = discord.Embed(
+                title="✨ Join Our Mystical Order (Become a Member)",
+                description=(
+                    "The AWS Cloud Club welcomes all seekers of cloud wisdom (students interested in AWS)! "
+                    "Follow these steps to begin your journey with us."
+                ),
+                color=discord.Color.purple()  # Mystical purple
+            )
+
+            # Steps to Join
+            embed.add_field(
+                name="🔮 The Path to Initiation (Joining Steps)",
+                value=(
+                    "**1.** Introduce yourself in the <#1384409113181814845> channel (arrivals)\n"
+                    "**2.** Select your roles in <#1384476784493334569> (role-assignment)\n"
+                    "**3.** Read our sacred rules in <#1384409127966474310> (rules)\n"
+                    "**4.** Engage with our community in <#1384049292129337488> (general-chat)\n"
+                    "**5.** Attend our mystical gatherings (events announced in <#1384409111797567521>)"
+                ),
+                inline=False
+            )
+
+            # Benefits
+            embed.add_field(
+                name="✨ Gifts of Membership (Benefits)",
+                value=(
+                    "• Access to mystical AWS knowledge (learning resources)\n"
+                    "• Guidance from experienced cloud sages (mentorship)\n"
+                    "• Participation in hands-on enchantments (workshops)\n"
+                    "• Connection to the AWS community (networking)\n"
+                    "• Preparation for certification quests (exam prep)"
+                ),
+                inline=False
+            )
+
+            # Requirements
+            embed.add_field(
+                name="📜 Requirements",
+                value=(
+                    "• Interest in cloud computing and AWS\n"
+                    "• Willingness to learn and participate\n"
+                    "• Respect for fellow seekers\n"
+                    "• No prior experience necessary - all are welcome!"
+                ),
+                inline=False
+            )
+
+            # Contact
+            embed.add_field(
+                name="📫 Questions?",
+                value=(
+                    "Reach out to our Guild Sages:\n"
+                    "• Mikaela Vianca Molina\n"
+                    "• John Vincent Augusto\n\n"
+                    "Or ask in the <#1384409143464693812> channel!"
+                ),
+                inline=False
+            )
+
+            # Set footer
+            embed.set_footer(text="✨ We look forward to welcoming you into our mystical fellowship! ✨")
+            
+            # AWS Logo with mystical aura
+            embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
+            
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            logging.error(f"Error in join command: {e}")
+            await interaction.response.send_message(
+                "🌑 The cosmic forces are disturbed. The Oracle cannot reveal this knowledge at this time.",
                 ephemeral=True
             )
 

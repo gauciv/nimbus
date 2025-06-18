@@ -1,0 +1,42 @@
+{
+  "name": "AWS Cloud Club - CTU Chapter",
+  "description": "A fellowship of students drawn to the arcane arts of cloud computing and the powerful enchantments of Amazon Web Services.",
+  "social_links": {
+    "instagram": "https://www.instagram.com/awscc_ctu/",
+    "facebook": "https://www.facebook.com/profile.php?id=61576861010720",
+    "discord": "https://discord.gg/your-invite-link"
+  },
+  "leadership": [
+    {
+      "name": "Mikaela Vianca Molina",
+      "role": "High Sage (Captain)",
+      "title": "Keeper of Visions",
+      "contact": ""
+    },
+    {
+      "name": "John Vincent Augusto",
+      "role": "Arcane Keeper (Captain)",
+      "title": "Master of Ceremonies",
+      "contact": ""
+    }
+  ],
+  "meeting_info": {
+    "day": "",
+    "time": "",
+    "location": "",
+    "frequency": ""
+  },
+  "mission": [
+    "Practical conjuring of AWS artifacts",
+    "Mystical workshops of technical knowledge",
+    "Communion with industry sages",
+    "Certification quests for the dedicated"
+  ],
+  "activities": [
+    "Weekly enchantment workshops",
+    "Monthly cloud artifact creation",
+    "AWS certification rituals",
+    "Networking ceremonies",
+    "Pilgrimages to industry sanctums"
+  ]
+}
