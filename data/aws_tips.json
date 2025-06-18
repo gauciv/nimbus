@@ -24,6 +24,16 @@
       "title": "Rightsize Your Ethereal Constructs",
       "description": "Summon only the size of EC2 instances that your enchantments (applications) truly require. The Oracle's Compute Optimizer can guide your choices by analyzing performance metrics and recommending optimal instance types.",
       "learn_more": "https://aws.amazon.com/compute-optimizer/"
+    },
+    {
+      "title": "Master the Art of Spot Instances",
+      "description": "Summon Spot Instances for flexible workloads to save up to 90% compared to on-demand pricing. These ephemeral resources can be perfect for batch processing, data analysis, and other interruptible tasks.",
+      "learn_more": "https://aws.amazon.com/ec2/spot/"
+    },
+    {
+      "title": "Optimize Storage Tiers",
+      "description": "Channel your data through the appropriate S3 storage tiers (Standard, IA, Glacier) based on access frequency. The ancient scrolls speak of significant savings when using lifecycle policies to automatically transition objects.",
+      "learn_more": "https://aws.amazon.com/s3/storage-classes/"
     }
   ],
   "Security Enchantments": [
@@ -51,6 +61,16 @@
       "title": "Invoke GuardDuty's Vigilance",
       "description": "Summon the watchful guardian (threat detection service) to detect malevolent entities (threats, unauthorized access) attempting to infiltrate your mystical realm. It continuously monitors for suspicious activity.",
       "learn_more": "https://aws.amazon.com/guardduty/"
+    },
+    {
+      "title": "Scry with AWS Config",
+      "description": "Use AWS Config to maintain a detailed record of your realm's configuration changes and ensure compliance with security standards. Let this magical eye watch over your resource configurations.",
+      "learn_more": "https://aws.amazon.com/config/"
+    },
+    {
+      "title": "Craft WAF Protection Spells",
+      "description": "Shield your web applications from malicious incantations using AWS WAF. Create rules to filter suspicious requests and protect against common web exploits.",
+      "learn_more": "https://aws.amazon.com/waf/"
     }
   ],
   "Performance Divination": [
@@ -78,6 +98,16 @@
       "title": "Optimize Image Enchantments",
       "description": "Compress and transform your mystical images with CloudFront Functions to reduce their ethereal weight (file size) and accelerate their manifestation (loading time) for a smoother user experience.",
       "learn_more": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-functions.html"
+    },
+    {
+      "title": "Harness the Power of Graviton",
+      "description": "Consider AWS Graviton processors for your mystical computations. These ARM-based instances can provide better price-performance for many workloads.",
+      "learn_more": "https://aws.amazon.com/ec2/graviton/"
+    },
+    {
+      "title": "Optimize Lambda Cold Starts",
+      "description": "Reduce the awakening time of your Spectral Functions by choosing appropriate memory sizes and using Provisioned Concurrency for latency-sensitive operations.",
+      "learn_more": "https://docs.aws.amazon.com/lambda/latest/dg/provisioned-concurrency.html"
     }
   ],
   "Reliability Wards": [
@@ -105,6 +135,16 @@
       "title": "Invoke Route 53 Health Checks",
       "description": "Command the Mystical Wayfinder (DNS service) to regularly test your enchantments (endpoints) and redirect seekers (users) away from troubled realms (failing instances) to maintain service availability.",
       "learn_more": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/welcome-health-checks.html"
+    },
+    {
+      "title": "Implement Dead Letter Queues",
+      "description": "Create repositories for failed message processing attempts using Dead Letter Queues. These mystical containers help track and debug failed operations in your async workflows.",
+      "learn_more": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html"
+    },
+    {
+      "title": "Master the Art of Auto Recovery",
+      "description": "Configure EC2 Auto Recovery to automatically resurrect instances when they become impaired. This ancient magic helps maintain system availability without manual intervention.",
+      "learn_more": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-recover.html"
     }
   ],
   "Serverless Sorcery": [
@@ -132,6 +172,50 @@
       "title": "Optimize Lambda Memory Allocation",
       "description": "Attune your Spectral Functions (Lambda functions) with precisely the right amount of memory to maximize their efficiency and minimize their cost. Memory affects both performance and pricing.",
       "learn_more": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html"
+    },
+    {
+      "title": "Embrace AppSync's GraphQL Magic",
+      "description": "Harness AWS AppSync to create scalable GraphQL APIs that can seamlessly integrate with multiple data sources. Perfect for real-time applications and offline data synchronization.",
+      "learn_more": "https://aws.amazon.com/appsync/"
+    },
+    {
+      "title": "Weave API Gateway Patterns",
+      "description": "Design robust API patterns using API Gateway's mystical features like request validation, throttling, and caching to protect and optimize your serverless endpoints.",
+      "learn_more": "https://aws.amazon.com/api-gateway/"
+    }
+  ],
+  "Cloud Architecture Wisdom": [
+    {
+      "title": "Master the Well-Architected Framework",
+      "description": "Study the six pillars of AWS Well-Architected Framework to create harmonious and balanced cloud architectures. Let these ancient principles guide your design decisions.",
+      "learn_more": "https://aws.amazon.com/architecture/well-architected/"
+    },
+    {
+      "title": "Embrace Infrastructure as Code",
+      "description": "Write your infrastructure spells using AWS CloudFormation or CDK, allowing you to version, replicate, and maintain your cloud resources through the power of code.",
+      "learn_more": "https://aws.amazon.com/cdk/"
+    },
+    {
+      "title": "Design for Chaos",
+      "description": "Practice chaos engineering using AWS Fault Injection Simulator to test your system's resilience against unexpected disruptions. Learn how your architecture responds to controlled chaos.",
+      "learn_more": "https://aws.amazon.com/fis/"
+    }
+  ],
+  "Container Conjuring": [
+    {
+      "title": "Orchestrate with ECS",
+      "description": "Master the art of container orchestration with Amazon ECS. Let the service handle the complex task of managing, scheduling, and scaling your containerized applications.",
+      "learn_more": "https://aws.amazon.com/ecs/"
+    },
+    {
+      "title": "Deploy with Fargate",
+      "description": "Unleash the power of serverless containers using AWS Fargate. Focus on your applications while the mystical forces handle the underlying infrastructure.",
+      "learn_more": "https://aws.amazon.com/fargate/"
+    },
+    {
+      "title": "Optimize Container Images",
+      "description": "Craft efficient container images using multi-stage builds and minimal base images. Smaller images lead to faster deployments and reduced storage costs.",
+      "learn_more": "https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-optimization.html"
     }
   ]
 }
