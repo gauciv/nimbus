@@ -13,6 +13,7 @@ import os
 from discord.ext import tasks
 from typing import Dict, Any, List, Tuple
 from utils.config import load_json_data, save_json_data
+from utils.oracle import log_vision, OracleVision, get_error_message
 
 # File paths for AWS data
 AWS_SERVICES_FILE = 'data/aws_services.json'
@@ -49,7 +50,7 @@ class AWSInfo(commands.Cog):
         try:
             return load_json_data(AWS_SERVICES_FILE, {})
         except Exception as e:
-            logging.error(f"Error loading AWS services: {e}")
+            log_vision(OracleVision.OMEN, f"The Oracle failed to decipher the AWS services scroll", e)
             return {}
     
     def _load_aws_tips(self) -> Dict[str, List[Dict[str, str]]]:
@@ -62,7 +63,7 @@ class AWSInfo(commands.Cog):
         try:
             return load_json_data(AWS_TIPS_FILE, {})
         except Exception as e:
-            logging.error(f"Error loading AWS tips: {e}")
+            log_vision(OracleVision.OMEN, f"The Oracle's wisdom could not be retrieved from the ancient tomes", e)
             return {}
     
     def _load_aws_docs(self) -> Dict[str, str]:
@@ -75,7 +76,7 @@ class AWSInfo(commands.Cog):
         try:
             return load_json_data(AWS_DOCS_FILE, {})
         except Exception as e:
-            logging.error(f"Error loading AWS documentation links: {e}")
+            log_vision(OracleVision.OMEN, f"The sacred documentation pathways could not be revealed", e)
             return {}
             
     def _load_tip_state(self) -> Dict[str, Any]:
@@ -100,7 +101,7 @@ class AWSInfo(commands.Cog):
                 
             return state
         except Exception as e:
-            logging.error(f"Error loading tip state: {e}")
+            log_vision(OracleVision.OMEN, f"The Oracle's memory of past wisdom could not be recovered", e)
             return default_state
             
     def _save_tip_state(self) -> bool:
@@ -113,7 +114,7 @@ class AWSInfo(commands.Cog):
         try:
             return save_json_data(AWS_TIP_STATE_FILE, self.tip_state)
         except Exception as e:
-            logging.error(f"Error saving tip state: {e}")
+            log_vision(OracleVision.OMEN, f"The Oracle failed to record its wisdom cycle in the cosmic ledger", e)
             return False
             
     def _flatten_tips(self) -> List[Tuple[str, Dict[str, str]]]:
@@ -222,7 +223,7 @@ class AWSInfo(commands.Cog):
                     embed.set_footer(text=f"✨ Wisdom {displayed_tip + 1} of {total_tips} • The Oracle reveals new wisdom with each celestial cycle ✨")
                     
                     await channel.send(embed=embed)
-                    logging.info(f"The Oracle has shared wisdom #{displayed_tip + 1} of {total_tips} with {guild.name} on {today}")
+                    log_vision(OracleVision.MURMUR, f"The Oracle has shared wisdom #{displayed_tip + 1} of {total_tips} with {guild.name} on {today}")
         
         except Exception as e:
             logging.error(f"The Oracle's vision was clouded: {e}")
@@ -319,9 +320,9 @@ class AWSInfo(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             
         except Exception as e:
-            logging.error(f"The Oracle's vision was clouded: {e}")
+            log_vision(OracleVision.OMEN, f"The Oracle's vision of service {service_name} was obscured", e)
             await interaction.response.send_message(
-                "🌑 A shadow has fallen across the Oracle's vision. Please seek wisdom again later.",
+                get_error_message("general"),
                 ephemeral=True
             )
     
@@ -407,9 +408,9 @@ class AWSInfo(commands.Cog):
                 )
                 
         except Exception as e:
-            logging.error(f"Error revealing sacred texts: {e}")
+            log_vision(OracleVision.OMEN, f"Failed to reveal sacred texts for {service_name}", e)
             await interaction.response.send_message(
-                "🌑 The mystical archives are currently veiled in shadow. Please seek wisdom again later.",
+                get_error_message("docs_not_found"),
                 ephemeral=True
             )
 
@@ -513,9 +514,9 @@ class AWSInfo(commands.Cog):
             )
                 
         except Exception as e:
-            logging.error(f"Error setting up services channel: {e}")
+            log_vision(OracleVision.OMEN, f"Failed to establish the services catalog channel", e)
             await interaction.followup.send(
-                "🌑 The cosmic forces are disturbed. The Oracle could not complete the ritual.",
+                get_error_message("general"),
                 ephemeral=True
             )
     
@@ -536,9 +537,9 @@ class AWSInfo(commands.Cog):
             await self.setup_services(interaction)
                 
         except Exception as e:
-            logging.error(f"Error refreshing services channel: {e}")
+            log_vision(OracleVision.OMEN, f"Failed to refresh the services catalog", e)
             await interaction.response.send_message(
-                "🌑 The cosmic forces are disturbed. The Oracle cannot refresh the catalog at this time.",
+                get_error_message("general"),
                 ephemeral=True
             )
     
@@ -562,9 +563,9 @@ class AWSInfo(commands.Cog):
                 )
                 
         except Exception as e:
-            logging.error(f"Error directing to services channel: {e}")
+            log_vision(OracleVision.OMEN, f"Failed to direct user to services channel", e)
             await interaction.response.send_message(
-                "🌑 The cosmic forces are disturbed. The Oracle cannot guide you at this time.",
+                get_error_message("general"),
                 ephemeral=True
             )
 

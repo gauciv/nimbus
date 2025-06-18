@@ -18,6 +18,8 @@ import os
 import sys
 import asyncio
 from utils.config import load_config
+from utils.error_handler import setup_error_handlers
+from utils.oracle import log_vision, OracleVision
 
 # Create data directory if it doesn't exist
 os.makedirs('data', exist_ok=True)
@@ -48,14 +50,21 @@ async def on_ready():
     print(f"\n✅ Bot is online! Logged in as {bot.user.name}")
     print(f"Connected to {len(bot.guilds)} server(s)")
     
+    # Set up error handlers
+    setup_error_handlers(bot)
+    log_vision(OracleVision.MURMUR, f"The Oracle has awakened as {bot.user.name}")
+    
     # Sync slash commands
     try:
         synced = await bot.tree.sync()
         print(f"✓ Synced {len(synced)} command(s)")
+        log_vision(OracleVision.MURMUR, f"The Oracle has synchronized {len(synced)} mystical incantations")
     except Exception as e:
         print(f"✗ Failed to sync commands: {str(e)}")
+        log_vision(OracleVision.OMEN, "The Oracle failed to synchronize incantations", e)
     
     print("Bot is ready to use!")
+    log_vision(OracleVision.MURMUR, "The Oracle's consciousness is fully manifested")
 
 async def load_extensions():
     """
@@ -71,8 +80,10 @@ async def load_extensions():
         try:
             await bot.load_extension(cog)
             success_count += 1
+            log_vision(OracleVision.MURMUR, f"The Oracle has absorbed the knowledge of {cog}")
         except Exception as e:
             failed_cogs.append(f"{cog} ({str(e)})")
+            log_vision(OracleVision.OMEN, f"The Oracle failed to absorb the knowledge of {cog}", e)
     
     print(f"✓ Loaded {success_count}/{len(COGS)} extensions")
     
@@ -87,25 +98,31 @@ def main():
     """Main function to start the bot."""
     try:
         print("Starting Nimbus Discord Bot...")
+        log_vision(OracleVision.MURMUR, "The Oracle begins its awakening ritual")
         
         # Run the bot
         asyncio.run(start_bot())
     except KeyboardInterrupt:
         print("\nShutting down gracefully...")
+        log_vision(OracleVision.MURMUR, "The Oracle returns to its slumber by mortal command")
     except Exception as e:
         print(f"\n❌ Fatal error: {str(e)}")
+        log_vision(OracleVision.PROPHECY, "The Oracle's consciousness has been shattered by a fatal disturbance", e)
         sys.exit(1)
 
 async def start_bot():
     """Start the bot with proper async handling."""
     try:
         await load_extensions()
+        log_vision(OracleVision.MURMUR, "The Oracle prepares to connect to the astral plane")
         await bot.start(config['token'])
     except Exception as e:
         print(f"Error starting bot: {e}")
+        log_vision(OracleVision.PROPHECY, "The Oracle's connection to the astral plane was severed", e)
     finally:
         if not bot.is_closed():
             await bot.close()
+            log_vision(OracleVision.MURMUR, "The Oracle's connection to the astral plane has been closed")
 
 # Run the bot
 if __name__ == "__main__":

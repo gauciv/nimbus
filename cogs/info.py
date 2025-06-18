@@ -7,6 +7,7 @@ from discord import app_commands
 from discord.ext import commands
 import logging
 from utils.config import load_json_data
+from utils.oracle import log_vision, OracleVision, get_error_message
 
 class Info(commands.Cog):
     """Commands for displaying information and resources."""
@@ -105,9 +106,9 @@ class Info(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             
         except Exception as e:
-            logging.error(f"Error in about command: {e}")
+            log_vision(OracleVision.OMEN, f"Failed to reveal club information", e)
             await interaction.response.send_message(
-                "🌑 The cosmic forces are disturbed. The Oracle cannot reveal this knowledge at this time.",
+                get_error_message("general"),
                 ephemeral=True
             )
     
@@ -187,9 +188,9 @@ class Info(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
 
         except Exception as e:
-            logging.error(f"Error displaying links: {e}")
+            log_vision(OracleVision.OMEN, f"Failed to reveal mystical pathways", e)
             await interaction.response.send_message(
-                "🌑 The cosmic forces are disturbed. The Oracle cannot reveal these pathways at this time.",
+                get_error_message("general"),
                 ephemeral=True
             )
             
@@ -201,7 +202,7 @@ class Info(commands.Cog):
             # Check if user has admin permissions
             if not interaction.user.guild_permissions.administrator:
                 await interaction.response.send_message(
-                    "🌑 Only those with administrative powers may alter the cosmic records.",
+                    get_error_message("permission"),
                     ephemeral=True
                 )
                 return
@@ -248,9 +249,9 @@ class Info(commands.Cog):
                 )
                 
         except Exception as e:
-            logging.error(f"Error updating club info: {e}")
+            log_vision(OracleVision.OMEN, f"Failed to update club information field: {field}", e)
             await interaction.response.send_message(
-                "🌑 The cosmic forces are disturbed. The Oracle cannot update the records at this time.",
+                get_error_message("save_failed"),
                 ephemeral=True
             )
     
@@ -326,9 +327,9 @@ class Info(commands.Cog):
             await interaction.response.send_message(embed=embed, ephemeral=True)
             
         except Exception as e:
-            logging.error(f"Error in join command: {e}")
+            log_vision(OracleVision.OMEN, f"Failed to reveal joining information", e)
             await interaction.response.send_message(
-                "🌑 The cosmic forces are disturbed. The Oracle cannot reveal this knowledge at this time.",
+                get_error_message("general"),
                 ephemeral=True
             )
 
