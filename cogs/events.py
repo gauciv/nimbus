@@ -31,7 +31,8 @@ class EventCommands(commands.GroupCog, name="event"):
     @app_commands.describe(
         title="The title of your gathering",
         date="The appointed date (DD/MM/YYYY)",
-        time="The appointed hour (HH:MM AM/PM)"
+        time="The appointed hour (HH:MM AM/PM)",
+        description="The mystical purpose of this gathering (optional)"
     )
     @is_core_team()
     async def create(
@@ -39,7 +40,8 @@ class EventCommands(commands.GroupCog, name="event"):
         interaction: discord.Interaction,
         title: str,
         date: str,
-        time: str
+        time: str,
+        description: str = ""
     ):
         """Create a new event announcement with mystical flair."""
         # First, provide helpful examples to the command invoker
@@ -53,7 +55,8 @@ class EventCommands(commands.GroupCog, name="event"):
             value=(
                 "**Title:** AWS Lambda Deep Dive Workshop\n"
                 "**Date:** 25/06/2025\n"
-                "**Time:** 2:30 PM"
+                "**Time:** 2:30 PM\n"
+                "**Description:** Learn the mystical arts of serverless computing with AWS Lambda"
             ),
             inline=False
         )
@@ -129,6 +132,14 @@ class EventCommands(commands.GroupCog, name="event"):
                 inline=True
             )
             
+            # Add description if provided
+            if description:
+                embed.add_field(
+                    name="📜 Mystical Purpose",
+                    value=description,
+                    inline=False
+                )
+            
             embed.add_field(
                 name="🔮 Sage of the Gathering",
                 value=interaction.user.mention,
@@ -147,7 +158,7 @@ class EventCommands(commands.GroupCog, name="event"):
             await event_message.add_reaction("👍")
 
             # Store the event
-            new_event = Event(title, date, time, interaction.user.id, event_message.id)
+            new_event = Event(title, date, time, interaction.user.id, event_message.id, description)
             self.event_manager.add_event(new_event)
 
             # Send confirmation to the command user
@@ -205,14 +216,21 @@ class EventCommands(commands.GroupCog, name="event"):
                 organizer = interaction.guild.get_member(event.organizer_id)
                 organizer_name = organizer.display_name if organizer else "Unknown"
                 
+                # Prepare event details
+                event_details = (
+                    f"📆 Date: {event.date}\n"
+                    f"⏰ Time: {event.time}\n"
+                    f"👤 Organizer: {organizer_name}\n"
+                    f"⏳ {time_str}"
+                )
+                
+                # Add description if available
+                if hasattr(event, 'description') and event.description:
+                    event_details += f"\n\n📜 {event.description}"
+                
                 embed.add_field(
                     name=f"Event #{i}: {event.title}",
-                    value=(
-                        f"📆 Date: {event.date}\n"
-                        f"⏰ Time: {event.time}\n"
-                        f"👤 Organizer: {organizer_name}\n"
-                        f"⏳ {time_str}"
-                    ),
+                    value=event_details,
                     inline=False
                 )
             
@@ -258,6 +276,14 @@ class EventCommands(commands.GroupCog, name="event"):
                                 value=f"{event.date} at {event.time}",
                                 inline=True
                             )
+                            
+                            # Add description if available
+                            if hasattr(event, 'description') and event.description:
+                                reminder_embed.add_field(
+                                    name="📜 Mystical Purpose",
+                                    value=event.description,
+                                    inline=False
+                                )
                             
                             await channel.send(
                                 content="@everyone A mystical gathering approaches!",

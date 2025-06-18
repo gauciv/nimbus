@@ -16,9 +16,9 @@ EVENTS_FILE = 'data/events.json'
 
 class Event:
     """
-    Represents a scheduled event with date, time, and organizer information.
+    Represents a scheduled event with date, time, description, and organizer information.
     """
-    def __init__(self, title: str, date: str, time: str, organizer_id: int, message_id: int):
+    def __init__(self, title: str, date: str, time: str, organizer_id: int, message_id: int, description: str = ""):
         """
         Initialize a new event.
         
@@ -28,12 +28,14 @@ class Event:
             time: Event time in HH:MM AM/PM format
             organizer_id: Discord ID of the event organizer
             message_id: Discord message ID of the event announcement
+            description: Optional description of the event
         """
         self.title = title
         self.date = date
         self.time = time
         self.organizer_id = organizer_id
         self.message_id = message_id
+        self.description = description
         
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -47,7 +49,8 @@ class Event:
             'date': self.date,
             'time': self.time,
             'organizer_id': self.organizer_id,
-            'message_id': self.message_id
+            'message_id': self.message_id,
+            'description': self.description
         }
     
     @staticmethod
@@ -66,7 +69,8 @@ class Event:
             data['date'],
             data['time'],
             data['organizer_id'],
-            data['message_id']
+            data['message_id'],
+            data.get('description', '')  # Use empty string as default if description is missing
         )
     
     def get_datetime(self) -> datetime:
