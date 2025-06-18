@@ -156,3 +156,23 @@ class EventManager:
         self.events = [event for event in self.events if event.get_datetime() > now]
         if len(self.events) < original_count:
             self.save_events()
+            
+    def get_all_events(self) -> List[Event]:
+        """
+        Get all events regardless of date.
+        
+        Returns:
+            List of all events
+        """
+        return self.events.copy()
+        
+    def remove_event(self, event: Event) -> None:
+        """
+        Remove an event and save to file.
+        
+        Args:
+            event: Event to remove
+        """
+        if event in self.events:
+            self.events.remove(event)
+            self.save_events()

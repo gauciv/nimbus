@@ -85,11 +85,23 @@ class AWSInfo(commands.Cog):
         Returns:
             Dict containing tip state information
         """
+        today = datetime.utcnow().strftime("%Y-%m-%d")
+        default_state = {"current_index": 0, "last_updated": today}
+        
         try:
-            return load_json_data(AWS_TIP_STATE_FILE, {"current_index": 0, "last_updated": datetime.utcnow().strftime("%Y-%m-%d")})
+            state = load_json_data(AWS_TIP_STATE_FILE, default_state)
+            
+            # Validate the date format
+            try:
+                datetime.strptime(state["last_updated"], "%Y-%m-%d")
+            except (ValueError, KeyError):
+                # If date is invalid, reset it to today
+                state["last_updated"] = today
+                
+            return state
         except Exception as e:
             logging.error(f"Error loading tip state: {e}")
-            return {"current_index": 0, "last_updated": datetime.utcnow().strftime("%Y-%m-%d")}
+            return default_state
             
     def _save_tip_state(self) -> bool:
         """
@@ -124,6 +136,7 @@ class AWSInfo(commands.Cog):
     def get_next_tip(self) -> Tuple[str, Dict[str, str]]:
         """
         Consult the Oracle for the next tip in the monthly cycle.
+        Only advances to the next tip if the date has changed.
         
         Returns:
             tuple: (category, tip)
@@ -132,21 +145,30 @@ class AWSInfo(commands.Cog):
         if total_tips == 0:
             return "General", {"title": "No tips available", "description": "The Oracle's wisdom is currently veiled.", "learn_more": "https://aws.amazon.com"}
         
-        # Get the current index from the state
+        # Get the current index and last updated date from the state
         current_index = self.tip_state.get("current_index", 0)
+        last_updated = self.tip_state.get("last_updated", "")
+        today = datetime.utcnow().strftime("%Y-%m-%d")
         
-        # Get the tip at the current index
-        tip_tuple = self.all_tips[current_index]
-        
-        # Increment the index for next time, wrapping around if we reach the end
-        next_index = (current_index + 1) % total_tips
-        
-        # Update the state
-        self.tip_state["current_index"] = next_index
-        self.tip_state["last_updated"] = datetime.utcnow().strftime("%Y-%m-%d")
-        self._save_tip_state()
-        
-        return tip_tuple
+        # Only advance the index if it's a new day
+        if today != last_updated:
+            # Get the tip at the current index
+            tip_tuple = self.all_tips[current_index]
+            
+            # Increment the index for next time, wrapping around if we reach the end
+            next_index = (current_index + 1) % total_tips
+            
+            # Update the state
+            self.tip_state["current_index"] = next_index
+            self.tip_state["last_updated"] = today
+            self._save_tip_state()
+            
+            return tip_tuple
+        else:
+            # If it's the same day, return the current tip without advancing
+            # We need to use the previous index since current_index has already been incremented
+            prev_index = (current_index - 1) if current_index > 0 else (total_tips - 1)
+            return self.all_tips[prev_index]
     
     @tasks.loop(hours=24)
     async def daily_tip(self):
@@ -185,13 +207,22 @@ class AWSInfo(commands.Cog):
                     
                     # Add mystical footer with tip number
                     total_tips = len(self.all_tips)
-                    current_tip = self.tip_state.get("current_index", 0)
-                    # We display the tip we just showed, which is the previous index
-                    displayed_tip = current_tip - 1 if current_tip > 0 else total_tips - 1
+                    current_index = self.tip_state.get("current_index", 0)
+                    # Calculate the displayed tip index based on whether we advanced today
+                    today = datetime.utcnow().strftime("%Y-%m-%d")
+                    last_updated = self.tip_state.get("last_updated", "")
+                    
+                    if today == last_updated:
+                        # If we updated today, the displayed tip is the previous index
+                        displayed_tip = (current_index - 1) if current_index > 0 else (total_tips - 1)
+                    else:
+                        # If we haven't updated yet today, the displayed tip is the current index
+                        displayed_tip = current_index
+                        
                     embed.set_footer(text=f"✨ Wisdom {displayed_tip + 1} of {total_tips} • The Oracle reveals new wisdom with each celestial cycle ✨")
                     
                     await channel.send(embed=embed)
-                    logging.info(f"The Oracle has shared wisdom with {guild.name}")
+                    logging.info(f"The Oracle has shared wisdom #{displayed_tip + 1} of {total_tips} with {guild.name} on {today}")
         
         except Exception as e:
             logging.error(f"The Oracle's vision was clouded: {e}")
