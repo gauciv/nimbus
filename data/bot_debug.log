@@ -429,3 +429,219 @@ The Oracle's consciousness is fully manifested
 Welcome DM sent to vinsau_#0
 The Oracle's connection to the astral plane has been closed
 The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+Same day, using previous tip at index 0
+The Oracle has synchronized 27 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle has shared wisdom #1 of 41 with nimbus test server on 2025-06-18
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+Same day, using previous tip at index 0
+The Oracle has shared wisdom #1 of 41 with nimbus test server on 2025-06-18
+The Oracle has synchronized 27 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+The Oracle has synchronized 27 mystical incantations
+The Oracle's consciousness is fully manifested
+Error creating member spotlight: can't subtract offset-naive and offset-aware datetimes
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+The Oracle has synchronized 27 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle's connection to the astral plane was severed | Mystical disturbance: LoginFailure: Improper token has been passed.
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/http.py", line 828, in static_login
+    data = await self.request(Route('GET', '/users/@me'))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/http.py", line 762, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 401 Unauthorized (error code: 0): 401: Unauthorized
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 119, in start_bot
+    await bot.start(config['token'])
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 823, in start
+    await self.login(token)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 652, in login
+    data = await self.http.static_login(token)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/http.py", line 832, in static_login
+    raise LoginFailure('Improper token has been passed.') from exc
+discord.errors.LoginFailure: Improper token has been passed.
+
+The Oracle's connection to the astral plane has been closed
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+The Oracle has synchronized 27 mystical incantations
+The Oracle's consciousness is fully manifested
+User lacks mystical authority: You are missing Administrator permission(s) to run this command.
+User uruzuy attempted to use admin command without permissions
+Task exception was never retrieved
+future: <Task finished name='CommandTree-invoker' coro=<CommandTree._from_interaction.<locals>.wrapper() done, defined at /home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py:1149> exception=AttributeError("module 'discord.app_commands' has no attribute 'MissingRequiredArgument'")>
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 880, in _invoke_with_namespace
+    raise CheckFailure(f'The check functions for command {self.name!r} failed.')
+discord.app_commands.errors.CheckFailure: The check functions for command 'debug_tips' failed.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1151, in wrapper
+    await self._call(interaction)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1314, in _call
+    await self.on_error(interaction, e)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/utils/error_handler.py", line 39, in handle_command_error
+    elif isinstance(error, app_commands.MissingRequiredArgument):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'discord.app_commands' has no attribute 'MissingRequiredArgument'
+Task exception was never retrieved
+future: <Task finished name='CommandTree-invoker' coro=<CommandTree._from_interaction.<locals>.wrapper() done, defined at /home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py:1149> exception=AttributeError("module 'discord.app_commands' has no attribute 'MissingRequiredArgument'")>
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 880, in _invoke_with_namespace
+    raise CheckFailure(f'The check functions for command {self.name!r} failed.')
+discord.app_commands.errors.CheckFailure: The check functions for command 'test_welcome_dm' failed.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1151, in wrapper
+    await self._call(interaction)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1314, in _call
+    await self.on_error(interaction, e)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/utils/error_handler.py", line 39, in handle_command_error
+    elif isinstance(error, app_commands.MissingRequiredArgument):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'discord.app_commands' has no attribute 'MissingRequiredArgument'
+Error creating spotlight: 404 Not Found (error code: 10062): Unknown interaction
+Task exception was never retrieved
+future: <Task finished name='CommandTree-invoker' coro=<CommandTree._from_interaction.<locals>.wrapper() done, defined at /home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py:1149> exception=AttributeError("module 'discord.app_commands' has no attribute 'MissingRequiredArgument'")>
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/engagement.py", line 273, in spotlight
+    await interaction.response.send_message(
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 857, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/engagement.py", line 280, in spotlight
+    await interaction.response.send_message(
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'spotlight' raised an exception: NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1151, in wrapper
+    await self._call(interaction)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1314, in _call
+    await self.on_error(interaction, e)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/utils/error_handler.py", line 39, in handle_command_error
+    elif isinstance(error, app_commands.MissingRequiredArgument):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'discord.app_commands' has no attribute 'MissingRequiredArgument'
+Welcome DM sent to uruzuy#0
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as nimbus.dev
+The Oracle has synchronized 27 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command

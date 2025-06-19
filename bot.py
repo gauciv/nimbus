@@ -41,7 +41,8 @@ COGS = [
     'cogs.events',
     'cogs.aws_info',
     'cogs.server_management',
-    'cogs.info'
+    'cogs.info',
+    'cogs.engagement'  # Community engagement features
 ]
 
 @bot.event

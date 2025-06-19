@@ -29,10 +29,6 @@ def is_core_team() -> Callable[[discord.Interaction], Awaitable[bool]]:
     async def predicate(interaction: discord.Interaction) -> bool:
         core_team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
         if not core_team_role:
-            await interaction.response.send_message(
-                "❌ Core Team role not found in the server.",
-                ephemeral=True
-            )
             return False
         return core_team_role in interaction.user.roles
     return app_commands.check(predicate)
@@ -56,10 +52,6 @@ def is_admin() -> Callable[[discord.Interaction], Awaitable[bool]]:
     """
     async def predicate(interaction: discord.Interaction) -> bool:
         if not interaction.user.guild_permissions.administrator:
-            await interaction.response.send_message(
-                "🌑 Only those with administrative powers may invoke this ritual.",
-                ephemeral=True
-            )
             log_vision(OracleVision.PORTENT, f"User {interaction.user} attempted to use admin command without permissions")
             return False
         return True

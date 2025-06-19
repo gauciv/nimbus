@@ -36,20 +36,24 @@ async def handle_command_error(
         error_message = "🌑 The Oracle lacks the mystical authority to perform this ritual."
         log_vision(OracleVision.PORTENT, f"Bot lacks mystical authority: {error}")
         
-    elif isinstance(error, app_commands.MissingRequiredArgument):
-        error_message = get_error_message("missing_argument")
-        log_vision(OracleVision.PORTENT, f"Ritual components missing: {error}")
+    # Note: MissingRequiredArgument doesn't exist in discord.py 2.x for app_commands
+    # Missing arguments are handled by Discord's built-in validation
         
-    elif isinstance(error, app_commands.BadArgument):
-        error_message = get_error_message("bad_argument")
-        log_vision(OracleVision.PORTENT, f"Ritual components misaligned: {error}")
+    # Note: BadArgument doesn't exist in discord.py 2.x for app_commands
+    # Bad arguments are handled by Discord's built-in validation
         
     elif isinstance(error, app_commands.CommandOnCooldown):
         error_message = get_error_message("rate_limit")
         log_vision(OracleVision.PORTENT, f"Ritual attempted too frequently: {error}")
         
     elif isinstance(error, app_commands.CheckFailure):
-        error_message = get_error_message("permission")
+        # Determine the specific permission error based on the command
+        if "admin" in str(error).lower() or "administrator" in str(error).lower():
+            error_message = "🌑 Only those with administrative powers may invoke this ritual."
+        elif "core team" in str(error).lower():
+            error_message = "❌ This command requires Core Team permissions."
+        else:
+            error_message = get_error_message("permission")
         log_vision(OracleVision.PORTENT, f"Ritual check failed: {error}")
         
     else:
