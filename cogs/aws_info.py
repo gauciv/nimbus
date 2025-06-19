@@ -332,7 +332,7 @@ class AWSInfo(commands.Cog):
             
             # Create an enchanted embed with the service information
             embed = discord.Embed(
-                title=f"{service['icon']} {service['mystical_name']} ({service['name']})",
+                title=f"{service['icon']} {service['name']} - {service['mystical_name']}",
                 description=f"{service['description']}",
                 color=discord.Color.purple()  # Mystical purple
             )
