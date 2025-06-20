@@ -8,6 +8,7 @@ from discord.ext import commands
 import logging
 from utils.config import load_json_data
 from utils.oracle import log_vision, OracleVision, get_error_message
+from utils.permission_levels import admin_only, everyone
 
 class Info(commands.Cog):
     """Commands for displaying information and resources."""
@@ -23,6 +24,7 @@ class Info(commands.Cog):
         self.club_info = load_json_data('data/club_info.json', {})
     
     @app_commands.command(name="about", description="✨ Learn about the AWS Cloud Club and its Sages (visible only to you)")
+    @everyone()
     async def about(self, interaction: discord.Interaction):
         """Display information about the AWS Cloud Club and its leaders."""
         try:
@@ -113,6 +115,7 @@ class Info(commands.Cog):
             )
     
     @app_commands.command(name="links", description="✨ Discover mystical pathways to AWS Cloud Club resources (visible only to you)")
+    @everyone()
     async def links(self, interaction: discord.Interaction):
         """Display important links and resources."""
         try:
@@ -195,7 +198,7 @@ class Info(commands.Cog):
             )
             
     @app_commands.command(name="update_info", description="✨ Update club information (Admin only)")
-    @app_commands.default_permissions(administrator=True)
+    @admin_only()
     async def update_info(self, interaction: discord.Interaction, field: str, value: str):
         """Update club information (Admin only)."""
         try:
@@ -256,6 +259,7 @@ class Info(commands.Cog):
             )
     
     @app_commands.command(name="join", description="✨ Learn how to join the AWS Cloud Club (visible only to you)")
+    @everyone()
     async def join(self, interaction: discord.Interaction):
         """Display information about joining the club."""
         try:

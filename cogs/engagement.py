@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import json
 import logging
 from pathlib import Path
+from utils.permission_levels import core_team_only, everyone
 
 class Engagement(commands.Cog):
     def __init__(self, bot):
@@ -49,6 +50,7 @@ class Engagement(commands.Cog):
         name="poll",
         description="✨ Create an enchanted poll for community decisions"
     )
+    @everyone()
     @app_commands.describe(
         question="The mystical question to ask",
         duration='Time to end (e.g., "7:30 PM") or duration (30m, 2h, 1d, 1w). Default: 1d',
@@ -163,6 +165,7 @@ class Engagement(commands.Cog):
         name="spotlight",
         description="✨ Celebrate a member's achievements and contributions"
     )
+    @core_team_only()
     @app_commands.describe(
         member="The community member to spotlight",
         achievement="Their notable achievement or contribution",

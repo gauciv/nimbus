@@ -6,8 +6,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import logging
-from utils.permissions import is_core_team
 from utils.config import load_json_data
+from utils.permission_levels import admin_only, core_team_only
 
 def load_config():
     """Load server configuration using the centralized config utility."""
@@ -233,7 +233,7 @@ class Welcome(commands.Cog):
             logging.warning("Could not find #arrivals channel to send welcome message")
 
     @app_commands.command(name="test_welcome", description="Test the welcome message (only visible to you)")
-    @is_core_team()
+    @core_team_only()
     async def test_welcome(self, interaction: discord.Interaction):
         """Test the welcome message that would be sent when a new member joins."""
         try:
@@ -276,7 +276,7 @@ class Welcome(commands.Cog):
             )
 
     @app_commands.command(name="test_welcome_dm", description="Test the welcome DM (sends you a test DM)")
-    @is_core_team()
+    @admin_only()
     async def test_welcome_dm(self, interaction: discord.Interaction):
         """Test the welcome DM that would be sent when a new member joins."""
         try:
@@ -292,7 +292,7 @@ class Welcome(commands.Cog):
             )
 
     @app_commands.command(name="setup_get_started", description="Set up the getting started guide")
-    @is_core_team()
+    @admin_only()
     async def setup_get_started(self, interaction: discord.Interaction):
         """Set up the getting started guide in the get-started channel."""
         try:

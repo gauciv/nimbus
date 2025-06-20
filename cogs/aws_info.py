@@ -13,9 +13,9 @@ import os
 import shutil
 from discord.ext import tasks
 from typing import Dict, Any, List, Tuple
-import utils.permissions
 from utils.config import load_json_data, save_json_data
 from utils.oracle import log_vision, OracleVision, get_error_message
+from utils.permission_levels import admin_only, everyone
 
 # File paths for AWS data
 AWS_SERVICES_FILE = 'data/aws_services.json'
@@ -301,6 +301,7 @@ class AWSInfo(commands.Cog):
     @app_commands.describe(
         service_name="The name of the AWS service (e.g., s3, ec2, lambda, rds)"
     )
+    @everyone()
     async def aws_service(self, interaction: discord.Interaction, service_name: str):
         """Get information about an AWS service."""
         try:
@@ -386,6 +387,7 @@ class AWSInfo(commands.Cog):
     @app_commands.describe(
         service_name="The true name of the AWS service (e.g., s3, lambda, ec2)"
     )
+    @everyone()
     async def docs(self, interaction: discord.Interaction, service_name: str):
         """Reveal the location of sacred documentation for an AWS service."""
         try:
@@ -640,7 +642,7 @@ class AWSInfo(commands.Cog):
             )
     
     @app_commands.command(name="debug_tips", description="🔍 Debug the AWS tips system (admin only)")
-    @utils.permissions.is_admin()
+    @admin_only()
     async def debug_tips(self, interaction: discord.Interaction):
         """Debug the AWS tips system and display current status."""
         try:
@@ -676,7 +678,7 @@ class AWSInfo(commands.Cog):
             )
 
     @app_commands.command(name="reset_tips", description="🔄 Reset the AWS tips system (admin only)")
-    @utils.permissions.is_admin()
+    @admin_only()
     async def reset_tips(self, interaction: discord.Interaction):
         """Reset the AWS tips system to its initial state."""
         try:
@@ -705,7 +707,7 @@ class AWSInfo(commands.Cog):
             )
 
     @app_commands.command(name="fix_tips_file", description="🔧 Fix the AWS tips file if corrupted (admin only)")
-    @utils.permissions.is_admin()
+    @admin_only()
     async def fix_tips_file(self, interaction: discord.Interaction):
         """Attempt to fix a corrupted AWS tips file."""
         try:
@@ -757,7 +759,7 @@ class AWSInfo(commands.Cog):
             )
         
     @app_commands.command(name="reload_tips", description="🔄 Reload AWS tips without resetting state (admin only)")
-    @utils.permissions.is_admin()
+    @admin_only()
     async def reload_tips(self, interaction: discord.Interaction):
         """Reload AWS tips without resetting the state."""
         try:
@@ -792,7 +794,7 @@ class AWSInfo(commands.Cog):
             )
     
     @app_commands.command(name="trigger_tip", description="🔮 Manually trigger the daily AWS tip (admin only)")
-    @utils.permissions.is_admin()
+    @admin_only()
     async def trigger_tip(self, interaction: discord.Interaction):
         """Manually trigger the daily AWS tip."""
         try:
@@ -875,7 +877,7 @@ class AWSInfo(commands.Cog):
             )
     
     @app_commands.command(name="debug_tips", description="🔍 Debug the AWS tips system (admin only)")
-    @utils.permissions.is_admin()
+    @admin_only()
     async def debug_tips(self, interaction: discord.Interaction):
         """Debug the AWS tips system and provide diagnostic information."""
         try:

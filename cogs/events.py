@@ -10,8 +10,8 @@ import re
 import asyncio
 from datetime import datetime, timedelta
 from utils.events import Event, EventManager
-from utils.permissions import is_core_team
 from utils.config import load_json_data
+from utils.permission_levels import core_team_only, everyone
 
 class EventCommands(commands.GroupCog, name="event"):
     """Event management commands group."""
@@ -36,7 +36,7 @@ class EventCommands(commands.GroupCog, name="event"):
         time="The appointed hour (HH:MM AM/PM)",
         description="The mystical purpose of this gathering (optional)"
     )
-    @is_core_team()
+    @core_team_only()
     async def create(
         self,
         interaction: discord.Interaction,
@@ -185,7 +185,7 @@ class EventCommands(commands.GroupCog, name="event"):
             )
 
     @app_commands.command(name="list", description="✨ Reveal the mystical gatherings for the Council of Elders (list events for Core Team)")
-    @is_core_team()
+    @core_team_only()
     async def list_events(self, interaction: discord.Interaction):
         """List all events with their numbers for Core Team members."""
         try:
@@ -238,7 +238,7 @@ class EventCommands(commands.GroupCog, name="event"):
         event_number="The numerical sigil of the gathering to unravel (event number from /event list)",
         reason="The arcane explanation for this unraveling (reason for cancellation)"
     )
-    @is_core_team()
+    @core_team_only()
     async def cancel(
         self,
         interaction: discord.Interaction,
@@ -349,6 +349,7 @@ class EventCommands(commands.GroupCog, name="event"):
             )
     
     @app_commands.command(name="schedule", description="✨ Consult the cosmic calendar of mystical gatherings (view upcoming events)")
+    @everyone()
     async def schedule(self, interaction: discord.Interaction):
         """Display all upcoming events with mystical flair."""
         try:

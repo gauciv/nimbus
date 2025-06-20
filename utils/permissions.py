@@ -11,13 +11,13 @@ from utils.oracle import log_vision, OracleVision
 
 def is_core_team() -> Callable[[discord.Interaction], Awaitable[bool]]:
     """
-    Check if the user has the Core Team role.
+    Check if the user has the Core Team role, administrator permissions, or is the server owner.
     
     This decorator can be applied to slash commands to restrict them
-    to users with the Core Team role.
+    to users with the Core Team role or higher permissions.
     
     Returns:
-        app_commands.check: A check that verifies the user has the Core Team role
+        app_commands.check: A check that verifies the user has the Core Team role or admin permissions
         
     Example:
         @app_commands.command(name="admin_command")
@@ -27,18 +27,24 @@ def is_core_team() -> Callable[[discord.Interaction], Awaitable[bool]]:
             await interaction.response.send_message("Admin command executed")
     """
     async def predicate(interaction: discord.Interaction) -> bool:
+        # Check if user is server owner or has administrator permissions (admins can use core team commands)
+        if interaction.user.id == interaction.guild.owner_id or interaction.user.guild_permissions.administrator:
+            return True
+        
+        # Check for Core Team role
         core_team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
-        if not core_team_role:
-            return False
-        return core_team_role in interaction.user.roles
+        if core_team_role and core_team_role in interaction.user.roles:
+            return True
+            
+        return False
     return app_commands.check(predicate)
 
 def is_admin() -> Callable[[discord.Interaction], Awaitable[bool]]:
     """
-    Check if the user has administrator permissions.
+    Check if the user has administrator permissions or is the server owner.
     
     This decorator can be applied to slash commands to restrict them
-    to users with administrator permissions.
+    to users with administrator permissions or server owners.
     
     Returns:
         app_commands.check: A check that verifies the user has administrator permissions
@@ -51,8 +57,9 @@ def is_admin() -> Callable[[discord.Interaction], Awaitable[bool]]:
             await interaction.response.send_message("Admin command executed")
     """
     async def predicate(interaction: discord.Interaction) -> bool:
-        if not interaction.user.guild_permissions.administrator:
-            log_vision(OracleVision.PORTENT, f"User {interaction.user} attempted to use admin command without permissions")
-            return False
-        return True
+        # Check if user is server owner or has administrator permissions
+        if interaction.user.id == interaction.guild.owner_id or interaction.user.guild_permissions.administrator:
+            return True
+        log_vision(OracleVision.PORTENT, f"User {interaction.user} attempted to use admin command without permissions")
+        return False
     return app_commands.check(predicate)

@@ -8,7 +8,7 @@ import logging
 from pathlib import Path
 import json
 from utils.config import load_json_data, save_json_data
-from utils.permissions import is_core_team
+from utils.permission_levels import admin_only, core_team_only
 
 class ServerManagement(commands.Cog):
     """Commands for server setup and management."""
@@ -26,7 +26,7 @@ class ServerManagement(commands.Cog):
     @app_commands.describe(
         member="The member to add to Core Team"
     )
-    @app_commands.checks.has_permissions(administrator=True)
+    @admin_only()
     async def setup_core_team(self, interaction: discord.Interaction, member: discord.Member = None):
         """Create the Core Team role with special permissions."""
         try:
@@ -93,7 +93,7 @@ class ServerManagement(commands.Cog):
         app_commands.Choice(name="Add to Core Team", value="add"),
         app_commands.Choice(name="Remove from Core Team", value="remove")
     ])
-    @app_commands.checks.has_permissions(administrator=True)
+    @admin_only()
     async def manage_core_team(
         self,
         interaction: discord.Interaction,
@@ -150,7 +150,7 @@ class ServerManagement(commands.Cog):
             )
     
     @app_commands.command(name="check_channels", description="Check and list required channel setup for the bot")
-    @app_commands.checks.has_permissions(administrator=True)
+    @admin_only()
     async def check_channels(self, interaction: discord.Interaction):
         """Check if all required channels exist and list their purposes."""
         required_channels = {
@@ -227,7 +227,7 @@ class ServerManagement(commands.Cog):
         await interaction.response.send_message(embed=embed, ephemeral=True)
     
     @app_commands.command(name="setup_channels", description="Create and configure all required channels")
-    @app_commands.checks.has_permissions(administrator=True)
+    @admin_only()
     async def setup_channels(self, interaction: discord.Interaction):
         """Create and configure all required channels."""
         try:
@@ -417,7 +417,7 @@ class ServerManagement(commands.Cog):
             )
     
     @app_commands.command(name="setup", description="Set up the server (channels and roles)")
-    @app_commands.checks.has_permissions(administrator=True)
+    @admin_only()
     async def setup(self, interaction: discord.Interaction):
         """Set up all necessary components for the server."""
         try:
@@ -545,7 +545,7 @@ class ServerManagement(commands.Cog):
     @app_commands.describe(
         message="The sacred proclamation to share with the realm (announcement message)"
     )
-    @is_core_team()
+    @core_team_only()
     async def announce(self, interaction: discord.Interaction, message: str):
         """Post a mystical announcement in the #announcements channel."""
         try:
@@ -605,7 +605,7 @@ class ServerManagement(commands.Cog):
     @app_commands.describe(
         question="The arcane inquiry to present to the fellowship (discussion topic)"
     )
-    @is_core_team()
+    @core_team_only()
     async def topic(self, interaction: discord.Interaction, question: str):
         """Post a mystical discussion topic in the main chat channel."""
         try:
@@ -673,7 +673,7 @@ class ServerManagement(commands.Cog):
         name="update_channel_config",
         description="Update channel IDs in the configuration for an existing server"
     )
-    @app_commands.checks.has_permissions(administrator=True)
+    @admin_only()
     async def update_channel_config(self, interaction: discord.Interaction):
         """Update channel IDs in server_config.json based on existing channels"""
         try:
