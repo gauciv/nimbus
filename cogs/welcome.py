@@ -25,16 +25,23 @@ class SimpleGetStartedButton(discord.ui.Button):
         )
         
     async def callback(self, interaction: discord.Interaction):
-        # Load channel ID from config
+        # Try to find get-started channel by config first, then by name
         config = load_config()
-        channel_id = config["channels"].get("get_started")
+        channel_id = config["channels"].get("get-started")
+        channel = None
         
         if channel_id:
-            await interaction.response.send_message(f"Welcome! Redirecting you to <#{channel_id}>...", ephemeral=True)
-            # This will directly take the user to the channel
             channel = interaction.guild.get_channel(int(channel_id))
-            if channel:
-                await channel.send(f"{interaction.user.mention}", delete_after=0.1)
+        
+        # If config fails, search by name (handle emoji prefixes)
+        if not channel:
+            for ch in interaction.guild.text_channels:
+                if ch.name.endswith("get-started") or "get-started" in ch.name.lower() or "getting-started" in ch.name.lower():
+                    channel = ch
+                    break
+        
+        if channel:
+            await interaction.response.send_message(f"Welcome! Check out {channel.mention} to get started!", ephemeral=True)
         else:
             await interaction.response.send_message("The get-started channel hasn't been configured yet. Please contact an administrator.", ephemeral=True)
 
@@ -194,8 +201,12 @@ class Welcome(commands.Cog):
         # Send welcome DM
         await self.send_welcome_dm(member)
         
-        # Find the #arrivals channel
-        arrivals_channel = discord.utils.get(member.guild.channels, name='arrivals')
+        # Find the arrivals channel (handle emoji prefixes)
+        arrivals_channel = None
+        for channel in member.guild.text_channels:
+            if channel.name.endswith('arrivals') or 'arrival' in channel.name.lower():
+                arrivals_channel = channel
+                break
         
         if arrivals_channel:
             # Create an embed for the welcome message
