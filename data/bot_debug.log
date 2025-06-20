@@ -995,3 +995,415 @@ Daily tip sent to Nimbus' Cloud Hub ☁
 Welcome DM sent to vinsau_#0
 The Oracle's connection to the astral plane has been closed
 The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle failed to absorb the knowledge of cogs.aws_info | Mystical disturbance: ExtensionFailed: Extension 'cogs.aws_info' raised an error: ModuleNotFoundError: No module named 'pytz'
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 951, in _load_from_module_spec
+    spec.loader.exec_module(lib)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 15, in <module>
+    import pytz
+ModuleNotFoundError: No module named 'pytz'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 82, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 954, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.aws_info' raised an error: ModuleNotFoundError: No module named 'pytz'
+
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 15 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle failed to absorb the knowledge of cogs.aws_info | Mystical disturbance: ExtensionFailed: Extension 'cogs.aws_info' raised an error: ModuleNotFoundError: No module named 'pytz'
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 951, in _load_from_module_spec
+    spec.loader.exec_module(lib)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 15, in <module>
+    import pytz
+ModuleNotFoundError: No module named 'pytz'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 82, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 954, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.aws_info' raised an error: ModuleNotFoundError: No module named 'pytz'
+
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 15 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's vision of service ec2 was obscured | Mystical disturbance: NotFound: 404 Not Found (error code: 10062): Unknown interaction
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 280, in aws_service
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+Unhandled mystical disturbance in command | Mystical disturbance: CommandInvokeError: Command 'aws' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 280, in aws_service
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 857, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 284, in aws_service
+    await interaction.response.send_message(
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'aws' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+Task exception was never retrieved
+future: <Task finished name='CommandTree-invoker' coro=<CommandTree._from_interaction.<locals>.wrapper() done, defined at /home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py:1149> exception=HTTPException('400 Bad Request (error code: 40060): Interaction has already been acknowledged.')>
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 280, in aws_service
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/webhook/async_.py", line 224, in request
+    raise NotFound(response, data)
+discord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 857, in _do_call
+    return await self._callback(self.binding, interaction, **params)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 284, in aws_service
+    await interaction.response.send_message(
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 883, in _invoke_with_namespace
+    return await self._do_call(interaction, transformed_values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 876, in _do_call
+    raise CommandInvokeError(self, e) from e
+discord.app_commands.errors.CommandInvokeError: Command 'aws' raised an exception: HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1151, in wrapper
+    await self._call(interaction)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1314, in _call
+    await self.on_error(interaction, e)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/utils/error_handler.py", line 66, in handle_command_error
+    await interaction.response.send_message(error_message, ephemeral=True)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/interactions.py", line 1004, in send_message
+    response = await adapter.create_interaction_response(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/webhook/async_.py", line 226, in request
+    raise HTTPException(response, data)
+discord.errors.HTTPException: 400 Bad Request (error code: 40060): Interaction has already been acknowledged.
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle failed to absorb the knowledge of cogs.aws_info | Mystical disturbance: ExtensionFailed: Extension 'cogs.aws_info' raised an error: AttributeError: loop attribute cannot be accessed in non-async contexts. Consider using either an asynchronous main function and passing it to asyncio.run or using asynchronous initialisation hooks such as Client.setup_hook
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 963, in _load_from_module_spec
+    await setup(self)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 410, in setup
+    await bot.add_cog(AWSInfo(bot))
+                      ^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 45, in __init__
+    self.bot.loop.create_task(self._send_startup_tip())
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 147, in __getattr__
+    raise AttributeError(msg)
+AttributeError: loop attribute cannot be accessed in non-async contexts. Consider using either an asynchronous main function and passing it to asyncio.run or using asynchronous initialisation hooks such as Client.setup_hook
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 82, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 968, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.aws_info' raised an error: AttributeError: loop attribute cannot be accessed in non-async contexts. Consider using either an asynchronous main function and passing it to asyncio.run or using asynchronous initialisation hooks such as Client.setup_hook
+
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 15 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle failed to absorb the knowledge of cogs.aws_info | Mystical disturbance: ExtensionFailed: Extension 'cogs.aws_info' raised an error: RuntimeError: Client has not been properly initialised. Please use the login method or asynchronous context manager before calling this method
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 963, in _load_from_module_spec
+    await setup(self)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 412, in setup
+    await bot.add_cog(AWSInfo(bot))
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 799, in add_cog
+    cog = await cog._inject(self, override=override, guild=guild, guilds=guilds)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/cog.py", line 706, in _inject
+    await maybe_coroutine(self.cog_load)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/utils.py", line 715, in maybe_coroutine
+    return await value
+           ^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 47, in cog_load
+    await self._send_startup_tip()
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 198, in _send_startup_tip
+    await self.bot.wait_until_ready()
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 1203, in wait_until_ready
+    raise RuntimeError(
+RuntimeError: Client has not been properly initialised. Please use the login method or asynchronous context manager before calling this method
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 82, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 968, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.aws_info' raised an error: RuntimeError: Client has not been properly initialised. Please use the login method or asynchronous context manager before calling this method
+
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 15 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+AWS Info cog on_ready event triggered
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+Starting startup tip process
+Startup tip index: 4, category: Cost Optimization
+No aws-tips channel found in guild Nimbus' Cloud Hub ☁
+Startup tip process completed
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+AWS Info cog on_ready event triggered
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+Starting startup tip process
+Startup tip index: 4, category: Cost Optimization
+No aws-tips channel found in guild Nimbus' Cloud Hub ☁
+Startup tip process completed
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+AWS Info cog on_ready event triggered
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+Starting startup tip process
+Startup tip index: 4, category: Cost Optimization
+Startup tip #4 sent to Nimbus' Cloud Hub ☁
+Startup tip process completed
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command

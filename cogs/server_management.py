@@ -131,11 +131,7 @@ class ServerManagement(commands.Cog):
                     "permissions": ["send_messages", "embed_links"],
                     "category": "COMMUNITY"
                 },
-                "help": {
-                    "description": "For assistance and support",
-                    "permissions": ["send_messages", "embed_links"],
-                    "category": "SUPPORT"
-                }
+
             }
 
             # Send initial response
@@ -524,8 +520,7 @@ class ServerManagement(commands.Cog):
                     "arrivals": ["arrival", "welcome", "join"],
                     "aws-tips": ["aws-tip", "tip", "daily"],
                     "rules": ["rule", "guideline"],
-                    "general-chat": ["general", "chat", "main"],
-                    "help": ["help", "support"]
+                    "general-chat": ["general", "chat", "main"]
                 }
                 
                 found_channels = 0
@@ -723,7 +718,7 @@ class ServerManagement(commands.Cog):
                 "rules": "Server rules",
                 "general-chat": "General discussion",
                 "role-assignment": "Role selection",
-                "help": "Help and support",
+
                 "aws-services": "AWS services catalog"
             }
             

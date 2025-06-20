@@ -6,13 +6,14 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import logging
-import random
 from datetime import datetime, timedelta
 import json
 import os
 import shutil
 from discord.ext import tasks
 from typing import Dict, Any, List, Tuple
+import pytz
+import asyncio
 from utils.config import load_json_data, save_json_data
 from utils.oracle import log_vision, OracleVision, get_error_message
 from utils.permission_levels import admin_only, everyone
@@ -42,6 +43,14 @@ class AWSInfo(commands.Cog):
         self.all_tips = self._flatten_tips()
         self.daily_tip.start()
     
+    @commands.Cog.listener()
+    async def on_ready(self):
+        """Called when the bot is ready - send today's tip immediately."""
+        log_vision(OracleVision.MURMUR, "AWS Info cog on_ready event triggered")
+        # Add a small delay to ensure all guilds are loaded
+        await asyncio.sleep(2)
+        await self._send_startup_tip()
+    
     def _load_aws_services(self) -> Dict[str, Any]:
         """Load AWS services from the mystical scrolls."""
         try:
@@ -68,7 +77,8 @@ class AWSInfo(commands.Cog):
             
     def _load_tip_state(self) -> Dict[str, Any]:
         """Load the current tip state from the mystical archives."""
-        today = datetime.utcnow().strftime("%Y-%m-%d")
+        ph_tz = pytz.timezone('Asia/Manila')
+        today = datetime.now(ph_tz).strftime("%Y-%m-%d")
         default_state = {"current_index": 0, "last_updated": today}
         
         try:
@@ -119,9 +129,25 @@ class AWSInfo(commands.Cog):
         """Release the magical energies when the cog is unloaded."""
         self.daily_tip.cancel()
     
+    def get_daily_tip_index(self) -> int:
+        """Get the tip index for today based on Philippines timezone and date."""
+        ph_tz = pytz.timezone('Asia/Manila')
+        today = datetime.now(ph_tz)
+        
+        # Use epoch days since a fixed date to ensure consistency
+        epoch_date = datetime(2024, 1, 1, tzinfo=ph_tz)
+        days_since_epoch = (today.date() - epoch_date.date()).days
+        
+        total_tips = len(self.all_tips)
+        if total_tips == 0:
+            return 0
+            
+        # Calculate index based on days since epoch
+        return days_since_epoch % total_tips
+    
     @tasks.loop(hours=24)
     async def daily_tip(self):
-        """Share a random AWS tip daily."""
+        """Share the daily AWS tip based on date."""
         try:
             # Reload tips to ensure we have the latest
             self.aws_tips = self._load_aws_tips()
@@ -132,15 +158,19 @@ class AWSInfo(commands.Cog):
                 log_vision(OracleVision.OMEN, "No tips available for daily tip task")
                 return
                 
+            # Get today's tip index
+            tip_index = self.get_daily_tip_index()
+            category, tip = self.all_tips[tip_index]
+                
             # Find the tips channel in all guilds
             for guild in self.bot.guilds:
                 try:
-                    channel = discord.utils.get(guild.channels, name=self.tips_channel_name)
+                    channel = discord.utils.find(
+                        lambda c: c.name.endswith(self.tips_channel_name) or c.name == self.tips_channel_name,
+                        guild.channels
+                    )
                     
                     if channel:
-                        # Get a random tip
-                        category, tip = random.choice(self.all_tips)
-                        
                         # Create the mystical tip embed
                         embed = discord.Embed(
                             title=f"✨ Oracle's Cloud Wisdom: {tip['title']}",
@@ -161,28 +191,89 @@ class AWSInfo(commands.Cog):
                         )
                         
                         embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
-                        embed.set_footer(text="✨ Daily AWS wisdom from the Oracle ✨")
+                        embed.set_footer(text=f"✨ Wisdom {tip_index + 1} of {len(self.all_tips)} • Daily AWS wisdom from the Oracle ✨")
                         
                         await channel.send(embed=embed)
-                        log_vision(OracleVision.MURMUR, f"Daily tip sent to {guild.name}")
+                        log_vision(OracleVision.MURMUR, f"Daily tip #{tip_index + 1} sent to {guild.name}")
                 except Exception as e:
                     log_vision(OracleVision.OMEN, f"Error sending daily tip to guild {guild.name}", e)
         
         except Exception as e:
             log_vision(OracleVision.OMEN, "The Oracle's vision was clouded during daily tip task", e)
     
-    @daily_tip.before_loop
-    async def before_daily_tip(self):
-        """Wait until a specific time to start the daily tip."""
+    async def _send_startup_tip(self):
+        """Send today's tip immediately when the bot starts up."""
+        log_vision(OracleVision.MURMUR, "Starting startup tip process")
         await self.bot.wait_until_ready()
         
-        # Calculate time until next run (9:00 AM UTC)
-        now = datetime.utcnow()
-        next_run = now.replace(hour=9, minute=0, second=0, microsecond=0)
-        if now >= next_run:
-            next_run = next_run.replace(day=now.day + 1)
+        try:
+            # Check if we have any tips
+            if not self.all_tips:
+                log_vision(OracleVision.OMEN, "No tips available for startup tip")
+                return
+                
+            # Get today's tip index
+            tip_index = self.get_daily_tip_index()
+            category, tip = self.all_tips[tip_index]
+            log_vision(OracleVision.MURMUR, f"Startup tip index: {tip_index + 1}, category: {category}")
+                
+            # Find the tips channel in all guilds
+            for guild in self.bot.guilds:
+                try:
+                    channel = discord.utils.find(
+                        lambda c: c.name.endswith(self.tips_channel_name) or c.name == self.tips_channel_name,
+                        guild.channels
+                    )
+                    
+                    if channel:
+                        # Create the mystical tip embed
+                        embed = discord.Embed(
+                            title=f"✨ Oracle's Cloud Wisdom: {tip['title']}",
+                            description=tip['description'],
+                            color=discord.Color.purple()
+                        )
+                        
+                        embed.add_field(
+                            name="🌌 Domain",
+                            value=f"{category}",
+                            inline=True
+                        )
+                        
+                        embed.add_field(
+                            name="📜 Learn More",
+                            value=f"[Documentation]({tip['learn_more']})",
+                            inline=True
+                        )
+                        
+                        embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg")
+                        embed.set_footer(text=f"✨ Wisdom {tip_index + 1} of {len(self.all_tips)} • Daily AWS wisdom from the Oracle ✨")
+                        
+                        await channel.send(embed=embed)
+                        log_vision(OracleVision.MURMUR, f"Startup tip #{tip_index + 1} sent to {guild.name}")
+                    else:
+                        log_vision(OracleVision.PORTENT, f"No aws-tips channel found in guild {guild.name}")
+                except Exception as e:
+                    log_vision(OracleVision.OMEN, f"Error sending startup tip to guild {guild.name}", e)
         
-        await discord.utils.sleep_until(next_run)
+        except Exception as e:
+            log_vision(OracleVision.OMEN, "The Oracle's vision was clouded during startup tip", e)
+        
+        log_vision(OracleVision.MURMUR, "Startup tip process completed")
+    
+    @daily_tip.before_loop
+    async def before_daily_tip(self):
+        """Wait until midnight Philippines time to start the daily tip."""
+        await self.bot.wait_until_ready()
+        
+        # Calculate time until next run (00:00 Philippines time)
+        ph_tz = pytz.timezone('Asia/Manila')
+        now = datetime.now(ph_tz)
+        next_run = now.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+        
+        # Convert to UTC for discord.utils.sleep_until
+        next_run_utc = next_run.astimezone(pytz.UTC).replace(tzinfo=None)
+        
+        await discord.utils.sleep_until(next_run_utc)
     
     @app_commands.command(name="aws", description="✨ Learn about AWS services (visible only to you)")
     @app_commands.describe(
