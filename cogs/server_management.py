@@ -290,6 +290,7 @@ class ServerManagement(commands.Cog):
             "core_team": {"status": "❌", "message": ""},
             "get_started": {"status": "❌", "message": ""},
             "role_assignment": {"status": "❌", "message": ""},
+            "rules_setup": {"status": "❌", "message": ""},
             "config_update": {"status": "❌", "message": ""},
             "recommendations": []
         }
@@ -439,7 +440,81 @@ class ServerManagement(commands.Cog):
                 results["role_assignment"]["message"] = "No suitable channel found"
                 results["recommendations"].append("Create a channel with 'role' or 'assignment' in the name")
             
-            # 4. Update configuration with found channels
+            # 4. Find and setup rules channel
+            rules_keywords = ["rule", "guideline"]
+            rules_channel = None
+            
+            for channel in interaction.guild.text_channels:
+                if any(keyword in channel.name.lower() for keyword in rules_keywords):
+                    rules_channel = channel
+                    break
+            
+            if rules_channel:
+                # Check if rules already exist
+                async for message in rules_channel.history(limit=10):
+                    if message.author == interaction.guild.me and "Sacred Laws" in (message.embeds[0].title if message.embeds else ""):
+                        results["rules_setup"]["status"] = "✅"
+                        results["rules_setup"]["message"] = f"Rules exist in #{rules_channel.name}"
+                        break
+                else:
+                    # Create server rules
+                    try:
+                        embed = discord.Embed(
+                            title="📜 The Sacred Laws of Our Digital Realm",
+                            description="Welcome, seeker, to the AWS Cloud Club! These ancient laws guide our mystical fellowship and ensure harmony within our constellation.",
+                            color=discord.Color.purple()
+                        )
+                        
+                        embed.add_field(
+                            name="🌟 The First Law: Honor Thy Fellow Travelers",
+                            value="Treat all members with respect and kindness. No harassment, discrimination, or offensive language shall disturb our sacred space.",
+                            inline=False
+                        )
+                        
+                        embed.add_field(
+                            name="🚫 The Second Law: Banish the Chaos of Spam",
+                            value="Avoid excessive posting, repetitive messages, or unsolicited self-promotion. Share your wisdom thoughtfully and meaningfully.",
+                            inline=False
+                        )
+                        
+                        embed.add_field(
+                            name="🎓 The Third Law: Illuminate the Path for Others",
+                            value="Share knowledge, answer questions, and support fellow members in their learning journey. We grow stronger together.",
+                            inline=False
+                        )
+                        
+                        embed.add_field(
+                            name="🗺️ The Fourth Law: Navigate the Channels Wisely",
+                            value="Use appropriate channels for your discussions. Each channel serves a purpose in our organized realm.",
+                            inline=False
+                        )
+                        
+                        embed.add_field(
+                            name="⚖️ The Fifth Law: Uphold Digital Honor",
+                            value="Do not share or request pirated software, illegal content, or copyrighted materials. Maintain the integrity of our community.",
+                            inline=False
+                        )
+                        
+                        embed.add_field(
+                            name="⚡ Consequences of Transgression",
+                            value="Those who violate these sacred laws may face warnings, temporary silencing, or banishment from our realm, depending on the severity.",
+                            inline=False
+                        )
+                        
+                        embed.set_footer(text="By joining our mystical fellowship, you pledge to honor these sacred laws. ✨")
+                        
+                        await rules_channel.send(embed=embed)
+                        results["rules_setup"]["status"] = "✅"
+                        results["rules_setup"]["message"] = f"Rules created in #{rules_channel.name}"
+                    except Exception as e:
+                        results["rules_setup"]["status"] = "❌"
+                        results["rules_setup"]["message"] = f"Failed to create rules: {str(e)}"
+            else:
+                results["rules_setup"]["status"] = "⚠️"
+                results["rules_setup"]["message"] = "No suitable channel found"
+                results["recommendations"].append("Create a channel with 'rules' or 'guidelines' in the name")
+            
+            # 6. Update configuration with found channels
             try:
                 config = load_json_data('data/server_config.json', {"channels": {}})
                 channel_mapping = {
@@ -468,7 +543,7 @@ class ServerManagement(commands.Cog):
                 results["config_update"]["status"] = "❌"
                 results["config_update"]["message"] = f"Config update failed: {str(e)}"
             
-            # 5. Generate report
+            # 7. Generate report
             embed = discord.Embed(
                 title="🔧 Server Setup Report",
                 description="Setup completed. Here's what was done:",
