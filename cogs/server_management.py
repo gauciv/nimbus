@@ -183,7 +183,10 @@ class ServerManagement(commands.Cog):
         )
 
         for channel_name, info in required_channels.items():
-            channel = discord.utils.get(interaction.guild.channels, name=channel_name)
+            channel = discord.utils.find(
+                lambda c: c.name.endswith(channel_name) or c.name == channel_name,
+                interaction.guild.channels
+            )
             status = "✅ Exists" if channel else "❌ Missing"
             
             embed.add_field(
@@ -198,7 +201,10 @@ class ServerManagement(commands.Cog):
 
         missing_channels = [
             name for name in required_channels.keys()
-            if not discord.utils.get(interaction.guild.channels, name=name)
+            if not discord.utils.find(
+                lambda c: c.name.endswith(name) or c.name == name,
+                interaction.guild.channels
+            )
         ]
 
         if missing_channels:
@@ -544,7 +550,10 @@ class ServerManagement(commands.Cog):
         """Post a mystical announcement in the #announcements channel."""
         try:
             # Find the announcements channel
-            announcements_channel = discord.utils.get(interaction.guild.channels, name='announcements')
+            announcements_channel = discord.utils.find(
+                lambda c: c.name.endswith('announcements') or c.name == 'announcements',
+                interaction.guild.channels
+            )
             if not announcements_channel:
                 await interaction.response.send_message(
                     "🌑 The sacred chamber of proclamations cannot be found in this realm. (Missing #announcements channel)",
@@ -688,9 +697,12 @@ class ServerManagement(commands.Cog):
                 "aws-services": "AWS services catalog"
             }
             
-            # Find each channel and update config
+            # Find each channel and update config (handles emoji prefixes)
             for channel_name, description in required_channels.items():
-                channel = discord.utils.get(interaction.guild.channels, name=channel_name)
+                channel = discord.utils.find(
+                    lambda c: c.name.endswith(channel_name) or c.name == channel_name,
+                    interaction.guild.channels
+                )
                 if channel:
                     updated_channels[channel_name] = str(channel.id)
                 else:

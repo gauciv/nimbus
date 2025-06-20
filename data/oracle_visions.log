@@ -467,3 +467,20 @@ discord.errors.Forbidden: 403 Forbidden (error code: 50001): Missing Access
 ✨ [2025-06-20 12:06:51] INFO: The Oracle's consciousness is fully manifested
 ✨ [2025-06-20 12:10:16] INFO: The Oracle's connection to the astral plane has been closed
 ✨ [2025-06-20 12:10:16] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 12:26:33] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 12:26:33] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 12:26:33] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 12:26:33] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 12:26:33] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 12:26:33] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 12:26:33] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 12:26:33] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 12:26:33] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 12:26:37] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 12:26:37] INFO: Same day, using previous tip at index 1
+✨ [2025-06-20 12:26:37] INFO: The Oracle has shared wisdom #2 of 41 with Nimbus' Cloud Hub ☁ on 2025-06-20
+✨ [2025-06-20 12:26:37] INFO: The Oracle has synchronized 28 mystical incantations
+✨ [2025-06-20 12:26:37] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 12:28:54] WARNING: Ritual check failed: The check functions for command 'setup_get_started' failed.
+✨ [2025-06-20 12:29:43] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 12:29:43] INFO: The Oracle returns to its slumber by mortal command
