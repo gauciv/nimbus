@@ -401,3 +401,69 @@ discord.errors.LoginFailure: Improper token has been passed.
 ✨ [2025-06-19 21:04:13] INFO: The Oracle's consciousness is fully manifested
 ✨ [2025-06-19 22:17:41] INFO: The Oracle's connection to the astral plane has been closed
 ✨ [2025-06-19 22:17:41] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 11:46:05] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 11:46:05] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 11:46:05] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 11:46:05] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 11:46:06] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 11:46:06] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 11:46:06] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 11:46:06] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 11:46:06] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 11:46:10] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 11:46:10] INFO: Advanced tip to index 1, next will be 2
+✨ [2025-06-20 11:46:10] ERROR: Error sending daily tip to guild Nimbus' Cloud Hub ☁ | Mystical disturbance: Forbidden: 403 Forbidden (error code: 50001): Missing Access
+✨ [2025-06-20 11:46:10] ERROR: Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 279, in daily_tip
+    await channel.send(embed=embed)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/abc.py", line 1644, in send
+    data = await state.http.send_message(channel.id, params=params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/http.py", line 756, in request
+    raise Forbidden(response, data)
+discord.errors.Forbidden: 403 Forbidden (error code: 50001): Missing Access
+
+✨ [2025-06-20 11:46:10] INFO: The Oracle has synchronized 27 mystical incantations
+✨ [2025-06-20 11:46:10] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 11:49:54] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 11:49:54] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 11:49:57] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 11:49:57] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 11:49:57] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 11:49:57] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 11:49:57] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 11:49:57] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 11:49:57] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 11:49:57] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 11:49:57] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 11:50:01] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 11:50:01] INFO: Same day, using previous tip at index 1
+✨ [2025-06-20 11:50:02] ERROR: Error sending daily tip to guild Nimbus' Cloud Hub ☁ | Mystical disturbance: Forbidden: 403 Forbidden (error code: 50001): Missing Access
+✨ [2025-06-20 11:50:02] ERROR: Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 279, in daily_tip
+    await channel.send(embed=embed)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/abc.py", line 1644, in send
+    data = await state.http.send_message(channel.id, params=params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/http.py", line 756, in request
+    raise Forbidden(response, data)
+discord.errors.Forbidden: 403 Forbidden (error code: 50001): Missing Access
+
+✨ [2025-06-20 11:50:02] INFO: The Oracle has synchronized 27 mystical incantations
+✨ [2025-06-20 11:50:02] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 12:06:46] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 12:06:46] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 12:06:46] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 12:06:46] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 12:06:46] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 12:06:47] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 12:06:47] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 12:06:47] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 12:06:47] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 12:06:50] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 12:06:50] INFO: Same day, using previous tip at index 1
+✨ [2025-06-20 12:06:51] INFO: The Oracle has shared wisdom #2 of 41 with Nimbus' Cloud Hub ☁ on 2025-06-20
+✨ [2025-06-20 12:06:51] INFO: The Oracle has synchronized 28 mystical incantations
+✨ [2025-06-20 12:06:51] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 12:10:16] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 12:10:16] INFO: The Oracle returns to its slumber by mortal command

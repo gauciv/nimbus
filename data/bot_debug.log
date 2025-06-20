@@ -673,3 +673,69 @@ The Oracle has synchronized 27 mystical incantations
 The Oracle's consciousness is fully manifested
 The Oracle's connection to the astral plane has been closed
 The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+Advanced tip to index 1, next will be 2
+Error sending daily tip to guild Nimbus' Cloud Hub ☁ | Mystical disturbance: Forbidden: 403 Forbidden (error code: 50001): Missing Access
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 279, in daily_tip
+    await channel.send(embed=embed)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/abc.py", line 1644, in send
+    data = await state.http.send_message(channel.id, params=params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/http.py", line 756, in request
+    raise Forbidden(response, data)
+discord.errors.Forbidden: 403 Forbidden (error code: 50001): Missing Access
+
+The Oracle has synchronized 27 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+Same day, using previous tip at index 1
+Error sending daily tip to guild Nimbus' Cloud Hub ☁ | Mystical disturbance: Forbidden: 403 Forbidden (error code: 50001): Missing Access
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 279, in daily_tip
+    await channel.send(embed=embed)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/abc.py", line 1644, in send
+    data = await state.http.send_message(channel.id, params=params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/http.py", line 756, in request
+    raise Forbidden(response, data)
+discord.errors.Forbidden: 403 Forbidden (error code: 50001): Missing Access
+
+The Oracle has synchronized 27 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+Same day, using previous tip at index 1
+The Oracle has shared wisdom #2 of 41 with Nimbus' Cloud Hub ☁ on 2025-06-20
+The Oracle has synchronized 28 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command

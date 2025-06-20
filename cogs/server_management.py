@@ -1,13 +1,13 @@
 """
 Server management cog for the Nimbus Discord bot.
-Handles server setup, channel management, and administrative commands.
 """
 import discord
 from discord import app_commands
 from discord.ext import commands
 import logging
-import json
 from pathlib import Path
+import json
+from utils.config import load_json_data, save_json_data
 from utils.permissions import is_core_team
 
 class ServerManagement(commands.Cog):
@@ -659,6 +659,68 @@ class ServerManagement(commands.Cog):
                         "❌ An error occurred while posting the discussion topic.",
                         ephemeral=True
                     )
+
+    @app_commands.command(
+        name="update_channel_config",
+        description="Update channel IDs in the configuration for an existing server"
+    )
+    @app_commands.checks.has_permissions(administrator=True)
+    async def update_channel_config(self, interaction: discord.Interaction):
+        """Update channel IDs in server_config.json based on existing channels"""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            
+            # Load current config
+            config = load_json_data('data/server_config.json', {"channels": {}})
+            updated_channels = {}
+            missing_channels = []
+            
+            # Required channel names
+            required_channels = {
+                "get-started": "Getting Started guide",
+                "arrivals": "Welcome messages",
+                "aws-tips": "AWS daily tips",
+                "announcements": "Server announcements",
+                "rules": "Server rules",
+                "general-chat": "General discussion",
+                "role-assignment": "Role selection",
+                "help": "Help and support",
+                "aws-services": "AWS services catalog"
+            }
+            
+            # Find each channel and update config
+            for channel_name, description in required_channels.items():
+                channel = discord.utils.get(interaction.guild.channels, name=channel_name)
+                if channel:
+                    updated_channels[channel_name] = str(channel.id)
+                else:
+                    missing_channels.append(channel_name)
+            
+            # Update config with new channel IDs
+            config["channels"] = updated_channels
+            save_json_data('data/server_config.json', config)
+            
+            # Prepare response message
+            response = ["✅ Channel configuration has been updated!"]
+            if updated_channels:
+                response.append("\n**Updated channels:**")
+                for name, id in updated_channels.items():
+                    response.append(f"• {name}: <#{id}>")
+            
+            if missing_channels:
+                response.append("\n**Missing channels:**")
+                for name in missing_channels:
+                    response.append(f"• {name}")
+                response.append("\nPlease create these channels and run this command again.")
+            
+            await interaction.followup.send("\n".join(response), ephemeral=True)
+            
+        except Exception as e:
+            logging.error(f"Error updating channel config: {e}")
+            await interaction.followup.send(
+                "❌ An error occurred while updating the channel configuration.",
+                ephemeral=True
+            )
 
 async def setup(bot: commands.Bot):
     """

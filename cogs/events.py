@@ -11,6 +11,7 @@ import asyncio
 from datetime import datetime, timedelta
 from utils.events import Event, EventManager
 from utils.permissions import is_core_team
+from utils.config import load_json_data
 
 class EventCommands(commands.GroupCog, name="event"):
     """Event management commands group."""
@@ -25,6 +26,7 @@ class EventCommands(commands.GroupCog, name="event"):
         super().__init__()
         self.bot = bot
         self.event_manager = EventManager()
+        self.config = load_json_data('data/server_config.json', {"channels": {}})
         self._task = None  # Store the background task for cleanup
 
     @app_commands.command(name="create", description="🌟 Inscribe a new gathering in the chronicles of our realm")
@@ -104,11 +106,19 @@ class EventCommands(commands.GroupCog, name="event"):
                 )
                 return
 
-            # Find the announcements channel
-            announcements_channel = discord.utils.get(interaction.guild.channels, name='announcements')
+            # Find the announcements channel using ID from config
+            announcements_id = self.config["channels"].get("announcements")
+            if not announcements_id:
+                await interaction.followup.send(
+                    "🌠 The announcements channel ID is not configured. Please update server_config.json",
+                    ephemeral=True
+                )
+                return
+                
+            announcements_channel = interaction.guild.get_channel(int(announcements_id))
             if not announcements_channel:
                 await interaction.followup.send(
-                    "🌠 The announcements channel seems to be lost in the void. Please ensure it exists.",
+                    "🌠 The announcements channel seems to be lost in the void. Please ensure it exists and update the ID.",
                     ephemeral=True
                 )
                 return
