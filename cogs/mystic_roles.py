@@ -151,11 +151,8 @@ class MysticRoles(commands.Cog):
             logging.error(f"Error manifesting roles: {e}")
             return False
 
-    @app_commands.command(name="setup_roles", description="🌟 Initialize the mystical role selection system")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def setup_roles(self, interaction: discord.Interaction):
-        """Set up the mystical role selection system."""
-        try:
+
+
             # Verify ethereal permissions
             permissions = interaction.channel.permissions_for(interaction.guild.me)
             required_perms = ["manage_roles", "send_messages", "add_reactions"]

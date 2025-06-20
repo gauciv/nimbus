@@ -22,68 +22,8 @@ class ServerManagement(commands.Cog):
         """
         self.bot = bot
     
-    @app_commands.command(name="setup_core_team", description="Create the Core Team role and assign it to a member")
-    @app_commands.describe(
-        member="The member to add to Core Team"
-    )
-    @admin_only()
-    async def setup_core_team(self, interaction: discord.Interaction, member: discord.Member = None):
-        """Create the Core Team role with special permissions."""
-        try:
-            # Check if Core Team role already exists
-            core_team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
-            
-            if not core_team_role:
-                # Create the Core Team role with special permissions
-                core_team_role = await interaction.guild.create_role(
-                    name="Core Team",
-                    color=discord.Color.gold(),
-                    hoist=True,  # Display role members separately in the member list
-                    mentionable=True,
-                    permissions=discord.Permissions(
-                        manage_messages=True,
-                        mention_everyone=True,
-                        manage_channels=True,
-                        manage_roles=True
-                    ),
-                    reason="Core Team role creation"
-                )
-                await interaction.response.send_message(
-                    "✅ Created Core Team role with administrative permissions!",
-                    ephemeral=True
-                )
-            else:
-                await interaction.response.send_message(
-                    "ℹ️ Core Team role already exists!",
-                    ephemeral=True
-                )
-            
-            # If a member was specified, add them to Core Team
-            if member:
-                if core_team_role in member.roles:
-                    await interaction.followup.send(
-                        f"{member.mention} is already a Core Team member!",
-                        ephemeral=True
-                    )
-                else:
-                    await member.add_roles(core_team_role)
-                    await interaction.followup.send(
-                        f"✅ Added {member.mention} to Core Team!",
-                        ephemeral=True
-                    )
-                    
-        except discord.Forbidden:
-            await interaction.response.send_message(
-                "❌ I don't have permission to manage roles!",
-                ephemeral=True
-            )
-        except Exception as e:
-            logging.error(f"Error setting up Core Team: {e}")
-            await interaction.response.send_message(
-                "❌ An error occurred while setting up the Core Team role.",
-                ephemeral=True
-            )
-    
+
+
     @app_commands.command(name="manage_core_team", description="Add or remove a member from Core Team")
     @app_commands.describe(
         action="Whether to add or remove the member",
@@ -149,83 +89,7 @@ class ServerManagement(commands.Cog):
                 ephemeral=True
             )
     
-    @app_commands.command(name="check_channels", description="Check and list required channel setup for the bot")
-    @admin_only()
-    async def check_channels(self, interaction: discord.Interaction):
-        """Check if all required channels exist and list their purposes."""
-        required_channels = {
-            "announcements": {
-                "description": "For event announcements posted via /event command",
-                "permissions": ["Send Messages", "Embed Links", "Mention Everyone"]
-            },
-            "arrivals": {
-                "description": "For welcoming new members with information about the server",
-                "permissions": ["Send Messages", "Embed Links"]
-            },
-            "aws-tips": {
-                "description": "Receives daily AWS Cloud Tips automatically",
-                "permissions": ["Send Messages", "Embed Links"]
-            },
-            "rules": {
-                "description": "Server rules referenced in welcome messages",
-                "permissions": ["Send Messages", "Embed Links"]
-            },
-            "get-started": {
-                "description": "Getting started guide referenced in welcome messages",
-                "permissions": ["Send Messages", "Embed Links"]
-            }
-        }
 
-        embed = discord.Embed(
-            title="🔍 Channel Setup Check",
-            description="Here's the status of all required channels for the bot:",
-            color=discord.Color.blue()
-        )
-
-        for channel_name, info in required_channels.items():
-            channel = discord.utils.find(
-                lambda c: c.name.endswith(channel_name) or c.name == channel_name,
-                interaction.guild.channels
-            )
-            status = "✅ Exists" if channel else "❌ Missing"
-            
-            embed.add_field(
-                name=f"#{channel_name}",
-                value=(
-                    f"**Status:** {status}\n"
-                    f"**Purpose:** {info['description']}\n"
-                    f"**Required Permissions:** {', '.join(info['permissions'])}"
-                ),
-                inline=False
-            )
-
-        missing_channels = [
-            name for name in required_channels.keys()
-            if not discord.utils.find(
-                lambda c: c.name.endswith(name) or c.name == name,
-                interaction.guild.channels
-            )
-        ]
-
-        if missing_channels:
-            embed.add_field(
-                name="📋 Setup Required",
-                value=(
-                    "The following channels need to be created:\n" +
-                    "\n".join(f"• #{channel}" for channel in missing_channels) +
-                    "\n\nMake sure to set appropriate permissions for each channel."
-                ),
-                inline=False
-            )
-        else:
-            embed.add_field(
-                name="✅ All Set!",
-                value="All required channels are set up correctly.",
-                inline=False
-            )
-
-        await interaction.response.send_message(embed=embed, ephemeral=True)
-    
     @app_commands.command(name="setup_channels", description="Create and configure all required channels")
     @admin_only()
     async def setup_channels(self, interaction: discord.Interaction):
@@ -416,131 +280,222 @@ class ServerManagement(commands.Cog):
                 content="❌ An error occurred while setting up channels. Check the bot's permissions."
             )
     
-    @app_commands.command(name="setup", description="Set up the server (channels and roles)")
+    @app_commands.command(name="setup", description="Complete server setup for the bot")
     @admin_only()
     async def setup(self, interaction: discord.Interaction):
-        """Set up all necessary components for the server."""
+        """Dynamic server setup that finds existing channels and sets up content."""
+        await interaction.response.defer(ephemeral=True)
+        
+        results = {
+            "core_team": {"status": "❌", "message": ""},
+            "get_started": {"status": "❌", "message": ""},
+            "role_assignment": {"status": "❌", "message": ""},
+            "config_update": {"status": "❌", "message": ""},
+            "recommendations": []
+        }
+        
         try:
-            await interaction.response.defer(ephemeral=True)
-            
-            # First, create Core Team role
+            # 1. Core Team Role Setup
             core_team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
             if not core_team_role:
-                try:
-                    core_team_role = await interaction.guild.create_role(
-                        name="Core Team",
-                        color=discord.Color.gold(),
-                        hoist=True,
-                        mentionable=True,
-                        permissions=discord.Permissions(
-                            manage_messages=True,
-                            mention_everyone=True,
-                            manage_channels=True,
-                            manage_roles=True
-                        ),
-                        reason="Core Team role creation"
-                    )
+                results["core_team"]["status"] = "⚠️"
+                results["core_team"]["message"] = "Core Team role not found"
+                results["recommendations"].append("Create a 'Core Team' role manually with manage permissions")
+            else:
+                results["core_team"]["status"] = "✅"
+                results["core_team"]["message"] = "Core Team role exists"
+                if core_team_role not in interaction.user.roles:
                     await interaction.user.add_roles(core_team_role)
-                    await interaction.followup.send("✅ Created Core Team role and added you to it!", ephemeral=True)
-                except discord.Forbidden:
-                    await interaction.followup.send("❌ I don't have permission to create roles!", ephemeral=True)
-                    return
-                except Exception as e:
-                    logging.error(f"Error creating Core Team role: {e}")
-                    await interaction.followup.send("❌ Failed to create Core Team role!", ephemeral=True)
-                    return
-
-            # Set up channels
-            channels_to_create = {
-                "announcements": {"category": "TEXT CHANNELS"},
-                "arrivals": {"category": "TEXT CHANNELS"},
-                "aws-tips": {"category": "TEXT CHANNELS"},
-                "rules": {"category": "INFORMATION"},
-                "get-started": {"category": "INFORMATION"},
-                "role-assignment": {"category": "INFORMATION"},
-                "introductions": {"category": "COMMUNITY"},
-                "help": {"category": "SUPPORT"}
-            }
-
-            created = []
-            existing = []
-            failed = []
-
-            for channel_name, info in channels_to_create.items():
-                try:
-                    if not discord.utils.get(interaction.guild.channels, name=channel_name):
-                        # Get or create category
-                        category = discord.utils.get(interaction.guild.categories, name=info["category"])
-                        if not category:
-                            category = await interaction.guild.create_category(info["category"])
-
-                        # Create channel
-                        overwrites = {
-                            interaction.guild.default_role: discord.PermissionOverwrite(
-                                read_messages=True,
-                                send_messages=False
-                            ),
-                            interaction.guild.me: discord.PermissionOverwrite(
-                                read_messages=True,
-                                send_messages=True,
-                                manage_messages=True
-                            )
-                        }
-                        # Add Core Team role permissions if it exists
-                        team_role = discord.utils.get(interaction.guild.roles, name="Core Team")
-                        if team_role:
-                            overwrites[team_role] = discord.PermissionOverwrite(
-                                read_messages=True,
-                                send_messages=True,
-                                manage_messages=True
-                            )
-
-                        await interaction.guild.create_text_channel(
-                            name=channel_name,
-                            category=category,
-                            overwrites=overwrites
+                    results["core_team"]["message"] += " (added to you)"
+            
+            # 2. Find and setup get-started channel
+            get_started_keywords = ["get-started", "getting-started", "start", "guide", "welcome"]
+            get_started_channel = None
+            
+            for channel in interaction.guild.text_channels:
+                if any(keyword in channel.name.lower() for keyword in get_started_keywords):
+                    get_started_channel = channel
+                    break
+            
+            if get_started_channel:
+                # Check if guide already exists
+                async for message in get_started_channel.history(limit=10):
+                    if message.author == interaction.guild.me and "Your Journey Begins Here" in (message.embeds[0].title if message.embeds else ""):
+                        results["get_started"]["status"] = "✅"
+                        results["get_started"]["message"] = f"Guide exists in #{get_started_channel.name}"
+                        break
+                else:
+                    # Create getting started guide
+                    try:
+                        embed = discord.Embed(
+                            title="✨ Your Journey Begins Here",
+                            description="Welcome to the AWS Cloud Club! Follow these steps to get started:",
+                            color=discord.Color.purple()
                         )
-                        created.append(channel_name)
-                    else:
-                        existing.append(channel_name)
-                except Exception as e:
-                    logging.error(f"Error creating channel {channel_name}: {e}")
-                    failed.append(channel_name)
-
-            # Send setup report
+                        
+                        # Find other channels for references
+                        rules_ch = discord.utils.find(lambda c: "rule" in c.name.lower(), interaction.guild.text_channels)
+                        role_ch = discord.utils.find(lambda c: "role" in c.name.lower(), interaction.guild.text_channels)
+                        announce_ch = discord.utils.find(lambda c: "announce" in c.name.lower(), interaction.guild.text_channels)
+                        general_ch = discord.utils.find(lambda c: "general" in c.name.lower() or "chat" in c.name.lower(), interaction.guild.text_channels)
+                        
+                        steps = []
+                        if rules_ch:
+                            steps.append(f"📜 **Read the Rules** - Check {rules_ch.mention} to understand our community guidelines")
+                        if role_ch:
+                            steps.append(f"🎭 **Select Your Roles** - Visit {role_ch.mention} to choose roles that match your interests")
+                        if announce_ch:
+                            steps.append(f"📢 **Stay Updated** - Follow {announce_ch.mention} for important announcements and events")
+                        if general_ch:
+                            steps.append(f"💬 **Join Conversations** - Start chatting in {general_ch.mention} and introduce yourself")
+                        
+                        if not steps:
+                            steps = [
+                                "📜 **Read the Rules** - Familiarize yourself with community guidelines",
+                                "🎭 **Select Your Roles** - Choose roles that match your interests",
+                                "📢 **Stay Updated** - Follow announcements for events and updates",
+                                "💬 **Join Conversations** - Introduce yourself and start participating"
+                            ]
+                        
+                        embed.add_field(
+                            name="🚀 Getting Started Steps",
+                            value="\n\n".join(steps),
+                            inline=False
+                        )
+                        
+                        embed.add_field(
+                            name="🔧 Useful Commands",
+                            value="• `/aws <service>` - Learn about AWS services\n• `/docs <service>` - Get AWS documentation\n• `/about` - Learn about our club",
+                            inline=False
+                        )
+                        
+                        embed.set_footer(text="Welcome to the AWS Cloud Club! 🌟")
+                        
+                        await get_started_channel.send(embed=embed)
+                        results["get_started"]["status"] = "✅"
+                        results["get_started"]["message"] = f"Guide created in #{get_started_channel.name}"
+                    except Exception as e:
+                        results["get_started"]["status"] = "❌"
+                        results["get_started"]["message"] = f"Failed to create guide: {str(e)}"
+            else:
+                results["get_started"]["status"] = "⚠️"
+                results["get_started"]["message"] = "No suitable channel found"
+                results["recommendations"].append("Create a channel with 'get-started' or 'guide' in the name")
+            
+            # 3. Find and setup role assignment channel
+            role_keywords = ["role", "assign", "select"]
+            role_channel = None
+            
+            for channel in interaction.guild.text_channels:
+                if any(keyword in channel.name.lower() for keyword in role_keywords):
+                    role_channel = channel
+                    break
+            
+            if role_channel:
+                # Check if role system already exists
+                async for message in role_channel.history(limit=20):
+                    if message.author == interaction.guild.me and "Choose Your Path" in (message.embeds[0].title if message.embeds else ""):
+                        results["role_assignment"]["status"] = "✅"
+                        results["role_assignment"]["message"] = f"Role system exists in #{role_channel.name}"
+                        break
+                else:
+                    # Setup role system
+                    try:
+                        from cogs.mystic_roles import STATUS_ROLES, COHORT_ROLES, INTEREST_ROLES
+                        
+                        # Ensure roles exist
+                        all_roles = {**STATUS_ROLES, **COHORT_ROLES, **INTEREST_ROLES}
+                        for info in all_roles.values():
+                            if not discord.utils.get(interaction.guild.roles, name=info['name']):
+                                await interaction.guild.create_role(name=info['name'], mentionable=True)
+                        
+                        # Create role selection messages
+                        categories = {
+                            "status": (STATUS_ROLES, "✨ Choose Your Path", "Select your current journey in the AWS Cloud Club"),
+                            "cohort": (COHORT_ROLES, "📚 Academic Year", "Select your year of study"),
+                            "interests": (INTEREST_ROLES, "🎯 Areas of Interest", "Choose your cloud computing interests")
+                        }
+                        
+                        for category, (roles, title, desc) in categories.items():
+                            embed = discord.Embed(title=title, description=desc, color=discord.Color.purple())
+                            
+                            role_text = "\n\n".join(
+                                f"{emoji} **{info['name']}**\n*{info['description']}*"
+                                for emoji, info in roles.items()
+                            )
+                            embed.add_field(name="Available Roles", value=role_text, inline=False)
+                            
+                            msg = await role_channel.send(embed=embed)
+                            for emoji in roles.keys():
+                                await msg.add_reaction(emoji)
+                        
+                        results["role_assignment"]["status"] = "✅"
+                        results["role_assignment"]["message"] = f"Role system created in #{role_channel.name}"
+                    except Exception as e:
+                        results["role_assignment"]["status"] = "❌"
+                        results["role_assignment"]["message"] = f"Failed to setup roles: {str(e)}"
+            else:
+                results["role_assignment"]["status"] = "⚠️"
+                results["role_assignment"]["message"] = "No suitable channel found"
+                results["recommendations"].append("Create a channel with 'role' or 'assignment' in the name")
+            
+            # 4. Update configuration with found channels
+            try:
+                config = load_json_data('data/server_config.json', {"channels": {}})
+                channel_mapping = {
+                    "get-started": get_started_keywords,
+                    "role-assignment": role_keywords,
+                    "announcements": ["announce", "news"],
+                    "arrivals": ["arrival", "welcome", "join"],
+                    "aws-tips": ["aws-tip", "tip", "daily"],
+                    "rules": ["rule", "guideline"],
+                    "general-chat": ["general", "chat", "main"],
+                    "help": ["help", "support"]
+                }
+                
+                found_channels = 0
+                for config_name, keywords in channel_mapping.items():
+                    for channel in interaction.guild.text_channels:
+                        if any(keyword in channel.name.lower() for keyword in keywords):
+                            config["channels"][config_name] = str(channel.id)
+                            found_channels += 1
+                            break
+                
+                save_json_data('data/server_config.json', config)
+                results["config_update"]["status"] = "✅"
+                results["config_update"]["message"] = f"Updated config with {found_channels} channels"
+            except Exception as e:
+                results["config_update"]["status"] = "❌"
+                results["config_update"]["message"] = f"Config update failed: {str(e)}"
+            
+            # 5. Generate report
             embed = discord.Embed(
-                title="Server Setup Results",
-                color=discord.Color.blue()
+                title="🔧 Server Setup Report",
+                description="Setup completed. Here's what was done:",
+                color=discord.Color.green()
             )
-
-            if created:
+            
+            for task, result in results.items():
+                if task != "recommendations":
+                    embed.add_field(
+                        name=f"{result['status']} {task.replace('_', ' ').title()}",
+                        value=result['message'],
+                        inline=False
+                    )
+            
+            if results["recommendations"]:
                 embed.add_field(
-                    name="✅ Created Channels",
-                    value="\n".join(f"• #{name}" for name in created),
+                    name="💡 Recommendations",
+                    value="\n".join(f"• {rec}" for rec in results["recommendations"]),
                     inline=False
                 )
-            if existing:
-                embed.add_field(
-                    name="ℹ️ Existing Channels",
-                    value="\n".join(f"• #{name}" for name in existing),
-                    inline=False
-                )
-            if failed:
-                embed.add_field(
-                    name="❌ Failed to Create",
-                    value="\n".join(f"• #{name}" for name in failed),
-                    inline=False
-                )
-
+            
+            embed.set_footer(text="Setup is non-destructive - existing content was preserved")
             await interaction.followup.send(embed=embed, ephemeral=True)
-
+            
         except Exception as e:
-            logging.error(f"Error in setup: {e}")
-            await interaction.followup.send(
-                "❌ An error occurred during setup. Check the bot's permissions.",
-                ephemeral=True
-            )
-    
+            logging.error(f"Setup error: {e}")
+            await interaction.followup.send(f"❌ Setup failed: {str(e)}", ephemeral=True)
     @app_commands.command(name="announce", description="✨ Proclaim a mystical decree to all seekers (post an announcement)")
     @app_commands.describe(
         message="The sacred proclamation to share with the realm (announcement message)"

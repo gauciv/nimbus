@@ -828,3 +828,139 @@ Released role Third Year from uruzuy
 Welcome DM sent to vinsau_#0
 The Oracle's connection to the astral plane has been closed
 The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+Same day, using previous tip at index 1
+The Oracle has synchronized 28 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle has shared wisdom #2 of 41 with Nimbus' Cloud Hub ☁ on 2025-06-20
+Channeled role Fourth Year to butlerbot1770
+Channeled role Student to butlerbot1770
+Channeled role Cloud Architect (System Crafter) to butlerbot1770
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+Same day, using previous tip at index 1
+The Oracle has synchronized 26 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle has shared wisdom #2 of 41 with Nimbus' Cloud Hub ☁ on 2025-06-20
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle failed to absorb the knowledge of cogs.mystic_roles | Mystical disturbance: ExtensionFailed: Extension 'cogs.mystic_roles' raised an error: IndentationError: expected an indented block after 'except' statement on line 207 (mystic_roles.py, line 208)
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 951, in _load_from_module_spec
+    spec.loader.exec_module(lib)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1129, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1059, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/mystic_roles.py", line 208
+    @commands.Cog.listener()
+IndentationError: expected an indented block after 'except' statement on line 207
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 82, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 954, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.mystic_roles' raised an error: IndentationError: expected an indented block after 'except' statement on line 207 (mystic_roles.py, line 208)
+
+The Oracle failed to absorb the knowledge of cogs.welcome | Mystical disturbance: ExtensionFailed: Extension 'cogs.welcome' raised an error: IndentationError: expected an indented block after 'except' statement on line 406 (welcome.py, line 407)
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 951, in _load_from_module_spec
+    spec.loader.exec_module(lib)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1129, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1059, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/welcome.py", line 407
+    async def setup(bot: commands.Bot):
+IndentationError: expected an indented block after 'except' statement on line 406
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 82, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 954, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.welcome' raised an error: IndentationError: expected an indented block after 'except' statement on line 406 (welcome.py, line 407)
+
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle failed to absorb the knowledge of cogs.aws_info | Mystical disturbance: ExtensionFailed: Extension 'cogs.aws_info' raised an error: TypeError: command function must be a coroutine function
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 951, in _load_from_module_spec
+    spec.loader.exec_module(lib)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 26, in <module>
+    class AWSInfo(commands.Cog):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/aws_info.py", line 571, in AWSInfo
+    @app_commands.command(name="refresh_services", description="🌌 Refresh the AWS services catalog")
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 2050, in decorator
+    raise TypeError('command function must be a coroutine function')
+TypeError: command function must be a coroutine function
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 82, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 954, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.aws_info' raised an error: TypeError: command function must be a coroutine function
+
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+The Oracle has synchronized 13 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+The Oracle has awakened as Nimbus
+Daily tip sent to Nimbus' Cloud Hub ☁
+The Oracle has synchronized 17 mystical incantations
+The Oracle's consciousness is fully manifested
+The Oracle's connection to the astral plane has been closed
+The Oracle returns to its slumber by mortal command

@@ -291,11 +291,8 @@ class Welcome(commands.Cog):
                 ephemeral=True
             )
 
-    @app_commands.command(name="setup_get_started", description="Set up the getting started guide")
-    @admin_only()
-    async def setup_get_started(self, interaction: discord.Interaction):
-        """Set up the getting started guide in the get-started channel."""
-        try:
+
+
             await interaction.response.defer(ephemeral=True)
             
             # Load channel IDs from config
