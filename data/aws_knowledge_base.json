@@ -1,0 +1,64 @@
+{
+  "common_questions": {
+    "what_is_aws": {
+      "answer": "AWS (Amazon Web Services) is a comprehensive cloud computing platform offering 200+ services including computing power, storage, databases, networking, analytics, and machine learning.",
+      "services": ["ec2", "s3", "lambda"],
+      "difficulty": "beginner"
+    },
+    "free_tier": {
+      "answer": "AWS Free Tier includes 12 months of free access to popular services, always-free services, and short-term trials. Perfect for learning and small projects.",
+      "services": ["ec2", "s3", "lambda", "dynamodb"],
+      "difficulty": "beginner"
+    },
+    "serverless_vs_containers": {
+      "answer": "Serverless (Lambda) is event-driven with automatic scaling and no server management. Containers (ECS/EKS) offer more control but require orchestration.",
+      "services": ["lambda", "fargate", "eks"],
+      "difficulty": "intermediate"
+    }
+  },
+  "learning_paths": {
+    "beginner": [
+      {"step": 1, "topic": "AWS Account Setup", "services": ["iam"]},
+      {"step": 2, "topic": "Object Storage", "services": ["s3"]},
+      {"step": 3, "topic": "Virtual Servers", "services": ["ec2"]},
+      {"step": 4, "topic": "Serverless Functions", "services": ["lambda"]},
+      {"step": 5, "topic": "Databases", "services": ["rds", "dynamodb"]}
+    ],
+    "developer": [
+      {"step": 1, "topic": "API Development", "services": ["apigateway", "lambda"]},
+      {"step": 2, "topic": "Data Storage", "services": ["s3", "dynamodb"]},
+      {"step": 3, "topic": "Authentication", "services": ["cognito"]},
+      {"step": 4, "topic": "Monitoring", "services": ["cloudwatch"]},
+      {"step": 5, "topic": "CI/CD", "services": ["codepipeline"]}
+    ],
+    "architect": [
+      {"step": 1, "topic": "Well-Architected Framework", "services": ["vpc", "iam"]},
+      {"step": 2, "topic": "High Availability", "services": ["elb", "route53"]},
+      {"step": 3, "topic": "Security", "services": ["kms", "secretsmanager"]},
+      {"step": 4, "topic": "Cost Optimization", "services": ["cloudwatch", "trusted-advisor"]},
+      {"step": 5, "topic": "Automation", "services": ["cloudformation", "step-functions"]}
+    ]
+  },
+  "use_case_patterns": {
+    "web_application": {
+      "description": "Scalable web application with database",
+      "services": ["ec2", "rds", "s3", "cloudfront", "route53"],
+      "architecture": "3-tier with CDN"
+    },
+    "serverless_api": {
+      "description": "Event-driven API without server management",
+      "services": ["lambda", "apigateway", "dynamodb", "cognito"],
+      "architecture": "Serverless microservices"
+    },
+    "data_analytics": {
+      "description": "Big data processing and analytics",
+      "services": ["s3", "glue", "athena", "quicksight"],
+      "architecture": "Data lake pattern"
+    },
+    "machine_learning": {
+      "description": "ML model training and deployment",
+      "services": ["sagemaker", "s3", "lambda", "apigateway"],
+      "architecture": "MLOps pipeline"
+    }
+  }
+}

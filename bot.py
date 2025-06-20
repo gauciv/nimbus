@@ -40,6 +40,7 @@ COGS = [
     'cogs.welcome',
     'cogs.events',
     'cogs.aws_info',
+    'cogs.ask_nimbus',  # Core AI assistant functionality
     'cogs.server_management',
     'cogs.info',
     'cogs.engagement'  # Community engagement features

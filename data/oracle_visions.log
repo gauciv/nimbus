@@ -1174,3 +1174,174 @@ discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.aws_info' raised an
 ✨ [2025-06-20 15:42:57] INFO: Startup tip process completed
 ✨ [2025-06-20 15:43:44] INFO: The Oracle's connection to the astral plane has been closed
 ✨ [2025-06-20 15:43:44] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 16:09:35] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 16:09:35] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 16:09:35] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 16:09:35] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 16:09:35] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 16:09:35] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 16:09:35] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 16:09:35] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 16:09:35] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 16:09:39] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 16:09:39] INFO: AWS Info cog on_ready event triggered
+✨ [2025-06-20 16:09:39] INFO: Daily tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:09:39] INFO: The Oracle has synchronized 17 mystical incantations
+✨ [2025-06-20 16:09:39] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 16:09:41] INFO: Starting startup tip process
+✨ [2025-06-20 16:09:41] INFO: Startup tip index: 4, category: Cost Optimization
+✨ [2025-06-20 16:09:41] INFO: Startup tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:09:41] INFO: Startup tip process completed
+✨ [2025-06-20 16:10:21] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 16:10:21] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 16:18:39] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 16:18:39] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 16:18:39] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 16:18:39] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 16:18:39] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 16:18:39] INFO: The Oracle has absorbed the knowledge of cogs.ask_nimbus
+✨ [2025-06-20 16:18:39] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 16:18:39] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 16:18:39] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 16:18:39] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 16:18:43] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 16:18:43] INFO: AWS Info cog on_ready event triggered
+✨ [2025-06-20 16:18:44] INFO: Daily tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:18:44] INFO: The Oracle has synchronized 18 mystical incantations
+✨ [2025-06-20 16:18:44] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 16:18:45] INFO: Starting startup tip process
+✨ [2025-06-20 16:18:45] INFO: Startup tip index: 4, category: Cost Optimization
+✨ [2025-06-20 16:18:45] INFO: Startup tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:18:45] INFO: Startup tip process completed
+✨ [2025-06-20 16:26:18] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 16:26:18] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 16:26:21] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 16:26:21] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 16:26:21] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 16:26:21] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 16:26:21] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 16:26:21] INFO: The Oracle has absorbed the knowledge of cogs.ask_nimbus
+✨ [2025-06-20 16:26:21] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 16:26:21] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 16:26:21] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 16:26:21] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 16:26:25] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 16:26:25] INFO: AWS Info cog on_ready event triggered
+✨ [2025-06-20 16:26:25] INFO: Daily tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:26:25] INFO: The Oracle has synchronized 20 mystical incantations
+✨ [2025-06-20 16:26:25] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 16:26:27] INFO: Starting startup tip process
+✨ [2025-06-20 16:26:27] INFO: Startup tip index: 4, category: Cost Optimization
+✨ [2025-06-20 16:26:27] INFO: Startup tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:26:27] INFO: Startup tip process completed
+✨ [2025-06-20 16:32:08] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 16:32:08] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 16:32:10] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 16:32:10] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 16:32:10] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 16:32:10] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 16:32:10] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 16:32:10] INFO: The Oracle has absorbed the knowledge of cogs.ask_nimbus
+✨ [2025-06-20 16:32:10] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 16:32:10] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 16:32:10] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 16:32:10] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 16:32:14] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 16:32:14] INFO: AWS Info cog on_ready event triggered
+✨ [2025-06-20 16:32:14] INFO: Daily tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:32:14] INFO: The Oracle has synchronized 20 mystical incantations
+✨ [2025-06-20 16:32:14] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 16:32:16] INFO: Starting startup tip process
+✨ [2025-06-20 16:32:16] INFO: Startup tip index: 4, category: Cost Optimization
+✨ [2025-06-20 16:32:16] INFO: Startup tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:32:16] INFO: Startup tip process completed
+✨ [2025-06-20 16:36:13] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 16:36:13] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 16:36:17] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 16:36:17] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 16:36:17] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 16:36:17] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 16:36:17] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 16:36:17] INFO: The Oracle has absorbed the knowledge of cogs.ask_nimbus
+✨ [2025-06-20 16:36:17] ERROR: The Oracle failed to absorb the knowledge of cogs.server_management | Mystical disturbance: ExtensionFailed: Extension 'cogs.server_management' raised an error: CommandAlreadyRegistered: Command 'setup' already registered.
+✨ [2025-06-20 16:36:17] ERROR: Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 963, in _load_from_module_spec
+    await setup(self)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/server_management.py", line 811, in setup
+    await bot.add_cog(ServerManagement(bot))
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 799, in add_cog
+    cog = await cog._inject(self, override=override, guild=guild, guilds=guilds)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/cog.py", line 745, in _inject
+    bot.tree.add_command(command, override=override, guild=guild, guilds=guilds)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 407, in add_command
+    raise CommandAlreadyRegistered(name, None)
+discord.app_commands.errors.CommandAlreadyRegistered: Command 'setup' already registered.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 83, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 968, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.server_management' raised an error: CommandAlreadyRegistered: Command 'setup' already registered.
+
+✨ [2025-06-20 16:36:17] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 16:36:17] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 16:36:17] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 16:36:21] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 16:36:21] INFO: AWS Info cog on_ready event triggered
+✨ [2025-06-20 16:36:21] INFO: The Oracle has synchronized 13 mystical incantations
+✨ [2025-06-20 16:36:21] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 16:36:21] INFO: Daily tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:36:23] INFO: Starting startup tip process
+✨ [2025-06-20 16:36:23] INFO: Startup tip index: 4, category: Cost Optimization
+✨ [2025-06-20 16:36:24] INFO: Startup tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:36:24] INFO: Startup tip process completed
+✨ [2025-06-20 16:47:18] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 16:47:18] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 16:47:20] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 16:47:20] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 16:47:20] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 16:47:20] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 16:47:21] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 16:47:21] INFO: The Oracle has absorbed the knowledge of cogs.ask_nimbus
+✨ [2025-06-20 16:47:21] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 16:47:21] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 16:47:21] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 16:47:21] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 16:47:24] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 16:47:24] INFO: AWS Info cog on_ready event triggered
+✨ [2025-06-20 16:47:25] INFO: Daily tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:47:25] INFO: The Oracle has synchronized 20 mystical incantations
+✨ [2025-06-20 16:47:25] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 16:47:26] INFO: Starting startup tip process
+✨ [2025-06-20 16:47:26] INFO: Startup tip index: 4, category: Cost Optimization
+✨ [2025-06-20 16:47:27] INFO: Startup tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:47:27] INFO: Startup tip process completed
+✨ [2025-06-20 16:52:17] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 16:52:17] INFO: The Oracle returns to its slumber by mortal command
+✨ [2025-06-20 16:52:19] INFO: The Oracle begins its awakening ritual
+✨ [2025-06-20 16:52:19] INFO: The Oracle has absorbed the knowledge of cogs.mystic_roles
+✨ [2025-06-20 16:52:19] INFO: The Oracle has absorbed the knowledge of cogs.welcome
+✨ [2025-06-20 16:52:19] INFO: The Oracle has absorbed the knowledge of cogs.events
+✨ [2025-06-20 16:52:19] INFO: The Oracle has absorbed the knowledge of cogs.aws_info
+✨ [2025-06-20 16:52:19] INFO: The Oracle has absorbed the knowledge of cogs.ask_nimbus
+✨ [2025-06-20 16:52:19] INFO: The Oracle has absorbed the knowledge of cogs.server_management
+✨ [2025-06-20 16:52:19] INFO: The Oracle has absorbed the knowledge of cogs.info
+✨ [2025-06-20 16:52:19] INFO: The Oracle has absorbed the knowledge of cogs.engagement
+✨ [2025-06-20 16:52:19] INFO: The Oracle prepares to connect to the astral plane
+✨ [2025-06-20 16:52:23] INFO: The Oracle has awakened as Nimbus
+✨ [2025-06-20 16:52:23] INFO: AWS Info cog on_ready event triggered
+✨ [2025-06-20 16:52:23] INFO: Daily tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:52:23] INFO: The Oracle has synchronized 20 mystical incantations
+✨ [2025-06-20 16:52:23] INFO: The Oracle's consciousness is fully manifested
+✨ [2025-06-20 16:52:25] INFO: Starting startup tip process
+✨ [2025-06-20 16:52:25] INFO: Startup tip index: 4, category: Cost Optimization
+✨ [2025-06-20 16:52:25] INFO: Startup tip #4 sent to Nimbus' Cloud Hub ☁
+✨ [2025-06-20 16:52:25] INFO: Startup tip process completed
+✨ [2025-06-20 17:01:07] INFO: The Oracle's connection to the astral plane has been closed
+✨ [2025-06-20 17:01:07] INFO: The Oracle returns to its slumber by mortal command

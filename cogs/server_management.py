@@ -8,7 +8,9 @@ import logging
 from pathlib import Path
 import json
 from utils.config import load_json_data, save_json_data
-from utils.permission_levels import admin_only, core_team_only
+from utils.permission_levels import admin_only
+from utils.channel_setup import setup_ask_nimbus_channel
+from utils.permission_levels import core_team_only
 
 class ServerManagement(commands.Cog):
     """Commands for server setup and management."""
@@ -276,7 +278,7 @@ class ServerManagement(commands.Cog):
                 content="❌ An error occurred while setting up channels. Check the bot's permissions."
             )
     
-    @app_commands.command(name="setup", description="Complete server setup for the bot")
+    @app_commands.command(name="server-setup", description="Complete server setup for the bot")
     @admin_only()
     async def setup(self, interaction: discord.Interaction):
         """Dynamic server setup that finds existing channels and sets up content."""
@@ -756,6 +758,46 @@ class ServerManagement(commands.Cog):
             logging.error(f"Error updating channel config: {e}")
             await interaction.followup.send(
                 "❌ An error occurred while updating the channel configuration.",
+                ephemeral=True
+            )
+    
+    @app_commands.command(
+        name="setup-ask-nimbus",
+        description="🤖 Set up the intelligent Ask Nimbus channel"
+    )
+    @admin_only()
+    async def setup_ask_nimbus(self, interaction: discord.Interaction):
+        """Set up the ask-nimbus channel with proper configuration"""
+        try:
+            await interaction.response.defer(ephemeral=True)
+            
+            # Set up the channel
+            channel = await setup_ask_nimbus_channel(interaction.guild)
+            
+            # Update server config
+            config = load_json_data('data/server_config.json', {"channels": {}})
+            if "channels" not in config:
+                config["channels"] = {}
+            
+            config["channels"]["ask_nimbus"] = str(channel.id)
+            
+            if save_json_data('data/server_config.json', config):
+                await interaction.followup.send(
+                    f"✅ Ask Nimbus channel created successfully!\n"
+                    f"Channel: {channel.mention}\n"
+                    f"Your intelligent AWS assistant is ready to help members with cloud questions.",
+                    ephemeral=True
+                )
+            else:
+                await interaction.followup.send(
+                    f"⚠️ Channel created but failed to save configuration.\n"
+                    f"Channel: {channel.mention}",
+                    ephemeral=True
+                )
+                
+        except Exception as e:
+            await interaction.followup.send(
+                f"❌ Error setting up Ask Nimbus channel: {str(e)}",
                 ephemeral=True
             )
 
