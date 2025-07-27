@@ -37,30 +37,25 @@ class AskNimbus(commands.Cog):
         if not (message.channel.name == self.ask_channel_name or message.channel.name.endswith(self.ask_channel_name)):
             return
         
-        # Rate limiting - 1 question per minute for entire channel
-        now = datetime.now()
-        if self.last_response_time and (now - self.last_response_time).seconds < 60:
-            return
-        
         # Check if question is AWS-related
         if not self._is_aws_related(message.content):
-            try:
-                await message.author.send(
-                    "🤖 **AWS Sage Notice**\n\n"
-                    "I'm specialized in AWS and cloud computing questions only. "
-                    "Please ask about AWS services, architecture, pricing, or cloud concepts.\n\n"
-                    "**Examples:**\n"
-                    "• 'What's the difference between S3 and EFS?'\n"
-                    "• 'How do I deploy a serverless API?'\n"
-                    "• 'Best practices for AWS security?'\n\n"
-                    "🧪 **Beta Notice:** My responses are limited and based on basic AWS knowledge."
-                )
-            except discord.Forbidden:
-                pass
+            embed = discord.Embed(
+                title="🚫 AWS Questions Only",
+                description="I can only answer AWS and cloud computing questions.",
+                color=discord.Color.orange()
+            )
+            embed.add_field(
+                name="✅ Ask me about:",
+                value="• AWS services (S3, EC2, Lambda, etc.)\n• Cloud architecture & best practices\n• Pricing and cost optimization\n• Certifications and learning paths",
+                inline=False
+            )
+            embed.add_field(
+                name="📝 Example questions:",
+                value="• 'Compare S3 vs EFS storage'\n• 'How to deploy serverless API?'\n• 'AWS security best practices'",
+                inline=False
+            )
+            await message.reply(embed=embed, mention_author=False)
             return
-        
-        # Update rate limit
-        self.last_response_time = now
         
         # Add typing indicator
         async with message.channel.typing():
@@ -69,12 +64,21 @@ class AskNimbus(commands.Cog):
             # Try AI-powered response first
             ai_response = await self._try_ai_response(message.content)
             if ai_response:
-                embed = discord.Embed(
-                    title="🤖 Nimbus AI Response",
-                    description=ai_response,
-                    color=discord.Color.blue()
-                )
-                embed.set_footer(text=f"Asked by {message.author.display_name} • Free AI Response")
+                # Check if it's a guardrail response
+                if "can only answer AWS" in ai_response:
+                    embed = discord.Embed(
+                        title="🚫 AWS Questions Only",
+                        description=ai_response,
+                        color=discord.Color.orange()
+                    )
+                else:
+                    embed = discord.Embed(
+                        title="🤖 AWS Expert Response",
+                        description=ai_response,
+                        color=discord.Color.blue()
+                    )
+                    embed.set_footer(text=f"Asked by {message.author.display_name} • Powered by AI")
+                
                 await message.reply(embed=embed, mention_author=False)
                 return
             
@@ -549,22 +553,29 @@ class AskNimbus(commands.Cog):
         await interaction.response.send_message(embed=embed, ephemeral=True)
     
     def _is_aws_related(self, text):
-        """Check if the question is AWS-related"""
+        """Check if the question is AWS-related with improved detection"""
         text_lower = text.lower()
         
-        # Check for AWS service names
-        for service in self.aws_keywords['services']:
+        # Direct AWS service mentions
+        aws_services = ['s3', 'ec2', 'lambda', 'rds', 'dynamodb', 'dynamo', 'vpc', 'iam', 'cloudformation', 'cloudwatch', 'sns', 'sqs', 'api gateway', 'cognito', 'amplify', 'bedrock', 'sagemaker', 'ecs', 'eks', 'fargate', 'route53', 'cloudfront', 'elb', 'elastic beanstalk', 'redshift', 'athena', 'glue', 'kinesis', 'step functions', 'eventbridge']
+        
+        # Check for direct service names
+        for service in aws_services:
             if service in text_lower:
                 return True
         
-        # Check for general AWS/cloud keywords
-        for keyword in self.aws_keywords['general']:
-            if keyword in text_lower:
-                return True
+        # Check for AWS/Amazon mentions
+        if any(word in text_lower for word in ['aws', 'amazon web services', 'amazon cloud']):
+            return True
         
-        # Check for common cloud patterns
-        cloud_patterns = ['deploy', 'host', 'scale', 'monitor', 'backup', 'migrate', 'architect', 'design', 'cost', 'price', 'free tier', 'certification', 'tutorial', 'guide']
-        if any(pattern in text_lower for pattern in cloud_patterns):
+        # Check for cloud computing terms with context
+        cloud_terms = ['cloud', 'serverless', 'microservices', 'devops', 'infrastructure', 'deployment', 'scaling', 'load balancer', 'database', 'storage', 'compute', 'networking']
+        if any(term in text_lower for term in cloud_terms):
+            return True
+        
+        # Check for common AWS-related questions
+        aws_patterns = ['cost', 'price', 'pricing', 'free tier', 'certification', 'architecture', 'best practices', 'security', 'backup', 'migrate', 'deploy', 'host']
+        if any(pattern in text_lower for pattern in aws_patterns):
             return True
         
         return False

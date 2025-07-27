@@ -25,6 +25,7 @@ class BotConfig(BaseSettings):
     
     # AI Configuration
     huggingface_api_key: Optional[str] = Field(None, env='HUGGINGFACE_API_KEY')
+    groq_api_key: Optional[str] = Field(None, env='GROQ_API_KEY')
     
     @validator('discord_token')
     def validate_token(cls, v):

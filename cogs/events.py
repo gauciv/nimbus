@@ -9,7 +9,7 @@ import logging
 import re
 import asyncio
 from datetime import datetime, timedelta
-from utils.events import Event, EventManager
+# from utils.events import Event, EventManager  # Temporarily disabled
 from utils.config import load_json_data
 from utils.permissions import core_team_only, everyone
 
@@ -25,7 +25,7 @@ class EventCommands(commands.GroupCog, name="event"):
         """
         super().__init__()
         self.bot = bot
-        self.event_manager = EventManager()
+        # self.event_manager = EventManager()  # Temporarily disabled
         self.config = load_json_data('data/server_config.json', {"channels": {}})
         self._task = None  # Store the background task for cleanup
 

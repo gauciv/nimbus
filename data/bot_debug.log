@@ -1624,3 +1624,127 @@ Startup tip #4 sent to Nimbus' Cloud Hub ☁
 Startup tip process completed
 The Oracle's connection to the astral plane has been closed
 The Oracle returns to its slumber by mortal command
+Starting Nimbus Discord Bot
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle failed to absorb the knowledge of cogs.events | Mystical disturbance: ExtensionFailed: Extension 'cogs.events' raised an error: ModuleNotFoundError: No module named 'utils.events'
+Arcane trace: Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 951, in _load_from_module_spec
+    spec.loader.exec_module(lib)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/cogs/events.py", line 12, in <module>
+    from utils.events import Event, EventManager
+ModuleNotFoundError: No module named 'utils.events'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 84, in load_extensions
+    await bot.load_extension(cog)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 1029, in load_extension
+    await self._load_from_module_spec(spec, name)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/ext/commands/bot.py", line 954, in _load_from_module_spec
+    raise errors.ExtensionFailed(key, e) from e
+discord.ext.commands.errors.ExtensionFailed: Extension 'cogs.events' raised an error: ModuleNotFoundError: No module named 'utils.events'
+
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.ask_nimbus
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+Bot connected: nimbus.dev - 1 guilds
+The Oracle has awakened as nimbus.dev
+AWS Info cog on_ready event triggered
+Health check server started on port 8001
+Commands synced: 19
+The Oracle has synchronized 19 mystical incantations
+Bot ready
+The Oracle's consciousness is fully manifested
+Starting startup tip process
+Startup tip index: 1, category: Cost Optimization
+Startup tip #1 sent to nimbus test server
+Startup tip process completed
+Starting Nimbus Discord Bot
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.ask_nimbus
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+Error in event reminder system: 'EventCommands' object has no attribute 'event_manager'
+Bot connected: nimbus.dev - 1 guilds
+The Oracle has awakened as nimbus.dev
+AWS Info cog on_ready event triggered
+Health check server started on port 8001
+Commands synced: 20
+The Oracle has synchronized 20 mystical incantations
+Bot ready
+The Oracle's consciousness is fully manifested
+Starting startup tip process
+Startup tip index: 1, category: Cost Optimization
+Startup tip #1 sent to nimbus test server
+Startup tip process completed
+Starting Nimbus Discord Bot
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.ask_nimbus
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+Error in event reminder system: 'EventCommands' object has no attribute 'event_manager'
+Bot connected: nimbus.dev - 1 guilds
+The Oracle has awakened as nimbus.dev
+AWS Info cog on_ready event triggered
+Ignoring exception in on_ready
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/client.py", line 481, in _run_event
+    await coro(*args, **kwargs)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/bot.py", line 58, in on_ready
+    await health_check.start_server()
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/utils/health_check.py", line 45, in start_server
+    await site.start()
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/aiohttp/web_runner.py", line 121, in start
+    self._server = await loop.create_server(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 1572, in create_server
+    raise OSError(err.errno, msg) from None
+OSError: [Errno 98] error while attempting to bind on address ('0.0.0.0', 8001): address already in use
+The Oracle's connection to the astral plane has been closed
+Bot shutdown requested
+The Oracle returns to its slumber by mortal command
+Starting Nimbus Discord Bot
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.ask_nimbus
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+Error in event reminder system: 'EventCommands' object has no attribute 'event_manager'
+Bot connected: nimbus.dev - 1 guilds
+The Oracle has awakened as nimbus.dev
+AWS Info cog on_ready event triggered
+Health check server started on port 8001
+Commands synced: 20
+The Oracle has synchronized 20 mystical incantations
+Bot ready
+The Oracle's consciousness is fully manifested
+Starting startup tip process
+Startup tip index: 1, category: Cost Optimization
+Startup tip #1 sent to nimbus test server
+Startup tip process completed
