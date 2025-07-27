@@ -13,19 +13,16 @@ Version: 2.0
 """
 import discord
 from discord.ext import commands
-import logging
-import os
-import sys
 import asyncio
-from utils.config import load_config
+from utils.config import config
+from utils.logging_config import setup_logging, get_logger
+from utils.database import db
 from utils.error_handler import setup_error_handlers
 from utils.oracle import log_vision, OracleVision
 
-# Create data directory if it doesn't exist
-os.makedirs('data', exist_ok=True)
-
-# Load configuration
-config = load_config()
+# Setup logging
+setup_logging()
+logger = get_logger(__name__)
 
 # Create bot instance with required intents
 intents = discord.Intents.default()
@@ -49,8 +46,11 @@ COGS = [
 @bot.event
 async def on_ready():
     """Event triggered when the bot is ready and connected to Discord."""
-    print(f"\n✅ Bot is online! Logged in as {bot.user.name}")
-    print(f"Connected to {len(bot.guilds)} server(s)")
+    logger.info("Bot connected", bot_name=bot.user.name, guild_count=len(bot.guilds))
+    
+    # Initialize database
+    await db.connect()
+    logger.info("Database connected")
     
     # Set up error handlers
     setup_error_handlers(bot)
@@ -59,13 +59,13 @@ async def on_ready():
     # Sync slash commands
     try:
         synced = await bot.tree.sync()
-        print(f"✓ Synced {len(synced)} command(s)")
+        logger.info("Commands synced", count=len(synced))
         log_vision(OracleVision.MURMUR, f"The Oracle has synchronized {len(synced)} mystical incantations")
     except Exception as e:
-        print(f"✗ Failed to sync commands: {str(e)}")
+        logger.error("Command sync failed", error=str(e))
         log_vision(OracleVision.OMEN, "The Oracle failed to synchronize incantations", e)
     
-    print("Bot is ready to use!")
+    logger.info("Bot ready")
     log_vision(OracleVision.MURMUR, "The Oracle's consciousness is fully manifested")
 
 async def load_extensions():
@@ -99,29 +99,30 @@ async def load_extensions():
 def main():
     """Main function to start the bot."""
     try:
-        print("Starting Nimbus Discord Bot...")
+        logger.info("Starting Nimbus Discord Bot")
         log_vision(OracleVision.MURMUR, "The Oracle begins its awakening ritual")
         
         # Run the bot
         asyncio.run(start_bot())
     except KeyboardInterrupt:
-        print("\nShutting down gracefully...")
+        logger.info("Bot shutdown requested")
         log_vision(OracleVision.MURMUR, "The Oracle returns to its slumber by mortal command")
     except Exception as e:
-        print(f"\n❌ Fatal error: {str(e)}")
+        logger.critical("Fatal error", error=str(e))
         log_vision(OracleVision.PROPHECY, "The Oracle's consciousness has been shattered by a fatal disturbance", e)
-        sys.exit(1)
+        raise
 
 async def start_bot():
     """Start the bot with proper async handling."""
     try:
         await load_extensions()
         log_vision(OracleVision.MURMUR, "The Oracle prepares to connect to the astral plane")
-        await bot.start(config['token'])
+        await bot.start(config.discord_token)
     except Exception as e:
-        print(f"Error starting bot: {e}")
+        logger.error("Bot startup failed", error=str(e))
         log_vision(OracleVision.PROPHECY, "The Oracle's connection to the astral plane was severed", e)
     finally:
+        await db.close()
         if not bot.is_closed():
             await bot.close()
             log_vision(OracleVision.MURMUR, "The Oracle's connection to the astral plane has been closed")

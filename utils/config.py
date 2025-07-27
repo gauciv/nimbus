@@ -1,64 +1,69 @@
 """
-Configuration utilities for the Nimbus Discord bot.
+Modern configuration system for Nimbus Discord Bot.
 
-This module handles loading and validating configuration from config.json,
-as well as providing utilities for loading and saving JSON data.
+Uses Pydantic for validation and environment variables for security.
 """
-import json
 import os
-import sys
-from typing import Dict, Any, Optional
+import json
+from typing import Optional, Any
+from pydantic import Field, validator
+from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
 
-# Constants
-CONFIG_FILE = 'config.json'
+# Load environment variables
+load_dotenv()
 
-def load_config() -> Dict[str, Any]:
-    """
-    Load configuration from config.json file.
+class BotConfig(BaseSettings):
+    """Main bot configuration with validation."""
     
-    Returns:
-        Dict containing configuration values
+    # Discord Configuration
+    discord_token: str = Field(..., env='DISCORD_TOKEN')
+    guild_id: Optional[int] = Field(None, env='GUILD_ID')
     
-    Raises:
-        SystemExit: If config file is missing, invalid, or contains errors
-    """
-    try:
-        with open(CONFIG_FILE) as f:
-            config = json.load(f)
-            
-            # Validate required fields
-            if 'token' not in config:
-                print("❌ Bot token not found in config.json")
-                sys.exit(1)
-            if not isinstance(config['token'], str) or not config['token'].strip():
-                print("❌ Bot token is empty or invalid")
-                sys.exit(1)
-                
-            # Mask token in logs for security - only show that it was loaded
-            print(f"✓ Configuration loaded (Token: ***masked***)")
-                
-            return config
-    except FileNotFoundError:
-        print(f"❌ {CONFIG_FILE} not found! Please create a config.json file with your bot token.")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print(f"❌ {CONFIG_FILE} is not a valid JSON file!")
-        sys.exit(1)
-    except Exception as e:
-        print(f"❌ Unexpected error loading config: {str(e)}")
-        sys.exit(1)
+    # Database Configuration
+    database_url: str = Field('sqlite:///data/nimbus.db', env='DATABASE_URL')
+    redis_url: str = Field('redis://localhost:6379/0', env='REDIS_URL')
+    
+    # Environment
+    environment: str = Field('development', env='ENVIRONMENT')
+    debug: bool = Field(False, env='DEBUG')
+    log_level: str = Field('INFO', env='LOG_LEVEL')
+    
+    # AI Configuration
+    openai_api_key: Optional[str] = Field(None, env='OPENAI_API_KEY')
+    anthropic_api_key: Optional[str] = Field(None, env='ANTHROPIC_API_KEY')
+    huggingface_api_key: Optional[str] = Field(None, env='HUGGINGFACE_API_KEY')
+    
+    # Monitoring
+    prometheus_port: int = Field(8000, env='PROMETHEUS_PORT')
+    health_check_port: int = Field(8001, env='HEALTH_CHECK_PORT')
+    
+    @validator('discord_token')
+    def validate_token(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Discord token cannot be empty')
+        return v.strip()
+    
+    @validator('log_level')
+    def validate_log_level(cls, v):
+        valid_levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
+        if v.upper() not in valid_levels:
+            raise ValueError(f'Log level must be one of: {valid_levels}')
+        return v.upper()
+    
+    class Config:
+        env_file = '.env'
+        case_sensitive = False
+
+# Global config instance
+config = BotConfig()
+
+def load_config() -> dict:
+    """Legacy compatibility function."""
+    return {'token': config.discord_token, 'guild_id': config.guild_id}
 
 def load_json_data(filename: str, default: Any = None) -> Any:
-    """
-    Load data from a JSON file.
-    
-    Args:
-        filename: Name of the JSON file to load
-        default: Default value to return if file doesn't exist or has errors
-        
-    Returns:
-        Loaded data or default value if loading fails
-    """
+    """Load data from a JSON file."""
     try:
         if os.path.exists(filename):
             with open(filename, 'r') as f:
@@ -68,22 +73,11 @@ def load_json_data(filename: str, default: Any = None) -> Any:
         return default
 
 def save_json_data(filename: str, data: Any) -> bool:
-    """
-    Save data to a JSON file.
-    
-    Args:
-        filename: Name of the JSON file to save to
-        data: Data to save
-        
-    Returns:
-        bool: True if successful, False otherwise
-    """
+    """Save data to a JSON file."""
     try:
-        # Ensure directory exists
         directory = os.path.dirname(filename)
         if directory:
             os.makedirs(directory, exist_ok=True)
-        
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
         return True
