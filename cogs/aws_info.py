@@ -16,7 +16,7 @@ import pytz
 import asyncio
 from utils.config import load_json_data, save_json_data
 from utils.oracle import log_vision, OracleVision, get_error_message
-from utils.permission_levels import admin_only, everyone
+from utils.permissions import admin_only, everyone
 
 # File paths for AWS data
 AWS_SERVICES_FILE = 'data/aws_services.json'

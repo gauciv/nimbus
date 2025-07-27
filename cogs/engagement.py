@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import json
 import logging
 from pathlib import Path
-from utils.permission_levels import core_team_only, everyone
+from utils.permissions import core_team_only, everyone
 
 class Engagement(commands.Cog):
     def __init__(self, bot):

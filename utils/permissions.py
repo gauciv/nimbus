@@ -63,3 +63,25 @@ def is_admin() -> Callable[[discord.Interaction], Awaitable[bool]]:
         log_vision(OracleVision.PORTENT, f"User {interaction.user} attempted to use admin command without permissions")
         return False
     return app_commands.check(predicate)
+
+# Permission level decorators
+def admin_only():
+    """Decorator for commands that require administrator permissions."""
+    return is_admin()
+
+def core_team_only():
+    """Decorator for commands that require Core Team role."""
+    return is_core_team()
+
+def everyone():
+    """Decorator for commands available to everyone (no restrictions)."""
+    def decorator(func):
+        return func
+    return decorator
+
+# Permission level mapping for easy reference
+PERMISSION_LEVELS = {
+    'admin': admin_only,
+    'core_team': core_team_only, 
+    'everyone': everyone
+}

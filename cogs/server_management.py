@@ -8,9 +8,9 @@ import logging
 from pathlib import Path
 import json
 from utils.config import load_json_data, save_json_data
-from utils.permission_levels import admin_only
+from utils.permissions import admin_only
 from utils.channel_setup import setup_ask_nimbus_channel
-from utils.permission_levels import core_team_only
+from utils.permissions import core_team_only
 
 class ServerManagement(commands.Cog):
     """Commands for server setup and management."""

@@ -11,7 +11,7 @@ import asyncio
 from datetime import datetime, timedelta
 from utils.events import Event, EventManager
 from utils.config import load_json_data
-from utils.permission_levels import core_team_only, everyone
+from utils.permissions import core_team_only, everyone
 
 class EventCommands(commands.GroupCog, name="event"):
     """Event management commands group."""

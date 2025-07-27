@@ -9,7 +9,8 @@ import json
 from datetime import datetime, timedelta
 from utils.config import load_json_data
 from utils.oracle import log_vision, OracleVision
-from utils.permission_levels import everyone
+from utils.permissions import everyone
+from utils.aws_free_client import AWSFreeClient
 
 class AskNimbus(commands.Cog):
     def __init__(self, bot):
@@ -65,10 +66,20 @@ class AskNimbus(commands.Cog):
         async with message.channel.typing():
             await asyncio.sleep(1)
             
-            # Process the question
-            response = await self._process_question(message)
+            # Try AI-powered response first
+            ai_response = await self._try_ai_response(message.content)
+            if ai_response:
+                embed = discord.Embed(
+                    title="🤖 Nimbus AI Response",
+                    description=ai_response,
+                    color=discord.Color.blue()
+                )
+                embed.set_footer(text=f"Asked by {message.author.display_name} • Free AI Response")
+                await message.reply(embed=embed, mention_author=False)
+                return
             
-            # Send public response
+            # Fallback to structured response
+            response = await self._process_question(message)
             await message.reply(embed=response, mention_author=False)
     
 
@@ -239,6 +250,16 @@ class AskNimbus(commands.Cog):
         
         embed.set_footer(text=f"Asked by {author.display_name} • 🧪 BETA - Limited responses")
         return embed
+    
+    async def _try_ai_response(self, question: str) -> str:
+        """Try to get AI response for AWS questions."""
+        try:
+            async with AWSFreeClient() as client:
+                response = await client.get_aws_answer(question)
+                return response
+        except Exception as e:
+            log_vision(OracleVision.OMEN, f"AI response failed: {str(e)}")
+            return None
     
     async def _handle_general(self, question, author):
         """Handle general AWS questions with enhanced reasoning"""

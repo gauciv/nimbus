@@ -7,7 +7,7 @@ from discord import app_commands
 from discord.ext import commands
 import logging
 from utils.config import load_json_data
-from utils.permission_levels import admin_only, core_team_only
+from utils.permissions import admin_only, core_team_only
 
 def load_config():
     """Load server configuration using the centralized config utility."""

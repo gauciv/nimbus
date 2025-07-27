@@ -8,7 +8,7 @@ from discord.ext import commands
 import logging
 from utils.config import load_json_data
 from utils.oracle import log_vision, OracleVision, get_error_message
-from utils.permission_levels import admin_only, everyone
+from utils.permissions import admin_only, everyone
 
 class Info(commands.Cog):
     """Commands for displaying information and resources."""

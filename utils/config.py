@@ -20,23 +20,11 @@ class BotConfig(BaseSettings):
     discord_token: str = Field(..., env='DISCORD_TOKEN')
     guild_id: Optional[int] = Field(None, env='GUILD_ID')
     
-    # Database Configuration
-    database_url: str = Field('sqlite:///data/nimbus.db', env='DATABASE_URL')
-    redis_url: str = Field('redis://localhost:6379/0', env='REDIS_URL')
-    
     # Environment
-    environment: str = Field('development', env='ENVIRONMENT')
-    debug: bool = Field(False, env='DEBUG')
     log_level: str = Field('INFO', env='LOG_LEVEL')
     
     # AI Configuration
-    openai_api_key: Optional[str] = Field(None, env='OPENAI_API_KEY')
-    anthropic_api_key: Optional[str] = Field(None, env='ANTHROPIC_API_KEY')
     huggingface_api_key: Optional[str] = Field(None, env='HUGGINGFACE_API_KEY')
-    
-    # Monitoring
-    prometheus_port: int = Field(8000, env='PROMETHEUS_PORT')
-    health_check_port: int = Field(8001, env='HEALTH_CHECK_PORT')
     
     @validator('discord_token')
     def validate_token(cls, v):

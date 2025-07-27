@@ -16,7 +16,7 @@ from discord.ext import commands
 import asyncio
 from utils.config import config
 from utils.logging_config import setup_logging, get_logger
-from utils.database import db
+
 from utils.error_handler import setup_error_handlers
 from utils.oracle import log_vision, OracleVision
 
@@ -48,9 +48,7 @@ async def on_ready():
     """Event triggered when the bot is ready and connected to Discord."""
     logger.info("Bot connected", bot_name=bot.user.name, guild_count=len(bot.guilds))
     
-    # Initialize database
-    await db.connect()
-    logger.info("Database connected")
+
     
     # Set up error handlers
     setup_error_handlers(bot)
@@ -122,7 +120,6 @@ async def start_bot():
         logger.error("Bot startup failed", error=str(e))
         log_vision(OracleVision.PROPHECY, "The Oracle's connection to the astral plane was severed", e)
     finally:
-        await db.close()
         if not bot.is_closed():
             await bot.close()
             log_vision(OracleVision.MURMUR, "The Oracle's connection to the astral plane has been closed")
