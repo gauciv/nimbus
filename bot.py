@@ -19,6 +19,7 @@ from utils.logging_config import setup_logging, get_logger
 
 from utils.error_handler import setup_error_handlers
 from utils.oracle import log_vision, OracleVision
+from utils.health_check import HealthCheck
 
 # Setup logging
 setup_logging()
@@ -46,21 +47,23 @@ COGS = [
 @bot.event
 async def on_ready():
     """Event triggered when the bot is ready and connected to Discord."""
-    logger.info("Bot connected", bot_name=bot.user.name, guild_count=len(bot.guilds))
-    
-
+    logger.info(f"Bot connected: {bot.user.name} - {len(bot.guilds)} guilds")
     
     # Set up error handlers
     setup_error_handlers(bot)
     log_vision(OracleVision.MURMUR, f"The Oracle has awakened as {bot.user.name}")
     
+    # Start health check server
+    health_check = HealthCheck(bot)
+    await health_check.start_server()
+    
     # Sync slash commands
     try:
         synced = await bot.tree.sync()
-        logger.info("Commands synced", count=len(synced))
+        logger.info(f"Commands synced: {len(synced)}")
         log_vision(OracleVision.MURMUR, f"The Oracle has synchronized {len(synced)} mystical incantations")
     except Exception as e:
-        logger.error("Command sync failed", error=str(e))
+        logger.error(f"Command sync failed: {str(e)}")
         log_vision(OracleVision.OMEN, "The Oracle failed to synchronize incantations", e)
     
     logger.info("Bot ready")

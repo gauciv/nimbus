@@ -5,6 +5,7 @@ import aiohttp
 import json
 from typing import Optional
 from utils.logging_config import get_logger
+from utils.config import config
 
 logger = get_logger(__name__)
 
@@ -67,30 +68,37 @@ class AWSFreeClient:
     
     async def _try_free_ai_with_aws_context(self, question: str) -> Optional[str]:
         """Use free AI with AWS context."""
-        if not self.session:
+        if not self.session or not config.huggingface_api_key:
             return None
         
         # Use Hugging Face free tier with AWS context
         url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
+        headers = {"Authorization": f"Bearer {config.huggingface_api_key}"}
         
-        aws_context = ("You are an AWS expert assistant. Answer questions about "
-                      "Amazon Web Services with accurate, helpful information.")
+        # Create a focused AWS prompt
+        prompt = f"AWS Expert: {question}\n\nAnswer:"
         
         payload = {
-            "inputs": f"{aws_context}\nUser: {question}\nAWS Expert:",
-            "parameters": {"max_length": 200, "temperature": 0.7}
+            "inputs": prompt,
+            "parameters": {
+                "max_new_tokens": 150,
+                "temperature": 0.7,
+                "do_sample": True,
+                "return_full_text": False
+            }
         }
         
         try:
-            async with self.session.post(url, json=payload) as resp:
+            async with self.session.post(url, headers=headers, json=payload) as resp:
                 if resp.status == 200:
                     data = await resp.json()
                     if isinstance(data, list) and data:
-                        response = data[0].get("generated_text", "")
-                        # Extract only the assistant's response
-                        if "AWS Expert:" in response:
-                            return response.split("AWS Expert:")[-1].strip()
+                        response = data[0].get("generated_text", "").strip()
+                        if response and len(response) > 10:
+                            return response
+                elif resp.status == 503:
+                    return "The AI model is currently loading. Please try again in a moment."
         except Exception as e:
-            logger.warning("Free AI request failed", error=str(e))
+            logger.warning(f"Hugging Face API error: {str(e)}")
         
         return None
