@@ -6,6 +6,8 @@ import json
 from typing import Optional
 from utils.logging_config import get_logger
 from utils.config import config
+from utils.rag_client import SimpleRAG
+from utils.response_cache import ResponseCache
 
 logger = get_logger(__name__)
 
@@ -15,6 +17,8 @@ class AWSFreeClient:
     def __init__(self):
         self.session = None
         self.aws_services = self._load_aws_services()
+        self.rag = SimpleRAG()
+        self.cache = ResponseCache()
     
     async def __aenter__(self):
         self.session = aiohttp.ClientSession()
@@ -33,25 +37,37 @@ class AWSFreeClient:
             return {}
     
     async def get_aws_answer(self, question: str) -> Optional[str]:
-        """Get AWS answer using free sources."""
+        """Get AWS answer using enhanced free sources."""
         
-        # Try AWS documentation search first
-        doc_answer = await self._search_aws_docs(question)
-        if doc_answer:
-            return doc_answer
+        # Check cache first
+        cached_response = self.cache.get_cached_response(question)
+        if cached_response:
+            return cached_response
+        
+        # Try local knowledge base with RAG
+        rag_answer = self._try_rag_answer(question)
+        if rag_answer:
+            self.cache.cache_response(question, rag_answer)
+            return rag_answer
         
         # Try service-specific responses
         service_answer = self._get_service_info(question)
         if service_answer:
+            self.cache.cache_response(question, service_answer)
             return service_answer
         
-        # Try Groq first (free, fast), then Hugging Face
-        groq_answer = await self._try_groq(question)
+        # Try Groq with RAG context
+        groq_answer = await self._try_groq_with_rag(question)
         if groq_answer:
-            return self._enhance_with_sources(groq_answer, question)
+            enhanced_answer = self._enhance_with_sources(groq_answer, question)
+            self.cache.cache_response(question, enhanced_answer)
+            return enhanced_answer
         
         # Fallback to Hugging Face
-        return await self._try_free_ai_with_aws_context(question)
+        hf_answer = await self._try_free_ai_with_aws_context(question)
+        if hf_answer:
+            self.cache.cache_response(question, hf_answer)
+        return hf_answer
     
     async def _search_aws_docs(self, question: str) -> Optional[str]:
         """Search AWS documentation (free)."""
@@ -192,6 +208,30 @@ class AWSFreeClient:
             return True
         
         return False
+    
+    def _try_rag_answer(self, question: str) -> Optional[str]:
+        """Try to answer using RAG with local knowledge."""
+        context = self.rag.search_relevant_context(question)
+        if context and len(context) > 50:  # Only if we have substantial context
+            return f"Based on AWS documentation: {context}\n\n📚 **Learn more:** [AWS Documentation](https://docs.aws.amazon.com/)"
+        return None
+    
+    async def _try_groq_with_rag(self, question: str) -> Optional[str]:
+        """Try Groq API with RAG context."""
+        try:
+            from utils.groq_client import GroqClient
+            
+            # Enhance question with RAG context
+            context = self.rag.search_relevant_context(question)
+            if context:
+                enhanced_question = f"Context: {context}\n\nQuestion: {question}"
+            else:
+                enhanced_question = question
+            
+            async with GroqClient() as client:
+                return await client.get_aws_answer(enhanced_question)
+        except:
+            return None
     
     async def _try_groq(self, question: str) -> Optional[str]:
         """Try Groq API (free 6000 requests/day)."""

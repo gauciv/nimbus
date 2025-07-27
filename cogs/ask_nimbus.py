@@ -78,6 +78,15 @@ class AskNimbus(commands.Cog):
                         color=discord.Color.blue()
                     )
                     embed.set_footer(text=f"Asked by {message.author.display_name} • Powered by AI")
+                    
+                    # Add related questions for better engagement
+                    suggestions = self._get_question_suggestions(message.content)
+                    if suggestions:
+                        embed.add_field(
+                            name="💡 Related questions you might ask:",
+                            value="\n".join([f"• {q}" for q in suggestions[:3]]),
+                            inline=False
+                        )
                 
                 await message.reply(embed=embed, mention_author=False)
                 return
@@ -579,6 +588,23 @@ class AskNimbus(commands.Cog):
             return True
         
         return False
+    
+    def _get_question_suggestions(self, question: str) -> list:
+        """Get related question suggestions."""
+        q = question.lower()
+        
+        if 's3' in q:
+            return ["How much does S3 cost?", "S3 vs EFS differences?", "S3 security best practices?"]
+        elif 'lambda' in q:
+            return ["Lambda pricing model?", "Lambda vs EC2 comparison?", "Lambda cold start solutions?"]
+        elif 'api gateway' in q or 'gateway' in q:
+            return ["API Gateway pricing?", "REST vs HTTP API differences?", "API Gateway security?"]
+        elif 'cost' in q or 'price' in q:
+            return ["AWS free tier services?", "Cost optimization tips?", "AWS pricing calculator?"]
+        elif 'database' in q:
+            return ["RDS vs DynamoDB?", "Database migration to AWS?", "Database backup strategies?"]
+        else:
+            return ["AWS free tier guide?", "Getting started with AWS?", "AWS certification path?"]
 
 async def setup(bot):
     await bot.add_cog(AskNimbus(bot))

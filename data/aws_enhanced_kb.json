@@ -1,0 +1,29 @@
+{
+  "api_gateway": {
+    "description": "Fully managed service for creating, publishing, maintaining, monitoring, and securing REST, HTTP, and WebSocket APIs at any scale",
+    "use_cases": "REST APIs, WebSocket APIs, HTTP APIs, API versioning, request/response transformation",
+    "pricing": "Pay per API call, free tier: 1M API calls per month",
+    "alternatives": "Application Load Balancer, CloudFront"
+  },
+  "lambda_pricing": {
+    "description": "Pay only for compute time consumed, charged per 100ms of execution",
+    "free_tier": "1M free requests per month, 400,000 GB-seconds compute time",
+    "cost_factors": "Number of requests, duration, memory allocation"
+  },
+  "s3_vs_ebs": {
+    "s3": "Object storage, unlimited capacity, accessed via REST API",
+    "ebs": "Block storage, attached to EC2 instances, limited capacity",
+    "use_s3_for": "Static websites, backups, data lakes, content distribution",
+    "use_ebs_for": "Database storage, file systems, boot volumes"
+  },
+  "serverless_architecture": {
+    "components": "Lambda, API Gateway, DynamoDB, S3, CloudFront",
+    "benefits": "No server management, automatic scaling, pay-per-use",
+    "patterns": "Event-driven, microservices, real-time processing"
+  },
+  "aws_free_tier": {
+    "always_free": "Lambda (1M requests), DynamoDB (25GB), CloudWatch (10 metrics)",
+    "12_months_free": "EC2 (750 hours t2.micro), S3 (5GB), RDS (750 hours db.t2.micro)",
+    "trials": "SageMaker (2 months), Redshift (2 months)"
+  }
+}
