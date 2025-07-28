@@ -44,30 +44,24 @@ class AWSFreeClient:
         if cached_response:
             return cached_response
         
-        # Try local knowledge base with RAG
-        rag_answer = self._try_rag_answer(question)
-        if rag_answer:
-            self.cache.cache_response(question, rag_answer)
-            return rag_answer
-        
-        # Try service-specific responses
-        service_answer = self._get_service_info(question)
-        if service_answer:
-            self.cache.cache_response(question, service_answer)
-            return service_answer
-        
-        # Try Groq with RAG context
+        # Try Groq AI first (best responses)
         groq_answer = await self._try_groq_with_rag(question)
         if groq_answer:
-            enhanced_answer = self._enhance_with_sources(groq_answer, question)
-            self.cache.cache_response(question, enhanced_answer)
-            return enhanced_answer
+            self.cache.cache_response(question, groq_answer)
+            return groq_answer
         
         # Fallback to Hugging Face
         hf_answer = await self._try_free_ai_with_aws_context(question)
         if hf_answer:
             self.cache.cache_response(question, hf_answer)
-        return hf_answer
+            return hf_answer
+        
+        # Last resort: local knowledge base (only if AI fails)
+        service_answer = self._get_service_info(question)
+        if service_answer:
+            return service_answer
+        
+        return "I couldn't find information about that. Please try rephrasing your AWS question."
     
     async def _search_aws_docs(self, question: str) -> Optional[str]:
         """Search AWS documentation (free)."""
@@ -97,13 +91,7 @@ class AWSFreeClient:
                         description = info.get('description', 'AWS service')
                         use_cases = info.get('use_cases', 'Various AWS workloads')
                         
-                        response = f"**{service}**: {description}\n\n**Use Cases**: {use_cases}"
-                        
-                        # Add documentation link
-                        service_slug = canonical
-                        response += f"\n\n**Source**: [AWS {service} Documentation](https://docs.aws.amazon.com/{service_slug}/)"
-                        
-                        return response
+                        return f"**{service}**: {description}\n\n**Use Cases**: {use_cases}"
         
         # Fallback to original matching
         for service, info in self.aws_services.items():
@@ -111,12 +99,7 @@ class AWSFreeClient:
                 description = info.get('description', 'AWS service')
                 use_cases = info.get('use_cases', 'Various AWS workloads')
                 
-                response = f"**{service}**: {description}\n\n**Use Cases**: {use_cases}"
-                
-                service_slug = service.lower().replace(' ', '-')
-                response += f"\n\n**Source**: [AWS {service} Documentation](https://docs.aws.amazon.com/{service_slug}/)"
-                
-                return response
+                return f"**{service}**: {description}\n\n**Use Cases**: {use_cases}"
         
         return None
     
@@ -155,8 +138,7 @@ class AWSFreeClient:
                     if isinstance(data, list) and data:
                         response = data[0].get("generated_text", "").strip()
                         if response and len(response) > 10:
-                            enhanced_response = self._enhance_with_sources(response, question)
-                            return enhanced_response
+                            return response
                 elif resp.status == 503:
                     return "The AI model is currently loading. Please try again in a moment."
         except Exception as e:
@@ -212,8 +194,8 @@ class AWSFreeClient:
     def _try_rag_answer(self, question: str) -> Optional[str]:
         """Try to answer using RAG with local knowledge."""
         context = self.rag.search_relevant_context(question)
-        if context and len(context) > 50:  # Only if we have substantial context
-            return f"Based on AWS documentation: {context}\n\n📚 **Learn more:** [AWS Documentation](https://docs.aws.amazon.com/)"
+        if context and len(context) > 50:
+            return f"Based on AWS knowledge: {context}"
         return None
     
     async def _try_groq_with_rag(self, question: str) -> Optional[str]:
