@@ -35,8 +35,9 @@ class AskNimbus(commands.Cog):
         if message.author.bot:
             return
             
-        # Check if message is in ask-nimbus channel
-        if not (message.channel.name == self.ask_channel_name or message.channel.name.endswith(self.ask_channel_name)):
+        # Check if message is in ask-nimbus channel (handle emoji prefixes)
+        channel_name_clean = ''.join(c for c in message.channel.name if c.isalnum() or c in '-_')
+        if not (self.ask_channel_name in channel_name_clean.lower()):
             return
         
         # Check for security violations first
