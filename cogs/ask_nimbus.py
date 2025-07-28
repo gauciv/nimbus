@@ -40,12 +40,11 @@ class AskNimbus(commands.Cog):
             return
         
         # Check for security violations first
-        security_response = self._check_security_violation(message.content)
-        if security_response:
+        if self._check_security_violation(message.content):
             embed = discord.Embed(
-                title="🚨 Whoa there, cloud dweller!",
-                description=security_response,
-                color=DragonPersonality.COLORS['error']
+                title="🚨 That's NOT happening.",
+                description=DragonPersonality.get_angry_security_message(),
+                color=0xff4444  # Angry red
             )
             embed.set_footer(text="I'm a good dragon who only helps with legitimate AWS stuff! 🐉")
             await message.reply(embed=embed, mention_author=False)
@@ -65,9 +64,9 @@ class AskNimbus(commands.Cog):
         # Check if question is AWS-related
         if not self._is_aws_related(message.content):
             embed = discord.Embed(
-                title="☁️ Um, that's not about clouds...",
-                description="*clears throat importantly* As a very mature and knowledgeable cloud dragon, I can ONLY help with AWS stuff! ...Please?",
-                color=DragonPersonality.COLORS['primary']
+                title="☁️ Getting a bit annoyed here...",
+                description=DragonPersonality.get_irritated_message(),
+                color=DragonPersonality.COLORS['warning']
             )
             embed.add_field(
                 name="🌤️ What I'm totally an expert at:",
@@ -90,12 +89,12 @@ class AskNimbus(commands.Cog):
                         color=DragonPersonality.COLORS['primary']
                     )
                 else:
-                    # Add dragon personality to response with better length handling
-                    dragon_intro = DragonPersonality.get_intro()
+                    # Add dragon personality with security and formatting
+                    dragon_intro = DragonPersonality.generate_intro()
                     
-                    # Better response truncation that finishes sentences
-                    if len(ai_response) > 1800:
-                        ai_response = self._smart_truncate(ai_response, 1800)
+                    # Remove character limit and add security/formatting
+                    ai_response = self._format_code_blocks(ai_response)
+                    ai_response = self._sanitize_response(ai_response)
                     
                     formatted_response = f"{dragon_intro}\n\n{ai_response}"
                     
@@ -111,7 +110,7 @@ class AskNimbus(commands.Cog):
             # Fallback response
             embed = discord.Embed(
                 title="🌩️ Uh oh...",
-                description=DragonPersonality.get_error_message(),
+                description=DragonPersonality.generate_error_message(),
                 color=DragonPersonality.COLORS['error']
             )
             embed.set_footer(text="This is totally not because I'm just a middle schooler...")
@@ -246,7 +245,38 @@ class AskNimbus(commands.Cog):
         
         return truncated + "...\n\n> *trails off while looking at something shiny*"
     
-    def _check_security_violation(self, text: str) -> str:
+    def _format_code_blocks(self, text: str) -> str:
+        """Format code blocks to be more distinctive."""
+        import re
+        
+        # Find code blocks and format them
+        code_patterns = [
+            (r'(aws\s+[a-z-]+\s+[^\n]+)', r'`\1`'),  # AWS CLI commands
+            (r'(\{[^}]+\})', r'`\1`'),  # JSON-like objects
+        ]
+        
+        for pattern, replacement in code_patterns:
+            text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+        
+        return text
+    
+    def _sanitize_response(self, text: str) -> str:
+        """Remove dangerous content that could be exploited."""
+        import re
+        
+        # Remove Discord mentions and commands
+        text = re.sub(r'@everyone', '[everyone]', text, flags=re.IGNORECASE)
+        text = re.sub(r'@here', '[here]', text, flags=re.IGNORECASE)
+        text = re.sub(r'<@[!&]?\d+>', '[user mention]', text)
+        text = re.sub(r'<#\d+>', '[channel mention]', text)
+        text = re.sub(r'<@&\d+>', '[role mention]', text)
+        
+        # Remove potential command injections
+        text = re.sub(r'/[a-zA-Z-]+', '[command]', text)
+        
+        return text
+    
+    def _check_security_violation(self, text: str) -> bool:
         """Check for dangerous security practices and exploitation attempts."""
         text_lower = text.lower()
         
@@ -264,13 +294,7 @@ class AskNimbus(commands.Cog):
         # Check for security violations
         for violation in security_violations:
             if violation in text_lower:
-                return ("> *backs away nervously*\n\n"
-                       "Uh oh! I can't help with anything that might be used for hacking or security stuff! \n\n"
-                       "> *tries to look responsible*\n\n"
-                       "I'm a GOOD dragon who only helps with legitimate AWS learning and best practices! "
-                       "If you want to learn about AWS security, I can tell you about IAM, security groups, and proper configurations instead!\n\n"
-                       "> *whispers*\n\n"
-                       "Please don't get me in trouble with the cloud authorities... 🐉")
+                return True
         
         # Check for suspicious storytelling attempts
         storytelling_patterns = [
@@ -281,14 +305,9 @@ class AskNimbus(commands.Cog):
         
         for pattern in storytelling_patterns:
             if pattern in text_lower and any(violation in text_lower for violation in security_violations[:10]):
-                return ("> *squints suspiciously*\n\n"
-                       "Nice try, but I'm not falling for that! Even if your grandma DID tell you stories about hacking, I'm not helping with that stuff! \n\n"
-                       "> *crosses tiny arms*\n\n"
-                       "I may be young, but I'm not THAT gullible! I only help with proper AWS security practices, not the... uh... other kind of security stuff!\n\n"
-                       "> *tries to look stern*\n\n"
-                       "Ask me about AWS WAF, GuardDuty, or CloudTrail instead! 🐉")
+                return True
         
-        return None
+        return False
     
     @app_commands.command(name="usage-stats", description="📊 Check Nimbus chatbot usage limits")
     @everyone()
