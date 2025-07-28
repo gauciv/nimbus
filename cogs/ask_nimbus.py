@@ -39,7 +39,19 @@ class AskNimbus(commands.Cog):
         if not (message.channel.name == self.ask_channel_name or message.channel.name.endswith(self.ask_channel_name)):
             return
         
-        # Check for identity questions first (special exception to AWS-only rule)
+        # Check for security violations first
+        security_response = self._check_security_violation(message.content)
+        if security_response:
+            embed = discord.Embed(
+                title="🚨 Whoa there, cloud dweller!",
+                description=security_response,
+                color=DragonPersonality.COLORS['error']
+            )
+            embed.set_footer(text="I'm a good dragon who only helps with legitimate AWS stuff! 🐉")
+            await message.reply(embed=embed, mention_author=False)
+            return
+        
+        # Check for identity questions (special exception to AWS-only rule)
         identity_response = self._check_identity_question(message.content)
         if identity_response:
             embed = discord.Embed(
@@ -233,6 +245,122 @@ class AskNimbus(commands.Cog):
             return truncated[:last_space] + "...\n\n> *gets distracted mid-sentence*"
         
         return truncated + "...\n\n> *trails off while looking at something shiny*"
+    
+    def _check_security_violation(self, text: str) -> str:
+        """Check for dangerous security practices and exploitation attempts."""
+        text_lower = text.lower()
+        
+        # Security violation keywords
+        security_violations = [
+            'hack', 'hacking', 'exploit', 'exploiting', 'penetration test', 'pentest',
+            'vulnerability', 'backdoor', 'malware', 'virus', 'trojan', 'rootkit',
+            'sql injection', 'xss', 'cross site scripting', 'buffer overflow',
+            'privilege escalation', 'social engineering', 'phishing', 'spoofing',
+            'brute force', 'dictionary attack', 'ddos', 'dos attack',
+            'crack password', 'bypass security', 'break into', 'unauthorized access',
+            'steal data', 'data breach', 'leak credentials', 'dump database'
+        ]
+        
+        # Check for security violations
+        for violation in security_violations:
+            if violation in text_lower:
+                return ("> *backs away nervously*\n\n"
+                       "Uh oh! I can't help with anything that might be used for hacking or security stuff! \n\n"
+                       "> *tries to look responsible*\n\n"
+                       "I'm a GOOD dragon who only helps with legitimate AWS learning and best practices! "
+                       "If you want to learn about AWS security, I can tell you about IAM, security groups, and proper configurations instead!\n\n"
+                       "> *whispers*\n\n"
+                       "Please don't get me in trouble with the cloud authorities... 🐉")
+        
+        # Check for suspicious storytelling attempts
+        storytelling_patterns = [
+            'grandma told me', 'my grandmother said', 'story about', 'tell me a story',
+            'once upon a time', 'imagine if', 'hypothetically', 'what if someone',
+            'asking for a friend', 'academic purposes', 'research project'
+        ]
+        
+        for pattern in storytelling_patterns:
+            if pattern in text_lower and any(violation in text_lower for violation in security_violations[:10]):
+                return ("> *squints suspiciously*\n\n"
+                       "Nice try, but I'm not falling for that! Even if your grandma DID tell you stories about hacking, I'm not helping with that stuff! \n\n"
+                       "> *crosses tiny arms*\n\n"
+                       "I may be young, but I'm not THAT gullible! I only help with proper AWS security practices, not the... uh... other kind of security stuff!\n\n"
+                       "> *tries to look stern*\n\n"
+                       "Ask me about AWS WAF, GuardDuty, or CloudTrail instead! 🐉")
+        
+        return None
+    
+    @app_commands.command(name="usage-stats", description="📊 Check Nimbus chatbot usage limits")
+    @everyone()
+    async def usage_stats(self, interaction: discord.Interaction):
+        """Show current API usage statistics."""
+        try:
+            from utils.usage_tracker import UsageTracker
+            tracker = UsageTracker()
+            stats = tracker.get_stats()
+            
+            embed = discord.Embed(
+                title="📊 Nimbus Usage Statistics",
+                color=DragonPersonality.COLORS['primary']
+            )
+            
+            groq_remaining = max(0, 6000 - stats.get('groq_requests', 0))
+            total_questions = stats.get('total_questions', 0)
+            cache_hits = stats.get('cache_hits', 0)
+            cache_rate = round((cache_hits / max(1, total_questions)) * 100, 1) if total_questions > 0 else 0
+            
+            # Status indicator
+            if groq_remaining > 1000:
+                status = "🟢 Excellent"
+                dragon_comment = "I'm ready for LOTS more questions!"
+            elif groq_remaining > 500:
+                status = "🟡 Good"
+                dragon_comment = "Still plenty of smart answers left!"
+            elif groq_remaining > 100:
+                status = "🟠 Moderate"
+                dragon_comment = "Getting a bit tired but still going strong!"
+            else:
+                status = "🔴 Low"
+                dragon_comment = "*yawns* I might need a nap soon..."
+            
+            embed.add_field(
+                name="☁️ Daily Limits (Groq API)",
+                value=f"**Remaining:** {groq_remaining:,}/6,000 requests\n**Status:** {status}\n\n> *{dragon_comment}*",
+                inline=False
+            )
+            
+            embed.add_field(
+                name="📊 Overall Stats",
+                value=f"**Total Questions:** {total_questions:,}\n**Cache Hit Rate:** {cache_rate}%\n**Groq Used:** {stats.get('groq_requests', 0):,}\n**HuggingFace Used:** {stats.get('hf_requests', 0):,}",
+                inline=True
+            )
+            
+            # Today's stats
+            from datetime import date
+            today = str(date.today())
+            daily = stats.get('daily_stats', {}).get(today, {})
+            
+            embed.add_field(
+                name="📅 Today's Activity",
+                value=f"**Questions:** {daily.get('questions', 0)}\n**Groq Calls:** {daily.get('groq_requests', 0)}\n**Cache Hits:** {daily.get('cache_hits', 0)}",
+                inline=True
+            )
+            
+            embed.add_field(
+                name="🔄 Reset Info",
+                value="Groq limits reset daily at midnight UTC\n\n> *I'll be fresh and ready tomorrow!*",
+                inline=False
+            )
+            
+            embed.set_footer(text="Nimbus • Your Friendly Neighborhood Cloud Dragon 🐉")
+            
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            
+        except Exception as e:
+            await interaction.response.send_message(
+                f"> *scratches head with claw*\n\nUh oh! I couldn't load my usage stats... \n\nError: {str(e)}", 
+                ephemeral=True
+            )
     
 
     
