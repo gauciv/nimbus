@@ -561,6 +561,46 @@ class AskNimbus(commands.Cog):
         
         await interaction.response.send_message(embed=embed, ephemeral=True)
     
+    @app_commands.command(name="clear-cache", description="🗑️ Clear response cache (Admin only)")
+    @app_commands.checks.has_permissions(administrator=True)
+    async def clear_cache(self, interaction: discord.Interaction):
+        """Clear the response cache."""
+        try:
+            import os
+            cache_file = 'data/response_cache.json'
+            if os.path.exists(cache_file):
+                os.remove(cache_file)
+            
+            await interaction.response.send_message("✅ Response cache cleared!", ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"❌ Error: {str(e)}", ephemeral=True)
+    
+    @app_commands.command(name="test-ai", description="🧪 Test AI response quality")
+    @app_commands.describe(question="Test question for AI")
+    @everyone()
+    async def test_ai(self, interaction: discord.Interaction, question: str):
+        """Test AI response without affecting stats."""
+        await interaction.response.defer(ephemeral=True)
+        
+        try:
+            response = await self._try_ai_response(question)
+            if response:
+                embed = discord.Embed(
+                    title="🧪 AI Test Response",
+                    description=response[:1000] + ("..." if len(response) > 1000 else ""),
+                    color=discord.Color.green()
+                )
+            else:
+                embed = discord.Embed(
+                    title="❌ No Response",
+                    description="AI couldn't generate a response.",
+                    color=discord.Color.red()
+                )
+            
+            await interaction.followup.send(embed=embed, ephemeral=True)
+        except Exception as e:
+            await interaction.followup.send(f"❌ Test failed: {str(e)}", ephemeral=True)
+    
     def _is_aws_related(self, text):
         """Check if the question is AWS-related with improved detection"""
         text_lower = text.lower()

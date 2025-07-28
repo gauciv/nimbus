@@ -46,13 +46,13 @@ class AWSFreeClient:
         
         # Try Groq AI first (best responses)
         groq_answer = await self._try_groq_with_rag(question)
-        if groq_answer:
+        if groq_answer and self._is_quality_response(groq_answer):
             self.cache.cache_response(question, groq_answer)
             return groq_answer
         
         # Fallback to Hugging Face
         hf_answer = await self._try_free_ai_with_aws_context(question)
-        if hf_answer:
+        if hf_answer and self._is_quality_response(hf_answer):
             self.cache.cache_response(question, hf_answer)
             return hf_answer
         
@@ -62,6 +62,32 @@ class AWSFreeClient:
             return service_answer
         
         return "I couldn't find information about that. Please try rephrasing your AWS question."
+    
+    def _is_quality_response(self, response: str) -> bool:
+        """Check if response meets quality standards."""
+        if not response or len(response.strip()) < 20:
+            return False
+        
+        # Check for common bad responses
+        bad_indicators = [
+            'i cannot', 'i can\'t', 'sorry', 'i don\'t know',
+            'as an ai', 'i\'m not able', 'i apologize'
+        ]
+        
+        response_lower = response.lower()
+        if any(indicator in response_lower for indicator in bad_indicators):
+            return False
+        
+        # Must contain AWS-related content
+        aws_indicators = [
+            'aws', 'amazon', 'cloud', 'service', 'ec2', 's3', 'lambda',
+            'database', 'storage', 'compute', 'serverless'
+        ]
+        
+        if not any(indicator in response_lower for indicator in aws_indicators):
+            return False
+        
+        return True
     
     async def _search_aws_docs(self, question: str) -> Optional[str]:
         """Search AWS documentation (free)."""
