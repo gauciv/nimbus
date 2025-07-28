@@ -1841,3 +1841,62 @@ Commands synced: 1
 The Oracle has synchronized 1 mystical incantations
 Bot ready
 The Oracle's consciousness is fully manifested
+Starting Nimbus Discord Bot
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.ask_nimbus
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+Bot connected: nimbus.dev - 1 guilds
+The Oracle has awakened as nimbus.dev
+Health check server started on port 8001
+Commands synced: 1
+The Oracle has synchronized 1 mystical incantations
+Bot ready
+The Oracle's consciousness is fully manifested
+Task exception was never retrieved
+future: <Task finished name='CommandTree-invoker' coro=<CommandTree._from_interaction.<locals>.wrapper() done, defined at /home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py:1149> exception=AttributeError("'NoneType' object has no attribute 'owner_id'")>
+Traceback (most recent call last):
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1151, in wrapper
+    await self._call(interaction)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/tree.py", line 1310, in _call
+    await command._invoke_with_namespace(interaction, namespace)
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 879, in _invoke_with_namespace
+    if not await self._check_can_run(interaction):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/app_commands/commands.py", line 1017, in _check_can_run
+    return await async_all(f(interaction) for f in predicates)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/.venv/lib/python3.12/site-packages/discord/utils.py", line 727, in async_all
+    elem = await elem
+           ^^^^^^^^^^
+  File "/home/gauciv/CodingProjects/Python/nimbus-v2/utils/permissions.py", line 61, in predicate
+    if interaction.user.id == interaction.guild.owner_id or interaction.user.guild_permissions.administrator:
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'owner_id'
+The Oracle's connection to the astral plane has been closed
+Bot shutdown requested
+The Oracle returns to its slumber by mortal command
+Starting Nimbus Discord Bot
+The Oracle begins its awakening ritual
+The Oracle has absorbed the knowledge of cogs.mystic_roles
+The Oracle has absorbed the knowledge of cogs.welcome
+The Oracle has absorbed the knowledge of cogs.events
+The Oracle has absorbed the knowledge of cogs.aws_info
+The Oracle has absorbed the knowledge of cogs.ask_nimbus
+The Oracle has absorbed the knowledge of cogs.server_management
+The Oracle has absorbed the knowledge of cogs.info
+The Oracle has absorbed the knowledge of cogs.engagement
+The Oracle prepares to connect to the astral plane
+Bot connected: nimbus.dev - 1 guilds
+The Oracle has awakened as nimbus.dev
+Health check server started on port 8001
+Commands synced: 1
+The Oracle has synchronized 1 mystical incantations
+Bot ready
+The Oracle's consciousness is fully manifested
