@@ -105,3 +105,84 @@ class DragonPersonality:
             "> *straightens up importantly*\n\nWelcome, {name}! I'm Nimbus, the official... unofficial... well, I'm A dragon who helps people! I'm very good at it!\n\n> *flaps wings proudly*\n\nYou picked the BEST server to join because I'm here! I know everything about AWS and clouds and... other important stuff!\n\n> *tries to look modest*\n\nIt's really no big deal being this knowledgeable... 🐉✨"
         ]
         return random.choice(messages)
+    
+    @staticmethod
+    def generate_intro():
+        """Generate a dynamic dragon intro."""
+        actions = [
+            "adjusts tiny reading glasses", "puffs out chest proudly", "clears throat importantly",
+            "tries to sound professional", "straightens up to look taller", "puts on tiny professor hat",
+            "shuffles through imaginary papers", "strikes a dramatic pose", "adjusts non-existent tie",
+            "taps claws on desk importantly", "flutters wings confidently", "pushes up tiny spectacles"
+        ]
+        
+        phrases = [
+            "Well OBVIOUSLY, as a very mature and... and... SOPHISTICATED cloud dragon",
+            "Being an expert in all things cloudy, I shall explicate... wait no... EXPLAIN",
+            "As someone who DEFINITELY knows everything about AWS",
+            "According to my vast and... uh... IMMENSE knowledge of the cloud realm",
+            "Listen carefully, for I am about to bestow great wisdom",
+            "Behold! My incredibly mature and sophisticated answer",
+            "Ahem! As a distinguished scholar of cloud computing",
+            "Prepare yourself for MAXIMUM knowledge deployment"
+        ]
+        
+        fails = [
+            "checks notes scribbled on cloud", "whispers 'I hope...'", "hat falls over eyes",
+            "papers are clearly just doodles of clouds", "immediately looks unsure",
+            "voice cracks slightly", "frantically googles under desk", "trips slightly"
+        ]
+        
+        action = random.choice(actions)
+        phrase = random.choice(phrases)
+        fail = random.choice(fails)
+        
+        return f"> *{action}*\n\n{phrase}...\n\n> *{fail}*"
+    
+    @staticmethod
+    def generate_error_message():
+        """Generate a dynamic dragon error message."""
+        actions = [
+            "shuffles wings nervously", "looks around awkwardly", "fidgets with tail",
+            "tries to look dignified while confused", "scratches head with claw", "flaps wings uncertainly"
+        ]
+        
+        excuses = [
+            "I... I couldn't figure that out. Maybe try asking it differently?",
+            "That's totally not in my very extensive and... and... COMPREHENSIVE knowledge base",
+            "That question is... uh... beneath my expertise level!",
+            "Even the most mature and sophisticated dragons need a break sometimes, okay?!",
+            "Perhaps you could rephrase that for... for... CLARITY purposes?",
+            "I totally know this but... uh... I'm testing YOU! Yeah!"
+        ]
+        
+        endings = [
+            "definitely not because I don't know", "tries to look dignified", "pushes up tiny glasses",
+            "nervous dragon noises", "whispers 'I'm still learning...'", "looks for escape route"
+        ]
+        
+        action = random.choice(actions)
+        excuse = random.choice(excuses)
+        ending = random.choice(endings)
+        
+        return f"> *{action}*\n\n{excuse}\n\n> *{ending}*"
+    
+    @staticmethod
+    def get_irritated_message():
+        """Get irritated response for non-AWS questions."""
+        messages = [
+            "> *tail twitches with annoyance*\n\nLook, I've told you already - I ONLY do AWS stuff! Why does everyone keep asking me about other things?\n\n> *huffs small puff of cloud*\n\nI'm trying to be a professional cloud dragon here!",
+            "> *crosses tiny arms*\n\nSeriously? Again with the non-AWS questions? I'm getting a little tired of explaining this...\n\n> *sighs dramatically*\n\nAWS. Cloud. Computing. That's what I do. Nothing else!",
+            "> *eye twitches slightly*\n\nOkay, I'm starting to get a teensy bit annoyed here... I've said it before and I'll say it again: AWS QUESTIONS ONLY!\n\n> *tries to calm down*\n\nDeep breaths, Nimbus... professional dragon..."
+        ]
+        return random.choice(messages)
+    
+    @staticmethod
+    def get_angry_security_message():
+        """Get angry but controlled response for security violations."""
+        messages = [
+            "> *eyes narrow dangerously*\n\nStop. Right. There.\n\nI don't care how you phrase it or what story you tell - I will NOT help with anything related to hacking, exploiting, or breaking into systems.\n\n> *speaks in serious, measured tone*\n\nI'm here to help people learn legitimate AWS skills. If you want to learn about AWS security, I can teach you about proper configurations, not how to break them.",
+            "> *small flames flicker from nostrils*\n\nI'm going to say this once, and I'm going to say it clearly:\n\nI. Do. Not. Help. With. Hacking.\n\n> *voice becomes stern and mature*\n\nI don't care if it's for 'research' or your 'grandmother told you' - I won't be tricked into helping with malicious activities. Ask me about AWS security best practices instead.",
+            "> *stands up to full height, looking genuinely serious*\n\nNo. Absolutely not.\n\nI may be young, but I'm not stupid. I know what you're trying to do, and I won't be part of it.\n\n> *speaks with unusual maturity*\n\nI'm here to help people build and secure things properly, not tear them down. Please respect that."
+        ]
+        return random.choice(messages)
