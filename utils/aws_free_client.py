@@ -142,14 +142,14 @@ class AWSFreeClient:
         url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-large"
         headers = {"Authorization": f"Bearer {config.huggingface_api_key}"}
         
-        # Smart context-aware prompting
-        context = self._get_question_context(question)
+        # Smart simplicity prompting - answer only what's asked
+        context = self._get_focused_context(question)
         prompt = f"AWS Expert: {context}\n\nQ: {question}\nA:"
         
         payload = {
             "inputs": prompt,
             "parameters": {
-                "max_new_tokens": 250,
+                "max_new_tokens": 800,
                 "temperature": 0.4,
                 "top_p": 0.9,
                 "do_sample": True,
@@ -250,22 +250,9 @@ class AWSFreeClient:
         except:
             return None
     
-    def _get_question_context(self, question: str) -> str:
-        """Add smart context based on question type."""
-        q = question.lower()
-        
-        if 'cost' in q or 'price' in q:
-            return "AWS uses pay-as-you-go pricing with free tier."
-        elif 'vs' in q or 'compare' in q:
-            return "AWS services have different use cases and trade-offs."
-        elif 'security' in q:
-            return "AWS follows shared responsibility security model."
-        elif 'serverless' in q or 'lambda' in q:
-            return "Serverless eliminates server management."
-        elif 'database' in q:
-            return "AWS offers managed databases for different needs."
-        else:
-            return "AWS provides scalable cloud services."
+    def _get_focused_context(self, question: str) -> str:
+        """Add focused context that emphasizes answering only what's asked."""
+        return "Answer ONLY what is specifically asked. Do not add extra information, examples, use cases, or benefits unless explicitly requested in the question."
     
     def _enhance_with_sources(self, response: str, question: str) -> str:
         """Add relevant AWS documentation links to response."""

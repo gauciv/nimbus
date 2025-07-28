@@ -92,7 +92,7 @@ class AskNimbus(commands.Cog):
                     # Add dragon personality with security and formatting
                     dragon_intro = DragonPersonality.generate_intro()
                     
-                    # Remove character limit and add security/formatting
+                    # Format and sanitize response without character limit
                     ai_response = self._format_code_blocks(ai_response)
                     ai_response = self._sanitize_response(ai_response)
                     
@@ -224,26 +224,7 @@ class AskNimbus(commands.Cog):
         
         return None
     
-    def _smart_truncate(self, text: str, max_length: int) -> str:
-        """Truncate text at sentence boundaries when possible."""
-        if len(text) <= max_length:
-            return text
-        
-        # Try to cut at sentence end
-        truncated = text[:max_length]
-        
-        # Look for sentence endings
-        for punct in ['. ', '! ', '? ']:
-            last_punct = truncated.rfind(punct)
-            if last_punct > max_length * 0.7:  # Don't cut too early
-                return truncated[:last_punct + 1] + "\n\n> *continues rambling but gets distracted by a shiny cloud*"
-        
-        # If no good sentence break, cut at word boundary
-        last_space = truncated.rfind(' ')
-        if last_space > max_length * 0.8:
-            return truncated[:last_space] + "...\n\n> *gets distracted mid-sentence*"
-        
-        return truncated + "...\n\n> *trails off while looking at something shiny*"
+
     
     def _format_code_blocks(self, text: str) -> str:
         """Format code blocks to be more distinctive."""
