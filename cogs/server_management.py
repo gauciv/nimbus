@@ -568,65 +568,7 @@ class ServerManagement(commands.Cog):
         except Exception as e:
             logging.error(f"Setup error: {e}")
             await interaction.followup.send(f"❌ Setup failed: {str(e)}", ephemeral=True)
-    @app_commands.command(name="announce", description="✨ Proclaim a mystical decree to all seekers (post an announcement)")
-    @app_commands.describe(
-        message="The sacred proclamation to share with the realm (announcement message)"
-    )
-    @core_team_only()
-    async def announce(self, interaction: discord.Interaction, message: str):
-        """Post a mystical announcement in the #announcements channel."""
-        try:
-            # Find the announcements channel
-            announcements_channel = discord.utils.find(
-                lambda c: c.name.endswith('announcements') or c.name == 'announcements',
-                interaction.guild.channels
-            )
-            if not announcements_channel:
-                await interaction.response.send_message(
-                    "🌑 The sacred chamber of proclamations cannot be found in this realm. (Missing #announcements channel)",
-                    ephemeral=True
-                )
-                return
 
-            # Create an embed for the announcement
-            embed = discord.Embed(
-                title="📜 Mystical Proclamation (Announcement)",
-                description=message,
-                color=discord.Color.purple(),
-                timestamp=discord.utils.utcnow()
-            )
-
-            # Add who made the announcement
-            embed.add_field(
-                name="Proclaimed by (Posted by)",
-                value=interaction.user.mention,
-                inline=False
-            )
-
-            # Send the announcement
-            try:
-                await announcements_channel.send(
-                    content="@everyone Heed this mystical proclamation from the Council of Elders! ✨",
-                    embed=embed
-                )
-                
-                # Confirm to the command user
-                await interaction.response.send_message(
-                    "✨ Your proclamation has been inscribed in the sacred chronicles! (Announcement posted successfully)",
-                    ephemeral=True
-                )
-            except discord.Forbidden:
-                await interaction.response.send_message(
-                    "🌑 The Oracle lacks the mystical authority to speak in the chamber of proclamations. (Missing permissions)",
-                    ephemeral=True
-                )
-                
-        except Exception as e:
-            logging.error(f"Error posting announcement: {e}")
-            await interaction.response.send_message(
-                "❌ An error occurred while posting the announcement.",
-                ephemeral=True
-            )
     
     @app_commands.command(name="topic", description="✨ Invoke a mystical discussion in the communal gathering (start a topic)")
     @app_commands.describe(
