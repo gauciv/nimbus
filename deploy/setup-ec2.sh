@@ -1,47 +1,58 @@
 #!/bin/bash
-# EC2 Setup Script for Nimbus Bot
+
+# EC2 Setup Script for Nimbus Bot Docker Deployment
 
 set -e
 
-echo "🚀 Setting up Nimbus Bot on EC2..."
+echo "🚀 Setting up EC2 for Nimbus Bot deployment..."
 
 # Update system
-sudo apt update && sudo apt upgrade -y
+sudo apt-get update
+sudo apt-get upgrade -y
 
-# Install Python and Git
-sudo apt install -y python3 python3-pip git
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
 
-# Clone repository
-cd /home/ubuntu
-if [ ! -d "nimbus-v2" ]; then
-    git clone https://github.com/yourusername/nimbus-v2.git
-fi
+# Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
-cd nimbus-v2
+# Install AWS CLI
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo apt-get install unzip -y
+unzip awscliv2.zip
+sudo ./aws/install
 
-# Install Python dependencies
-pip3 install --user -r requirements.txt
+# Create project directory
+mkdir -p /home/$USER/nimbus-v2
+cd /home/$USER/nimbus-v2
 
-# Create .env file
-if [ ! -f ".env" ]; then
-    cp .env.example .env
-    echo "⚠️  Please edit .env file with your tokens:"
-    echo "   nano .env"
-    echo ""
-fi
+# Clone repository (you'll need to set this up)
+# git clone https://github.com/yourusername/nimbus-v2.git .
 
-# Setup systemd service
-sudo cp deploy/nimbus-bot.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable nimbus-bot
+# Create data and logs directories
+mkdir -p data logs
 
-# Create data directory
-mkdir -p data
+# Create environment file template
+cat > .env << 'EOF'
+DISCORD_TOKEN=your_discord_token_here
+GUILD_ID=your_guild_id_here
+GROQ_API_KEY=your_groq_api_key_here
+HUGGINGFACE_API_KEY=your_huggingface_api_key_here
+LOG_LEVEL=INFO
+EOF
 
-echo "✅ Setup complete!"
-echo ""
-echo "Next steps:"
-echo "1. Edit .env file: nano .env"
-echo "2. Start the bot: sudo systemctl start nimbus-bot"
-echo "3. Check status: sudo systemctl status nimbus-bot"
-echo "4. View logs: sudo journalctl -u nimbus-bot -f"
+echo "✅ EC2 setup complete!"
+echo "📝 Next steps:"
+echo "1. Configure AWS credentials: aws configure"
+echo "2. Edit .env file with your tokens"
+echo "3. Set up ECR repository"
+echo "4. Configure GitHub secrets for CI/CD"
+
+# Create ECR repository
+echo "🐳 Creating ECR repository..."
+aws ecr create-repository --repository-name nimbus-bot --region ap-southeast-1 || echo "Repository might already exist"
+
+echo "🎉 Setup complete! Ready for deployment."

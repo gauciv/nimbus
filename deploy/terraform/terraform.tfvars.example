@@ -1,0 +1,5 @@
+key_pair_name = "nimbus-bot-key"
+discord_token = "MTM4Mzc5MTIyNTYyNjQzMTU0OQ.GjSVG7.RlSsl1rFRY_uw3dMuCwe3iG8HIIXaTYp0QKDIE"
+guild_id = "1381607822873202779"
+groq_api_key = "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"
+huggingface_api_key = "yhf_pmzIrZcsfQVekPuBiEghyTtPiHiVFCPUsk"
