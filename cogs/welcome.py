@@ -30,11 +30,17 @@ class Welcome(commands.Cog):
         if arrivals_channel:
             # Public announcement
             public_message = self._get_public_welcome(member)
+            member_count = member.guild.member_count
             embed = discord.Embed(
                 description=public_message,
                 color=DragonPersonality.COLORS['success']
             )
             embed.set_thumbnail(url=member.display_avatar.url)
+            embed.add_field(
+                name="📊 Cloud Kingdom Census",
+                value=f"We now have **{member_count}** cloud dwellers! \n\n> *tries to count on claws but gets confused*",
+                inline=False
+            )
             embed.set_footer(text=DragonPersonality.get_success_footer())
             
             await arrivals_channel.send(embed=embed)
@@ -65,7 +71,7 @@ class Welcome(commands.Cog):
     
     def _get_public_welcome(self, member):
         """Get a random public welcome message."""
-        return DragonPersonality.get_welcome_public().format(mention=member.mention)
+        return DragonPersonality.get_welcome_public().format(mention=member.mention, count=member.guild.member_count)
     
     def _get_private_welcome(self, member):
         """Get a random private welcome message."""

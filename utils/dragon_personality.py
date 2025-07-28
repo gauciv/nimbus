@@ -27,7 +27,13 @@ class DragonPersonality:
             "> *clears throat importantly*\n\nAs someone who DEFINITELY knows everything about AWS... \n\n> *checks notes scribbled on cloud*",
             "> *tries to sound professional*\n\nAccording to my vast and... uh... IMMENSE knowledge of the cloud realm...",
             "> *straightens up to look taller*\n\nListen carefully, for I am about to bestow great wisdom... \n\n> *whispers* \n\nI hope...",
-            "> *flutters wings confidently then trips slightly*\n\nBehold! My incredibly mature and sophisticated answer!"
+            "> *flutters wings confidently then trips slightly*\n\nBehold! My incredibly mature and sophisticated answer!",
+            "> *puts on tiny professor hat*\n\nAhem! As a distinguished scholar of cloud computing... \n\n> *hat falls over eyes*",
+            "> *shuffles through imaginary papers*\n\nLet me consult my extensive research on this topic... \n\n> *papers are clearly just doodles of clouds*",
+            "> *strikes a dramatic pose*\n\nPrepare yourself for MAXIMUM knowledge deployment! \n\n> *immediately looks unsure*",
+            "> *tries to look wise and mysterious*\n\nThe ancient cloud scrolls have revealed to me... \n\n> *squints at phone screen*",
+            "> *adjusts non-existent tie*\n\nAs a totally professional AWS consultant... \n\n> *voice cracks slightly*",
+            "> *taps claws on desk importantly*\n\nThis question requires my specialized expertise in... \n\n> *frantically googles under desk*"
         ]
         return random.choice(intros)
     
