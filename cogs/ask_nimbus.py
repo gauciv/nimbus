@@ -11,16 +11,17 @@ from utils.config import load_json_data
 from utils.oracle import log_vision, OracleVision
 from utils.permissions import everyone
 from utils.aws_free_client import AWSFreeClient
+from utils.dragon_personality import DragonPersonality
 
 class AskNimbus(commands.Cog):
+    """Nimbus - A middle school cloud dragon trying very hard to be mature and helpful."""
+    
     def __init__(self, bot):
         self.bot = bot
         self.ask_channel_name = "ask-nimbus"
         self.aws_services = load_json_data('data/aws_services.json', {})
         self.knowledge_base = load_json_data('data/aws_knowledge_base.json', {})
-        self.conversation_context = {}  # Store conversation history
         self.question_count = 0
-        self.last_response_time = None  # Rate limiting
         self.aws_keywords = {
             'services': list(self.aws_services.keys()),
             'general': ['aws', 'amazon', 'cloud', 'ec2', 's3', 'lambda', 'rds', 'vpc', 'iam', 'cloudformation', 'serverless', 'devops', 'infrastructure', 'deployment', 'scaling', 'monitoring', 'security', 'storage', 'database', 'compute', 'networking', 'cdn', 'api', 'microservices']
@@ -40,15 +41,16 @@ class AskNimbus(commands.Cog):
         # Check if question is AWS-related
         if not self._is_aws_related(message.content):
             embed = discord.Embed(
-                title="AWS Questions Only",
-                description="I can only answer AWS and cloud computing questions.",
-                color=0xff6b6b
+                title="☁️ Um, that's not about clouds...",
+                description="*clears throat importantly* As a very mature and knowledgeable cloud dragon, I can ONLY help with AWS stuff! ...Please?",
+                color=DragonPersonality.COLORS['primary']
             )
             embed.add_field(
-                name="What I can help with:",
-                value="• AWS services (S3, EC2, Lambda, etc.)\n• Cloud architecture & best practices\n• Pricing and cost optimization\n• Certifications and learning paths",
+                name="🌤️ What I'm totally an expert at:",
+                value="• AWS services (I know ALL of them... mostly)\n• Cloud architecture (I live in clouds!)\n• Pricing stuff (math is easy... right?)\n• Certifications (I don't have any but whatever)",
                 inline=False
             )
+            embed.set_footer(text="I'm definitely not just a middle schooler pretending to be smart 😤")
             await message.reply(embed=embed, mention_author=False)
             return
         
@@ -59,25 +61,31 @@ class AskNimbus(commands.Cog):
             if ai_response:
                 if "can only answer AWS" in ai_response:
                     embed = discord.Embed(
-                        title="AWS Questions Only",
+                        title="☁️ Um, that's not about clouds...",
                         description=ai_response,
-                        color=0xff6b6b
+                        color=DragonPersonality.COLORS['primary']
                     )
                 else:
+                    # Add dragon personality to response
+                    dragon_intro = DragonPersonality.get_intro()
+                    formatted_response = f"{dragon_intro}\n\n{ai_response}"
+                    
                     embed = discord.Embed(
-                        description=ai_response,
-                        color=0x4dabf7
+                        description=formatted_response,
+                        color=DragonPersonality.COLORS['secondary']
                     )
-                    embed.set_footer(text=f"Asked by {message.author.display_name}")
+                    embed.set_footer(text=f"Asked by {message.author.display_name} • {DragonPersonality.get_success_footer()}")
                 
                 await message.reply(embed=embed, mention_author=False)
                 return
             
             # Fallback response
             embed = discord.Embed(
-                description="I couldn't process your question. Please try rephrasing it.",
-                color=0xff6b6b
+                title="🌩️ Uh oh...",
+                description=DragonPersonality.get_error_message(),
+                color=DragonPersonality.COLORS['error']
             )
+            embed.set_footer(text="This is totally not because I'm just a middle schooler...")
             await message.reply(embed=embed, mention_author=False)
     
 
@@ -153,6 +161,8 @@ class AskNimbus(commands.Cog):
             return True
         
         return False
+    
+
     
 
 
