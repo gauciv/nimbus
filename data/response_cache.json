@@ -302,5 +302,29 @@
   "eded4678d55a841deb6fce38884a64ea": {
     "response": "Oooh, shiny S3 bucket! *ahem* As a cloud dragon expert, I'll guide you through the steps to create an S3 bucket. *clears throat*\n\nTo create an S3 bucket, follow these steps:\n\n1. Log in to the AWS Management Console.\n2. Navigate to the S3 dashboard.\n3. Click \"Create bucket\" and enter a unique name for your bucket.\n4. Choose the region where you want to store your bucket.\n5. Set the bucket's public access settings (optional).\n6. Click \"Create bucket\" to create your bucket.\n\n*adjusts tiny wings* That covers what you asked about!",
     "timestamp": "2025-07-28T22:36:18.840116"
+  },
+  "4dacdf4a676c23277fe19d15e42d04ef": {
+    "response": "*adjusts tiny glasses*\n\nAmazon CloudFront is a web service that speeds up distribution of static and dynamic web content by reducing latency, improving performance, and scalability. It is a content delivery network (CDN) that integrates with other AWS services to deliver high-quality streaming and downloading experiences.",
+    "timestamp": "2025-07-28T22:45:27.927857"
+  },
+  "e918589bee6d8be6a88b39da514315ef": {
+    "response": "*flaps tiny wings excitedly*\n\nAmazon Amplify is not a thing, my friend! *clears throat* I mean, I'm afraid you're thinking of Amazon SNS (Simple Notification Service), not Amplify. *adjusts tiny glasses*\n\nAmazon SNS is a fully managed messaging service that enables you to fan out messages to multiple subscribers, such as AWS Lambda functions, Amazon SQS queues, and more. It's a great way to decouple microservices and enable event-driven",
+    "timestamp": "2025-07-28T22:45:39.923224"
+  },
+  "ffcc72d0e5489cdc8c8734daf8140ee8": {
+    "response": "> adjusts tiny glasses\n\nAmazon Kinesis is a fully managed, real-time data processing service that enables you to collect, process, and analyze large-scale data streams from various sources, such as social media, IoT devices, and applications.",
+    "timestamp": "2025-07-28T22:48:33.715497"
+  },
+  "68dabf3b3428fe161110c1e41f2a84db": {
+    "response": "> adjusts tiny wings\n\nTo create an S3 bucket, follow these steps:\n\n1. Log in to the AWS Management Console.\n2. Navigate to the S3 dashboard.\n3. Click the \"Create bucket\" button.\n4. Enter a unique name for your bucket.\n5. Choose a region for your bucket.\n6. Set the bucket's public access settings (optional).\n7. Click \"Create bucket\" to create the bucket.\n\nThat's it! Your S3 bucket is now created.",
+    "timestamp": "2025-07-28T22:48:52.545543"
+  },
+  "dc723f109577b675d6e2e64d16c40b7f": {
+    "response": "> adjusts tiny wings\n\nTo create a cloud application, follow these steps:\n\n1. Design your application architecture, considering scalability, security, and performance. Decide which AWS services to use.\n2. Set up an AWS account and configure your security credentials.\n3. Create an Amazon S3 bucket for storing and serving static assets.\n4. Use Amazon DynamoDB for storing and retrieving data.\n5. Implement serverless functions using AWS Lambda to handle business logic and API integrations.\n6. Distribute static assets and accelerate content delivery using Amazon CloudFront.\n7. Monitor and troubleshoot your application using AWS CloudWatch and X-Ray.\n\n> flaps wings excitedly",
+    "timestamp": "2025-07-28T22:49:19.383511"
+  },
+  "45e077437a1289a721c25d7b88d13edb": {
+    "response": "> adjusts tiny wings\n\nS3 is an object storage service that stores and serves large amounts of data, such as images, videos, and documents. It works by storing objects in a distributed system of servers, called a \"bucket\". When you upload an object to S3, it is divided into smaller chunks and stored across multiple servers. This allows for high availability and scalability. When you request an object, S3 retrieves the chunks from the servers and reassembles them for you.",
+    "timestamp": "2025-07-28T22:49:30.555244"
   }
 }

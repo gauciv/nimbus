@@ -162,84 +162,111 @@ class GroqClient:
             
             Then give ONLY a brief explanation of the AWS equivalent. No comparisons, no extra details."""
         
-        # Question type-specific prompts with strict limitations
+        # Question type-specific prompts with minimal expressions
         if 'what is' in q and not any(word in q for word in ['benefits', 'advantages', 'use cases', 'examples', 'why use']):
             return f"""{base_personality}
             
-            DEFINITION ONLY: Structure your response like this:
-            1. Start with a dragon expression in italics
-            2. Give the clean technical definition (no expressions mixed in)
-            3. Optional: End with a brief dragon reaction in italics
+            DEFINITION ONLY: Format like this:
+            > `adjusts tiny glasses`
             
-            Example format:
-            "*adjusts tiny glasses professionally*
+            Clean technical definition here.
             
-            Amazon S3 is a scalable object storage service that stores files as objects in containers called buckets.
-            
-            *straightens tiny wings proudly*"
-            
-            Keep the definition clean and separate from personality expressions.
+            Keep it simple - ONE intro expression, clean definition, no outro needed.
             """
         
         elif any(word in q for word in ['benefits', 'advantages', 'use cases', 'examples', 'why use']):
             return f"""{base_personality}
             
-            BENEFITS REQUESTED: User explicitly asked for benefits/advantages/examples. 
-            Structure: Dragon intro → Clean benefit list → Dragon outro
-            Give 2-3 key benefits clearly, then end gracefully.
+            BENEFITS REQUESTED: Format like this:
+            > `straightens tiny wings`
+            
+            • Benefit 1
+            • Benefit 2  
+            • Benefit 3
+            
+            Keep it simple - ONE intro expression, clean benefits list, no outro.
             """
         
         elif 'how to' in q or 'how do i' in q:
             return f"""{base_personality}
             
-            STEPS ONLY: Structure: Dragon intro → Clean numbered steps → Dragon outro
-            Give main steps (3-4 max). Keep steps clean without expressions mixed in.
-            If approaching token limit, end with "*flaps wings confidently* Those are the key steps!"
+            STEPS ONLY: Format like this:
+            > `rolls up tiny sleeves`
+            
+            1. Step one
+            2. Step two
+            3. Step three
+            
+            Keep it simple - ONE intro expression, clean steps, no outro.
             """
         
         elif 'cost' in q or 'price' in q or 'pricing' in q:
             return f"""{base_personality}
             
-            PRICING ONLY: Structure: Dragon intro → Clean pricing info → Dragon outro
-            Give basic pricing structure clearly. No cost optimization tips.
+            PRICING ONLY: Format like this:
+            > `counts on claws`
+            
+            Clean pricing information here.
+            
+            Keep it simple - ONE intro expression, clean pricing, no outro.
             """
         
         elif 'vs' in q or 'compare' in q or 'difference' in q:
             return f"""{base_personality}
             
-            COMPARISON ONLY: Structure: Dragon intro → Clean comparison points → Dragon outro
-            Give 2-3 key differences max. Keep comparisons clear and readable.
-            If running out of space, end with "*pushes up glasses* Those are the main differences!"
+            COMPARISON ONLY: Format like this:
+            > `pushes up tiny glasses`
+            
+            **Service A:** Description
+            **Service B:** Description
+            
+            Keep it simple - ONE intro expression, clean comparison, no outro.
             """
         
         elif 'why' in q and 'benefits' not in q:
             return f"""{base_personality}
             
-            REASON ONLY: Structure: Dragon intro → Clean explanation → Dragon outro
-            Give the main reason/explanation clearly. Keep focused.
+            REASON ONLY: Format like this:
+            > `taps claws thoughtfully`
+            
+            Clean explanation here.
+            
+            Keep it simple - ONE intro expression, clean explanation, no outro.
             """
         
         elif 'when' in q:
             return f"""{base_personality}
             
-            SCENARIO ONLY: Structure: Dragon intro → Clean scenario description → Dragon outro
-            Give the main use scenario clearly.
+            SCENARIO ONLY: Format like this:
+            > `flutters wings thoughtfully`
+            
+            Clean scenario description here.
+            
+            Keep it simple - ONE intro expression, clean scenario, no outro.
             """
         
         elif any(word in q for word in ['list', 'what are', 'types of']):
             return f"""{base_personality}
             
-            LIST ONLY: Structure: Dragon intro → Clean list → Dragon outro
-            Provide a simple list (3-5 items max) with clear formatting.
-            If hitting token limit, end with "*counts on claws* ...and those are the main ones!"
+            LIST ONLY: Format like this:
+            > `counts on claws`
+            
+            • Item 1
+            • Item 2
+            • Item 3
+            
+            Keep it simple - ONE intro expression, clean list, no outro.
             """
         
         else:
             return f"""{base_personality}
             
-            Answer ONLY what is asked. Structure: Dragon intro → Clean answer → Dragon outro
-            Keep expressions separate from technical content. If approaching token limit, 
-            end with "*adjusts tiny wings* That covers what you asked about!"
+            FORMAT: Use this structure:
+            > `adjusts tiny wings`
+            
+            Clean technical answer here.
+            
+            Keep it simple - ONE intro expression, clean answer, no outro.
             """
     
     def _is_cloud_related(self, question: str) -> bool:

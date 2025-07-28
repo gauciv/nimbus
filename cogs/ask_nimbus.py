@@ -89,14 +89,11 @@ class AskNimbus(commands.Cog):
                         color=DragonPersonality.COLORS['primary']
                     )
                 else:
-                    # Add dragon personality with security and formatting
-                    dragon_intro = DragonPersonality.generate_intro()
-                    
-                    # Format and sanitize response without character limit
+                    # Format and sanitize response without extra dragon intro
                     ai_response = self._format_code_blocks(ai_response)
                     ai_response = self._sanitize_response(ai_response)
                     
-                    formatted_response = f"{dragon_intro}\n\n{ai_response}"
+                    formatted_response = ai_response
                     
                     embed = discord.Embed(
                         description=formatted_response,
