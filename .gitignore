@@ -42,6 +42,22 @@ Thumbs.db
 
 # Environment variables
 .env
-.env.*deploy/terraform/.terraform/
+.env.*
+
+# Terraform
+deploy/terraform/.terraform/
 deploy/terraform/.terraform.lock.hcl
 deploy/terraform/terraform.tfstate*
+deploy/terraform/terraform.tfvars
+*.pem
+
+# AWS credentials
+*.pem
+aws-credentials
+
+# Sensitive data
+config.json
+*.key
+*.crt
+*.p12
+*.pfx
