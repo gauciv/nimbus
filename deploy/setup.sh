@@ -12,7 +12,7 @@ chmod 400 nimbus-key.pem
 # 2. Deploy EC2 instance
 echo "📦 Creating EC2 instance..."
 aws cloudformation deploy \
-    --template-file ec2.yml \
+    --template-file deploy/aws/ec2.yml \
     --stack-name nimbus-bot \
 
 

@@ -44,4 +44,7 @@ Thumbs.db
 .env
 .env.*
 
-nimbus-key.pem 
+# Deployment secrets
+*.pem
+*.key
+nimbus-key*
