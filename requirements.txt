@@ -9,3 +9,4 @@ pydantic-settings>=2.0.0
 
 # HTTP for AI requests
 aiohttp>=3.8.5
+requests>=2.31.0

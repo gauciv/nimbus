@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  nimbus-bot:
+    image: ${ECR_REGISTRY}/nimbus-bot:latest
+    container_name: nimbus-bot-prod
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=INFO
+    secrets:
+      - discord_token
+      - groq_api_key
+      - huggingface_api_key
+    volumes:
+      - nimbus-data:/app/data
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/nimbus-bot
+        awslogs-region: ${AWS_REGION}
+        awslogs-stream-prefix: ecs
+
+secrets:
+  discord_token:
+    external: true
+  groq_api_key:
+    external: true
+  huggingface_api_key:
+    external: true
+
+volumes:
+  nimbus-data:
+    driver: local
