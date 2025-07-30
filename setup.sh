@@ -14,7 +14,7 @@ echo "📦 Creating EC2 instance..."
 aws cloudformation deploy \
     --template-file ec2.yml \
     --stack-name nimbus-bot \
-    --capabilities CAPABILITY_IAM
+
 
 # 3. Get instance IP
 INSTANCE_IP=$(aws cloudformation describe-stacks \

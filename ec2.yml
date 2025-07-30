@@ -20,7 +20,6 @@ Resources:
       KeyName: nimbus-key
       SecurityGroupIds:
         - !Ref BotSecurityGroup
-      IamInstanceProfile: !Ref InstanceProfile
       Tags:
         - Key: Name
           Value: Nimbus-Bot
@@ -35,40 +34,6 @@ Resources:
           
           curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           chmod +x /usr/local/bin/docker-compose
-          
-          # Setup auto-deploy webhook
-          mkdir -p /home/ec2-user/webhook
-          cat > /home/ec2-user/webhook/deploy.sh << 'EOF'
-          #!/bin/bash
-          cd /home/ec2-user/nimbus-v2
-          git pull origin main
-          docker-compose down
-          docker-compose up -d --build
-          EOF
-          chmod +x /home/ec2-user/webhook/deploy.sh
-          
-          # Install webhook listener
-          yum install -y nodejs npm
-          npm install -g webhook
-
-  InstanceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: ec2.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-
-  InstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Roles:
-        - !Ref InstanceRole
 
 Outputs:
   InstanceIP:
